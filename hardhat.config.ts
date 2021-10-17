@@ -3,9 +3,14 @@ import * as dotenv from "dotenv";
 import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import "@nomiclabs/hardhat-ethers";
+import "hardhat-deploy-ethers";
+import "hardhat-deploy";
+import "@symfoni/hardhat-react";
+import "hardhat-typechain";
+import "@typechain/ethers-v5";
 
 dotenv.config();
 
