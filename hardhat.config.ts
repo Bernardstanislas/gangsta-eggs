@@ -29,7 +29,14 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
+  react: {
+    providerPriority: ["web3modal", "hardhat"],
+  },
   networks: {
+    hardhat: {
+      chainId: 1337,
+      inject: false, // optional. If true, it will EXPOSE your mnemonic in your frontend code. Then it would be available as an "in-page browser wallet" / signer which can sign without confirmation.
+    },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts:

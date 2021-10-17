@@ -199,7 +199,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     }
         ;
     const getGreeter = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? Greeter__factory.connect(ethers.constants.AddressZero, _signer) : Greeter__factory.connect(ethers.constants.AddressZero, _provider)
+
+        const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+        const instance = _signer ? Greeter__factory.connect(contractAddress, _signer) : Greeter__factory.connect(contractAddress, _provider)
         const contract: SymfoniGreeter = {
             instance: instance,
             factory: _signer ? new Greeter__factory(_signer) : undefined,
