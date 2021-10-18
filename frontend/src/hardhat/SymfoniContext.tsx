@@ -4,8 +4,10 @@
 import { providers, Signer, ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
-import { CryptoEgg } from "./typechain/CryptoEgg";
-import { CryptoEgg__factory } from "./typechain/factories/CryptoEgg__factory";
+import GangstaEggsDeployment from "./deployments/localhost/GangstaEggs.json";
+import { GangstaEggs } from "./typechain/GangstaEggs";
+import { GangstaEggs__factory } from "./typechain/factories/GangstaEggs__factory";
+import GreeterDeployment from "./deployments/localhost/Greeter.json";
 import { Greeter } from "./typechain/Greeter";
 import { Greeter__factory } from "./typechain/factories/Greeter__factory";
 import { ERC721Upgradeable } from "./typechain/ERC721Upgradeable";
@@ -29,7 +31,7 @@ const defaultSymfoniContext: SymfoniContextInterface = {
     providers: []
 };
 export const SymfoniContext = React.createContext<SymfoniContextInterface>(defaultSymfoniContext);
-export const CryptoEggContext = React.createContext<SymfoniCryptoEgg>(emptyContract);
+export const GangstaEggsContext = React.createContext<SymfoniGangstaEggs>(emptyContract);
 export const GreeterContext = React.createContext<SymfoniGreeter>(emptyContract);
 export const ERC721UpgradeableContext = React.createContext<SymfoniERC721Upgradeable>(emptyContract);
 
@@ -47,9 +49,9 @@ export interface SymfoniProps {
     loadingComponent?: React.ReactNode;
 }
 
-export interface SymfoniCryptoEgg {
-    instance?: CryptoEgg;
-    factory?: CryptoEgg__factory;
+export interface SymfoniGangstaEggs {
+    instance?: GangstaEggs;
+    factory?: GangstaEggs__factory;
 }
 
 export interface SymfoniGreeter {
@@ -76,7 +78,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [currentAddress, setCurrentAddress] = useState<string>(defaultCurrentAddress);
     const [fallbackProvider] = useState<string | undefined>(undefined);
     const [providerPriority, setProviderPriority] = useState<string[]>(["web3modal", "hardhat"]);
-    const [CryptoEgg, setCryptoEgg] = useState<SymfoniCryptoEgg>(emptyContract);
+    const [GangstaEggs, setGangstaEggs] = useState<SymfoniGangstaEggs>(emptyContract);
     const [Greeter, setGreeter] = useState<SymfoniGreeter>(emptyContract);
     const [ERC721Upgradeable, setERC721Upgradeable] = useState<SymfoniERC721Upgradeable>(emptyContract);
     useEffect(() => {
@@ -158,7 +160,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 setMessages(old => [...old, text])
             }
             const finishWithContracts = (text: string) => {
-                setCryptoEgg(getCryptoEgg(_provider, _signer))
+                setGangstaEggs(getGangstaEggs(_provider, _signer))
                 setGreeter(getGreeter(_provider, _signer))
                 setERC721Upgradeable(getERC721Upgradeable(_provider, _signer))
                 finish(text)
@@ -189,18 +191,20 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return () => { subscribed = false }
     }, [initializeCounter])
 
-    const getCryptoEgg = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? CryptoEgg__factory.connect(ethers.constants.AddressZero, _signer) : CryptoEgg__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniCryptoEgg = {
+    const getGangstaEggs = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = GangstaEggsDeployment.receipt.contractAddress
+        const instance = _signer ? GangstaEggs__factory.connect(contractAddress, _signer) : GangstaEggs__factory.connect(contractAddress, _provider)
+        const contract: SymfoniGangstaEggs = {
             instance: instance,
-            factory: _signer ? new CryptoEgg__factory(_signer) : undefined,
+            factory: _signer ? new GangstaEggs__factory(_signer) : undefined,
         }
         return contract
     }
         ;
     const getGreeter = (_provider: providers.Provider, _signer?: Signer) => {
 
-        const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+        const contractAddress = GreeterDeployment.receipt.contractAddress
         const instance = _signer ? Greeter__factory.connect(contractAddress, _signer) : Greeter__factory.connect(contractAddress, _provider)
         const contract: SymfoniGreeter = {
             instance: instance,
@@ -232,7 +236,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
             <ProviderContext.Provider value={[provider, setProvider]}>
                 <SignerContext.Provider value={[signer, setSigner]}>
                     <CurrentAddressContext.Provider value={[currentAddress, setCurrentAddress]}>
-                        <CryptoEggContext.Provider value={CryptoEgg}>
+                        <GangstaEggsContext.Provider value={GangstaEggs}>
                             <GreeterContext.Provider value={Greeter}>
                                 <ERC721UpgradeableContext.Provider value={ERC721Upgradeable}>
                                     {showLoading && loading ?
@@ -247,7 +251,7 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                     }
                                 </ERC721UpgradeableContext.Provider >
                             </GreeterContext.Provider >
-                        </CryptoEggContext.Provider >
+                        </GangstaEggsContext.Provider >
                     </CurrentAddressContext.Provider>
                 </SignerContext.Provider>
             </ProviderContext.Provider>

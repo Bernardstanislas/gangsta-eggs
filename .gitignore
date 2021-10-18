@@ -8,4 +8,4 @@ typechain
 cache
 artifacts
 
-/deployments/localhost
+deployments/localhost
