@@ -1,6 +1,6 @@
 import React from "react";
 import { Symfoni } from "./hardhat/SymfoniContext";
-import { Home } from "./home";
+import { Home } from "./Home";
 
 function App() {
   return (
