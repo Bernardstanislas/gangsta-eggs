@@ -1,12 +1,11 @@
 import React from "react";
-import "./App.css";
 import { Symfoni } from "./hardhat/SymfoniContext";
-import { Greeter } from "./Greeter";
+import { Home } from "./home";
 
 function App() {
   return (
-    <Symfoni>
-      <Greeter />
+    <Symfoni autoInit={false}>
+      <Home />
     </Symfoni>
   );
 }
