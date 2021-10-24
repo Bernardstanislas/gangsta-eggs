@@ -4,10 +4,10 @@
 import { providers, Signer, ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
-import GangstaEggsDeployment from "./deployments/localhost/GangstaEggs.json";
+import GangstaEggsDeployment from "./deployments/ropsten/GangstaEggs.json";
 import { GangstaEggs } from "./typechain/GangstaEggs";
 import { GangstaEggs__factory } from "./typechain/factories/GangstaEggs__factory";
-import GreeterDeployment from "./deployments/localhost/Greeter.json";
+import GreeterDeployment from "./deployments/ropsten/Greeter.json";
 import { Greeter } from "./typechain/Greeter";
 import { Greeter__factory } from "./typechain/factories/Greeter__factory";
 import { ERC721Upgradeable } from "./typechain/ERC721Upgradeable";
