@@ -24,3 +24,4 @@ yarn-error.log*
 
 src/hardhat/deployments/localhost
 .parcel-cache
+.vercel

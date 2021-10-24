@@ -5,7 +5,7 @@ export const Header = () => {
     <>
       <div
         className="bg-fixed bg-contain p-6"
-        style={{ backgroundImage: `url("src/banner1-mobile.png")` }}
+        style={{ backgroundImage: `url("banner1-mobile.png")` }}
       >
         <div className="backdrop-brightness-90 backdrop-blur leading-10 text-3xl font-display drop-shadow p-4 my-8 rounded">
           <h1>Welcome to the</h1>
