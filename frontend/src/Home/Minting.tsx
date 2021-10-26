@@ -11,7 +11,7 @@ export const Minting = () => {
         </div>
 
         <div className="flex justify-center py-6 md:flex-1">
-          <button className="bg-white p-4 border border-pink-800 shadow-md font-display text-xl text-pink-400 rounded-md">
+          <button className="bg-white p-4 md:px-16 md:py-8 border border-pink-800 shadow-md font-display text-xl text-pink-400 rounded-md">
             <strong>Presale on 01/11/21</strong>
           </button>
         </div>
