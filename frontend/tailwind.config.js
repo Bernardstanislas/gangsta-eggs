@@ -9,8 +9,8 @@ module.exports = {
       },
       extend: {
         backgroundImage: {
-          'banner-mobile': 'url("banner1-mobile.jpg")',
-          'banner-desktop': 'url("banner1.jpg")',
+          'banner-mobile': 'url("/banner1-mobile.jpg")',
+          'banner-desktop': 'url("/banner1.jpg")',
          }
       }
     },
