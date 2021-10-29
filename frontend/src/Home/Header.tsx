@@ -1,27 +1,29 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import React from "react";
 
 export const Header = () => {
   return (
     <>
-      <div className="bg-fixed bg-contain p-6 md:p-12 bg-banner-mobile md:bg-banner-desktop bg-cover flex flex-col items-center">
-        <div className="backdrop-brightness-90 backdrop-blur leading-10 text-3xl font-display drop-shadow p-4 my-8 rounded md:w-96">
-          <h1>Welcome to the</h1>
-          <h1>
-            <strong>GangstaEggs Factory</strong>
-          </h1>
-        </div>
-        <div className="flex justify-center">
-          <div className="border p-4 bg-white text-black rounded drop-shadow-lg md:m-6">
-            <p>🥚 9,999 randomly generated NFT eggs on Ethereum blockchain</p>
-            <p>🐣 Evolve your eggs into cute chicks</p>
-            <p>💞 Breed your chicks to create new eggs!</p>
-            <div className="flex justify-center px-6 py-4">
-              <button className="bg-pink-400 p-2 border border-pink-800 shadow-md font-display text-xl text-white">
-                <strong>Presale on 01/11/21</strong>
-              </button>
-            </div>
-          </div>
-        </div>
+      <h4 className="shadow-pixel bg-gray-300 inline-block p-3 mt-12 mb-8 text-xl text-gray-600">
+        <strong>The Colleggction</strong>
+      </h4>
+      <div className="transform scale-y-150 mb-4">
+        <h1 className="font-display text-3xl text-pink-100 filter drop-shadow-bottom">
+          <strong>GANGSTAEGGS</strong>
+        </h1>
+      </div>
+      <p>
+        A collection of <strong>9,999</strong> uniquely generated collectible
+        gangsta eggs, which evolve into breedable cute chicks.
+      </p>
+      <div className="flex mt-2 mb-20">
+        <a className="px-6 py-3" href="https://twitter.com/GangstaEggs">
+          <FontAwesomeIcon icon={["fab", "twitter"]} size="2x" />
+        </a>
+        <a className="px-6 py-3" href="https://discord.gg/eUSKPXMj">
+          <FontAwesomeIcon icon={["fab", "discord"]} size="2x" />
+        </a>
       </div>
     </>
   );
