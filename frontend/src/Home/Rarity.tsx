@@ -32,7 +32,7 @@ export const Rarity = () => {
           />
         </div>
       </div>
-      <div className="mb-3">
+      <div className="pb-16 border-b">
         <Subtitle>Types</Subtitle>
         <div className="grid grid-cols-2 gap-4">
           <Card

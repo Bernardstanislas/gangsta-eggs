@@ -2,7 +2,7 @@ import React from "react";
 import { Rarity } from "./Rarity";
 import { Header } from "./Header";
 import { Menu } from "./Menu";
-import { Minting } from "./Minting";
+import { About } from "./About";
 
 export const Home = () => {
   return (
@@ -12,6 +12,7 @@ export const Home = () => {
         <div className="px-4 pt-16">
           <Header />
           <Rarity />
+          <About />
         </div>
       </div>
     </div>
