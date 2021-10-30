@@ -3,6 +3,7 @@ import { Rarity } from "./Rarity";
 import { Header } from "./Header";
 import { Menu } from "./Menu";
 import { About } from "./About";
+import { Roadmap } from "./Roadmap";
 
 export const Home = () => {
   return (
@@ -13,6 +14,7 @@ export const Home = () => {
           <Header />
           <Rarity />
           <About />
+          <Roadmap />
         </div>
       </div>
     </div>
