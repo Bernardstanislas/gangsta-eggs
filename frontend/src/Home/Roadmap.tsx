@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 import { Section } from "../components/Section";
@@ -6,11 +7,7 @@ import { Subtitle } from "../components/Subtitle";
 export const Roadmap = () => {
   return (
     <Section title="Roadmap" withBorder={true}>
-      <img
-        className="h-20"
-        src="/windows-folder.png"
-        alt="windows-folder"
-      ></img>
+      <FontAwesomeIcon icon="drumstick-bite" size="3x" className="my-2" />
       <Subtitle>Next</Subtitle>
       <p className="my-2 leading-tight">
         <b>xx/xx:</b> presale mint. Open the chicken coop!
