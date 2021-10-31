@@ -4,6 +4,7 @@ import { Header } from "./Header";
 import { Menu } from "./Menu";
 import { About } from "./About";
 import { Roadmap } from "./Roadmap";
+import { FAQ } from "./FAQ";
 
 export const Home = () => {
   return (
@@ -15,6 +16,7 @@ export const Home = () => {
           <Rarity />
           <About />
           <Roadmap />
+          <FAQ />
         </div>
       </div>
     </div>
