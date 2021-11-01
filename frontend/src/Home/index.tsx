@@ -7,6 +7,7 @@ import { Roadmap } from "./Roadmap";
 import { FAQ } from "./FAQ";
 import { Team } from "./Team";
 import { Minting } from "./Minting";
+import { Copyrights } from "./Copyrights";
 
 export const Home = () => {
   return (
@@ -21,6 +22,7 @@ export const Home = () => {
           <Roadmap />
           <FAQ />
           <Team />
+          <Copyrights />
         </div>
       </div>
     </div>
