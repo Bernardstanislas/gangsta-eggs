@@ -5,7 +5,7 @@ export const Minting = () => {
   return (
     <Section title="Minting" withBorder={true}>
       <p>Find all the release agenda in the FAQ below!</p>
-      <div className="flex flex-col md:flex-row-reverse items-center md:py-16">
+      <div className="flex flex-col md:flex-row-reverse items-center">
         <div className="md:flex-1 shadow-m flex justify-center items:center my-4">
           <img
             className="w-2/3 shadow-bar"

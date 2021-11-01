@@ -12,6 +12,10 @@ module.exports = {
         'display': ["'Press Start 2P'", 'ui-sans-serif', 'system-ui'],
         'body': ['Roboto Mono', 'ui-sans-serif', 'system-ui'],
       },
+      backgroundColor: theme => ({
+        ...theme('colors'),
+        'pourpre': '#89152d',
+      }),
       extend: {
         backgroundImage: {
           'banner-mobile': 'url("/banner1-mobile.jpg")',
