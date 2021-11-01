@@ -10,10 +10,10 @@ export const Roadmap = () => {
       <FontAwesomeIcon icon="drumstick-bite" size="3x" className="my-2" />
       <Subtitle>Next</Subtitle>
       <p className="my-2 leading-tight">
-        <b>xx/xx:</b> presale mint. Open the chicken coop!
+        <b>11/22/21:</b> presale mint. Open the chicken coop!
       </p>
       <p className="my-2 leading-tight">
-        <b>xx/xx:</b> minting open
+        <b>11/29/21:</b> minting open
       </p>
       <p className="my-2 leading-tight">
         <b>25% sold:</b> free gangsta eggs will be airdropped to 100 collectors
@@ -30,7 +30,8 @@ export const Roadmap = () => {
         <b>100% sold:</b> charity giveaway
       </p>
       <p className="my-2 leading-tight">
-        <b>xx/xx:</b> Time for evolution ! GangstaChicks and breeding release
+        <b>100% sold:</b> Time for evolution ! GangstaChicks and breeding
+        release
       </p>
       <p className="my-2 leading-tight">
         <b>Q1 2022:</b> Metaverse opened to external contributors (ecosystem

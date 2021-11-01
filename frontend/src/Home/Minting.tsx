@@ -15,7 +15,7 @@ export const Minting = () => {
         </div>
         <div className="flex justify-center pt-6 md:flex-1">
           <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce">
-            <strong>Presale on 01/11/21</strong>
+            <strong>Presale on 11/22/21</strong>
           </button>
         </div>
       </div>
