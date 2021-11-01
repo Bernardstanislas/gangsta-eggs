@@ -16,6 +16,8 @@ module.exports = {
         backgroundImage: {
           'banner-mobile': 'url("/banner1-mobile.jpg")',
           'banner-desktop': 'url("/banner1.jpg")',
+          'egg-desktop': 'url("/background.jpg")',
+          'egg-mobile': 'url("/background-mobile.jpg")',
          },
          boxShadow: {
           pixel: 'inset 0 -4px 0 0 #929292, -2px -2px 0 0 #000, 2px 2px 0 0 #000',
