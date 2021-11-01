@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 import { Section } from "../components/Section";
@@ -20,6 +21,7 @@ export const Team = () => {
           name="Thib"
           title="Technical/Data/Blockchain egg-xpert"
           imageUrl="https://uploads-ssl.webflow.com/612f754973590a388c869510/612f9bcc7e9d9d4b26487e25_unnamed-2.png"
+          linkedinUrl="https://www.linkedin.com/in/thibault-fermet-703505224/"
         >
           <p>
             Former blockchain developer at Facebook (Libra project and
