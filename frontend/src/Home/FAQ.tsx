@@ -4,7 +4,7 @@ import { Section } from "../components/Section";
 
 export const FAQ = () => {
   return (
-    <Section title="FAQ" withBorder={false}>
+    <Section title="FAQ" withBorder={true}>
       <div className="space-y-2">
         <Accordion title="Why should I join Gangsta Egg community?">
           <p>

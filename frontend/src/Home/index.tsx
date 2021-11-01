@@ -5,6 +5,7 @@ import { Menu } from "./Menu";
 import { About } from "./About";
 import { Roadmap } from "./Roadmap";
 import { FAQ } from "./FAQ";
+import { Team } from "./Team";
 
 export const Home = () => {
   return (
@@ -17,6 +18,7 @@ export const Home = () => {
           <About />
           <Roadmap />
           <FAQ />
+          <Team />
         </div>
       </div>
     </div>

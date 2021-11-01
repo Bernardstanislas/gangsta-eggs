@@ -12,7 +12,7 @@ export const Accordion: React.FC<Props> = ({ title, children }) => {
   return (
     <div className="bg-gray-300 shadow-bevel text-gray-900">
       <div
-        className="flex justify-between items-center text-xl px-4"
+        className="flex justify-between items-center text-lg px-4"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="hidden max-h-0 max-h-screen rotate-0 rotate-180"></div>
