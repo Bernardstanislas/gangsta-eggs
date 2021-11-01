@@ -80,11 +80,6 @@ export const Rarity = () => {
           percentage={30}
         />
         <Card
-          imageUrl="/images/rarity/hats/helmet.png"
-          title="Helmet"
-          percentage={18}
-        />
-        <Card
           imageUrl="/images/rarity/hats/beanie.png"
           title="Beanie"
           percentage={10}
