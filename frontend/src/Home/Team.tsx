@@ -6,7 +6,7 @@ import { TeamMember } from "../components/TeamMember";
 export const Team = () => {
   return (
     <Section title="The eggcellent team">
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <TeamMember
           name="Stan"
           title="Prospectivist, strategic planner and project manager"

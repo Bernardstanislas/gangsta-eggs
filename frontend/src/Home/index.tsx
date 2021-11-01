@@ -12,8 +12,8 @@ import { Copyrights } from "./Copyrights";
 export const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-700 to-red-800 bg-scroll font-body text-white">
-      <div className="container">
-        <Menu />
+      <Menu />
+      <div className="sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg mx-auto">
         <div className="px-4 pt-16">
           <Header />
           <Minting />

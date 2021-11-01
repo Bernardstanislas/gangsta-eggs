@@ -7,7 +7,7 @@ export const Rarity = () => {
   return (
     <Section title="Rarity" withBorder={true}>
       <Subtitle>Types</Subtitle>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card
           imageUrl="https://uploads-ssl.webflow.com/612f754973590a388c869510/612f8f780230b44c70bd4133_type-normal.png"
           title="Normal"
@@ -30,7 +30,7 @@ export const Rarity = () => {
         />
       </div>
       <Subtitle>Types</Subtitle>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card
           imageUrl="https://uploads-ssl.webflow.com/612f754973590a388c869510/612f8f780230b44c70bd4133_type-normal.png"
           title="Normal"
