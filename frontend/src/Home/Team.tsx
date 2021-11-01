@@ -10,7 +10,7 @@ export const Team = () => {
         <TeamMember
           name="Stan"
           title="Prospectivist, strategic planner and project manager"
-          imageUrl="https://uploads-ssl.webflow.com/612f754973590a388c869510/612f8f780230b44c70bd4133_type-normal.png"
+          imageUrl="/images/team/stan.png"
         >
           <p>Metaverse passionate</p>
           <p>Former Project manager at Second Life (Linden Lab)</p>
@@ -19,7 +19,7 @@ export const Team = () => {
         <TeamMember
           name="Thib"
           title="Technical/Data/Blockchain egg-xpert"
-          imageUrl="https://uploads-ssl.webflow.com/612f754973590a388c869510/612f9bcc7e9d9d4b26487e25_unnamed-2.png"
+          imageUrl="/images/team/thib.png"
           linkedinUrl="https://www.linkedin.com/in/thibault-fermet-703505224/"
         >
           <p>
@@ -34,7 +34,7 @@ export const Team = () => {
         <TeamMember
           name="Eish"
           title="Artist and Design egg-xpert"
-          imageUrl="https://uploads-ssl.webflow.com/612f754973590a388c869510/612f8f780230b44c70bd4133_type-normal.png"
+          imageUrl="/images/team/eish.png"
         >
           <p>Father of Gangsta Eggs and Chicks</p>
           <p>Passionate about ‘brutalism’</p>
