@@ -53,12 +53,12 @@ export const FAQ = () => {
           <p>Secondary sales will be available on OpenSea.</p>
         </Accordion>
         <Accordion title="How much does it cost?">
-          <p>Egg minting : Fixed price of 0.04 ETH</p>
+          <p>Egg minting: Fixed price of 0.04 ETH</p>
           <p>Chicks are free (burn egg + gas fees only)</p>
           <p>Breeding cost: 0.02 ETH</p>
           <p>
-            Secondary sales royalties : 5% to Gangsta Eggs, of which half will
-            be reinvested in the project
+            Secondary sales royalties: 5% to Gangsta Eggs, of which half will be
+            reinvested in the project
           </p>
         </Accordion>
         <Accordion title="How to evolve?">
