@@ -6,6 +6,7 @@ import { About } from "./About";
 import { Roadmap } from "./Roadmap";
 import { FAQ } from "./FAQ";
 import { Team } from "./Team";
+import { Minting } from "./Minting";
 
 export const Home = () => {
   return (
@@ -14,6 +15,7 @@ export const Home = () => {
         <Menu />
         <div className="px-4 pt-16">
           <Header />
+          <Minting />
           <Rarity />
           <About />
           <Roadmap />

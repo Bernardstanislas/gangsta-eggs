@@ -1,21 +1,23 @@
 import React from "react";
-import { Title } from "../components/Title";
+import { Section } from "../components/Section";
 
 export const Minting = () => {
   return (
-    <div className="bg-pink-400 p-6">
-      <Title>Start your egg collection!</Title>
+    <Section title="Minting" withBorder={true}>
       <div className="flex flex-col md:flex-row-reverse items-center md:py-16">
-        <div className="md:flex-1 shadow-m flex justify-center items:center">
-          <img className="md:w-2/3 " src="1.gif" alt="first-animation" />
+        <div className="md:flex-1 shadow-m flex justify-center items:center my-4">
+          <img
+            className="w-2/3 shadow-bar"
+            src="/1.gif"
+            alt="first-animation"
+          />
         </div>
-
-        <div className="flex justify-center py-6 md:flex-1">
-          <button className="bg-white p-4 md:px-16 md:py-8 border border-pink-800 shadow-md font-display text-xl text-pink-400 rounded-md">
+        <div className="flex justify-center pt-6 md:flex-1">
+          <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600">
             <strong>Presale on 01/11/21</strong>
           </button>
         </div>
       </div>
-    </div>
+    </Section>
   );
 };
