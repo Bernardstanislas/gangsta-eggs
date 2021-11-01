@@ -30,7 +30,7 @@ export const Accordion: React.FC<Props> = ({ title, children }) => {
           isOpen ? "screen" : "0"
         }`}
       >
-        <div className="p-4">{children}</div>
+        <div className="p-4 space-y-3">{children}</div>
       </div>
     </div>
   );
