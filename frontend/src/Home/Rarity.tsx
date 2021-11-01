@@ -110,6 +110,12 @@ export const Rarity = () => {
           percentage={6}
         />
       </div>
+      <Subtitle>And many more...</Subtitle>
+      <p>
+        We just couldn't fit all attributes in here, just the main ones. You got
+        an egg with unlisted attributes? Good news, this means it's{" "}
+        <b>pretty rare</b>! Nice pick :)
+      </p>
     </Section>
   );
 };
