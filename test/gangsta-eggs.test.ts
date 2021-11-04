@@ -15,11 +15,16 @@ describe("GangstaEggs", function () {
     expect(await gangstaEggs.paused()).to.be.false;
 
     await gangstaEggs.pause();
-
     expect(await gangstaEggs.paused()).to.be.true;
 
     await gangstaEggs.unpause();
-
     expect(await gangstaEggs.paused()).to.be.false;
+  });
+
+  it("cannot be paused by someone else", async () => {
+    const signers = await ethers.getSigners();
+
+    const gangstaEggsWithNobod = await gangstaEggs.connect(signers[1]);
+    await expect(gangstaEggsWithNobod.pause()).to.be.reverted;
   });
 });
