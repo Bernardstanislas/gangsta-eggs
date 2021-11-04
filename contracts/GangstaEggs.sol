@@ -1,34 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.6;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract GangstaEggs is
-    Initializable,
-    ERC721Upgradeable,
-    PausableUpgradeable,
-    OwnableUpgradeable
-{
-    using CountersUpgradeable for CountersUpgradeable.Counter;
+contract GangstaEggs is ERC721, Pausable, Ownable {
+    using Counters for Counters.Counter;
 
-    CountersUpgradeable.Counter private _tokenIdCounter;
+    Counters.Counter private _tokenIdCounter;
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
+    string private _baseTokenURI;
 
-    function initialize() public initializer {
-        __ERC721_init("GangstaEggs", "GEG");
-        __Pausable_init();
-        __Ownable_init();
-    }
-
-    function _baseURI() internal pure override returns (string memory) {
-        return "https://yolo.lol/";
-    }
+    constructor() ERC721("GangstaEggs", "GEGG") {}
 
     function pause() public onlyOwner {
         _pause();
@@ -43,11 +28,16 @@ contract GangstaEggs is
         _tokenIdCounter.increment();
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override whenNotPaused {
+    function setBaseTokenURI(string memory _newBaseTokenURI) public onlyOwner {
+        require(bytes(_newBaseTokenURI).length > 0, "Base token URI must not be empty");
+        _baseTokenURI = _newBaseTokenURI;
+    }
+
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+        internal
+        whenNotPaused
+        override
+    {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 }
