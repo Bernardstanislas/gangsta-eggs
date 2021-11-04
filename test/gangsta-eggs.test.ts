@@ -1,12 +1,25 @@
+import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
 describe("GangstaEggs", function () {
   let gangstaEggs: Contract;
 
-  it("can be deployed", async () => {
+  before(async () => {
     const GangstaEggs = await ethers.getContractFactory("GangstaEggs");
     gangstaEggs = await GangstaEggs.deploy();
     await gangstaEggs.deployed();
+  });
+
+  it("can be paused by the pauser role", async () => {
+    expect(await gangstaEggs.paused()).to.be.false;
+
+    await gangstaEggs.pause();
+
+    expect(await gangstaEggs.paused()).to.be.true;
+
+    await gangstaEggs.unpause();
+
+    expect(await gangstaEggs.paused()).to.be.false;
   });
 });
