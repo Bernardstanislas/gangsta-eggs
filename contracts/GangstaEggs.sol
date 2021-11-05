@@ -3,30 +3,18 @@ pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./RoleBasedAccess.sol";
+import "./PriceReference.sol";
 
-contract GangstaEggs is ERC721, Pausable, RoleBasedAccess {
+contract GangstaEggs is ERC721, Pausable, RoleBasedAccess, PriceReference {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
 
     string private _baseTokenURI;
 
-    uint256 private _mintingPrice;
-
-    enum TokenType {
-        EGG,
-        CHICK
-    }
-
-    // Mapping from token id to token type
-    mapping(uint256 => TokenType) private _tokenTypes;
-
-    constructor() ERC721("GangstaEggs", "GEGG") {
-        _mintingPrice = 0.04 ether;
-    }
+    constructor() ERC721("GangstaEggs", "GEGG") {}
 
     function pause() public onlyRole(PAUSER_ROLE) {
         _pause();
@@ -44,11 +32,6 @@ contract GangstaEggs is ERC721, Pausable, RoleBasedAccess {
     function setBaseTokenURI(string memory _newBaseTokenURI) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(bytes(_newBaseTokenURI).length > 0, "Base token URI must not be empty");
         _baseTokenURI = _newBaseTokenURI;
-    }
-
-    function setMintingPrice(uint256 _newMintingPrice) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(_newMintingPrice > 0, "Minting price must be greater than 0");
-        _mintingPrice = _newMintingPrice;
     }
 
     function mint() public payable {
