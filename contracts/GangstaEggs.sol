@@ -5,12 +5,11 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./RoleBasedAccess.sol";
 
-contract GangstaEggs is ERC721, Pausable, AccessControl {
+contract GangstaEggs is ERC721, Pausable, RoleBasedAccess {
     using Counters for Counters.Counter;
 
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     Counters.Counter private _tokenIdCounter;
 
     string private _baseTokenURI;
@@ -26,9 +25,6 @@ contract GangstaEggs is ERC721, Pausable, AccessControl {
     mapping(uint256 => TokenType) private _tokenTypes;
 
     constructor() ERC721("GangstaEggs", "GEGG") {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(PAUSER_ROLE, msg.sender);
-        _setupRole(MINTER_ROLE, msg.sender);
         _mintingPrice = 0.04 ether;
     }
 
@@ -78,7 +74,7 @@ contract GangstaEggs is ERC721, Pausable, AccessControl {
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, AccessControl)
+        override(ERC721, RoleBasedAccess)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
