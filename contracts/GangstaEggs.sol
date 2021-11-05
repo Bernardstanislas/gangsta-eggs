@@ -8,7 +8,7 @@ import "./PriceReference.sol";
 import "./WithPause.sol";
 import "./TokenBaseUriReference.sol";
 
-contract GangstaEggs is WithPause, PriceReference, TokenBaseUriReference {
+contract GangstaEggs is WithPause, PriceReference {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
@@ -41,20 +41,12 @@ contract GangstaEggs is WithPause, PriceReference, TokenBaseUriReference {
         _tokenIdCounter.increment();
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        whenNotPaused
-        override
-    {
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
-
     // The following functions are overrides required by Solidity.
 
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(TokenBaseUriReference, RoleBasedAccess)
+        override(WithPause, RoleBasedAccess)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

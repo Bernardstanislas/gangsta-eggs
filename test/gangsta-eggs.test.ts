@@ -93,5 +93,14 @@ describe("GangstaEggs", function () {
         gangstaEggs.mint("", { value: ethers.utils.parseEther("1") })
       ).to.be.revertedWith("IPFS CID must not be empty");
     });
+
+    it("cannot happend when the contract is paused", async () => {
+      await gangstaEggs.pause();
+      await expect(
+        gangstaEggs.mint(ipfsCid, {
+          value: ethers.utils.parseEther("0.04"),
+        })
+      ).to.be.revertedWith("Pausable: paused");
+    });
   });
 });
