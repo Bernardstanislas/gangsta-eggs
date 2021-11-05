@@ -87,5 +87,11 @@ describe("GangstaEggs", function () {
         .to.emit(gangstaEggs, "Transfer")
         .withArgs(ethers.constants.AddressZero, owner.address, 2);
     });
+
+    it("needs an IPFS CID", async () => {
+      await expect(
+        gangstaEggs.mint("", { value: ethers.utils.parseEther("1") })
+      ).to.be.revertedWith("IPFS CID must not be empty");
+    });
   });
 });
