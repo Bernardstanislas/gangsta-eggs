@@ -6,6 +6,7 @@ import { ethers } from "hardhat";
 describe("GangstaEggs", function () {
   let gangstaEggs: Contract;
   let owner: SignerWithAddress;
+  const ipfsCid = "yolocroute";
 
   beforeEach(async () => {
     const GangstaEggs = await ethers.getContractFactory("GangstaEggs");
@@ -34,7 +35,7 @@ describe("GangstaEggs", function () {
 
   it("can set the baseTokenUri", async () => {
     const signers = await ethers.getSigners();
-    await gangstaEggs.safeMint(signers[0].address);
+    await gangstaEggs.airdrop(signers[0].address, ipfsCid);
 
     expect(await gangstaEggs.tokenURI(0)).to.equal("");
 
@@ -52,19 +53,19 @@ describe("GangstaEggs", function () {
 
   describe("mint()", () => {
     it("needs payment", async () => {
-      await expect(gangstaEggs.mint()).to.be.reverted;
+      await expect(gangstaEggs.mint(ipfsCid)).to.be.reverted;
     });
 
     it("accepts minting when payment is gte minting price", async () => {
       await expect(
-        gangstaEggs.mint({
+        gangstaEggs.mint(ipfsCid, {
           value: ethers.utils.parseEther("0.04"),
         })
       )
         .to.emit(gangstaEggs, "Transfer")
         .withArgs(ethers.constants.AddressZero, owner.address, 0);
       await expect(
-        gangstaEggs.mint({
+        gangstaEggs.mint(ipfsCid, {
           value: ethers.utils.parseEther("0.08"),
         })
       )
@@ -74,18 +75,17 @@ describe("GangstaEggs", function () {
       await gangstaEggs.setMintingPrice(ethers.utils.parseEther("2"));
 
       await expect(
-        gangstaEggs.mint({
+        gangstaEggs.mint(ipfsCid, {
           value: ethers.utils.parseEther("0.04"),
         })
       ).to.be.reverted;
       await expect(
-        gangstaEggs.mint({
+        gangstaEggs.mint(ipfsCid, {
           value: ethers.utils.parseEther("2"),
         })
       )
         .to.emit(gangstaEggs, "Transfer")
         .withArgs(ethers.constants.AddressZero, owner.address, 2);
-      console.log(ethers.utils.parseEther("2"));
     });
   });
 });

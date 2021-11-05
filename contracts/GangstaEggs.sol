@@ -14,6 +14,12 @@ contract GangstaEggs is ERC721, Pausable, RoleBasedAccess, PriceReference {
 
     string private _baseTokenURI;
 
+    struct TokenMetadatum {
+        string ipfsCid;
+    }
+
+    mapping(uint256 => TokenMetadatum) private _tokenMetadata;
+
     constructor() ERC721("GangstaEggs", "GEGG") {}
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -24,9 +30,8 @@ contract GangstaEggs is ERC721, Pausable, RoleBasedAccess, PriceReference {
         _unpause();
     }
 
-    function safeMint(address to) public onlyRole(MINTER_ROLE) {
-        _safeMint(to, _tokenIdCounter.current());
-        _tokenIdCounter.increment();
+    function airdrop(address to, string memory ipfsCid) public onlyRole(MINTER_ROLE) {
+        _mintWithIpfsCid(to, ipfsCid);
     }
 
     function setBaseTokenURI(string memory _newBaseTokenURI) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -34,9 +39,19 @@ contract GangstaEggs is ERC721, Pausable, RoleBasedAccess, PriceReference {
         _baseTokenURI = _newBaseTokenURI;
     }
 
-    function mint() public payable {
+    function mint(string memory ipfsCid) public payable {
         require(msg.value >= _mintingPrice, "Minting price is higher than provided payment");
-        _safeMint(_msgSender(), _tokenIdCounter.current());
+        _mintWithIpfsCid(_msgSender(), ipfsCid);
+    }
+
+    function _mintWithIpfsCid(address to, string memory ipfsCid) private  {
+        require(bytes(ipfsCid).length > 0, "IPFS CID must not be empty");
+
+        uint256 tokenId = _tokenIdCounter.current();
+        require(bytes(_tokenMetadata[tokenId].ipfsCid).length == 0, "Token already has an IPFS CID");
+
+        _safeMint(to, tokenId);
+        _tokenMetadata[tokenId] = TokenMetadatum(ipfsCid);
         _tokenIdCounter.increment();
     }
 
