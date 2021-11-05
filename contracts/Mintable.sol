@@ -15,7 +15,22 @@ abstract contract Mintable is WithPause, PriceReference {
         string ipfsCid;
     }
 
+    struct Token {
+        uint256 id;
+        address owner;
+        TokenMetadatum metadata;
+    }
+
     mapping(uint256 => TokenMetadatum) private _tokenMetadata;
+
+    function tokenMetadata(uint256 _tokenId) public view returns (Token memory) {
+        require(_msgSender() == ownerOf(_tokenId), "Only owner can access token metadata");
+        return Token(
+            _tokenId,
+            ownerOf(_tokenId),
+            _tokenMetadata[_tokenId]
+        );
+    }
 
     function _mintWithIpfsCid(address to, string memory ipfsCid) internal  {
         require(bytes(ipfsCid).length > 0, "IPFS CID must not be empty");

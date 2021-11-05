@@ -7,6 +7,7 @@ describe("GangstaEggs", function () {
   let gangstaEggs: Contract;
   let gangstaChicks: Contract;
   let owner: SignerWithAddress;
+  let signers: SignerWithAddress[];
   const ipfsCid = "yolocroute";
 
   beforeEach(async () => {
@@ -19,7 +20,7 @@ describe("GangstaEggs", function () {
     const GangstaEggs = await ethers.getContractFactory("GangstaEggs");
     gangstaEggs = await GangstaEggs.deploy();
     await gangstaEggs.deployed();
-    const signers = await ethers.getSigners();
+    signers = await ethers.getSigners();
     owner = signers[0];
   });
 
@@ -131,6 +132,35 @@ describe("GangstaEggs", function () {
 
     it("succeeds to set the contract address if the address is a GangstaChick contract", async () => {
       await gangstaEggs.setGangstaChicks(gangstaChicks.address);
+    });
+  });
+
+  describe("listTokens()", () => {
+    it("reverts if token does not exist", async () => {
+      await expect(gangstaEggs.tokenMetadata(0)).to.be.revertedWith(
+        "ERC721: owner query for nonexistent token"
+      );
+    });
+
+    it("reverts if caller does not own the token", async () => {
+      await gangstaEggs.mint(ipfsCid, {
+        value: ethers.utils.parseEther("0.04"),
+      });
+      const gangstaEggsWithNobod = await gangstaEggs.connect(signers[1]);
+      await expect(gangstaEggsWithNobod.tokenMetadata(0)).to.be.revertedWith(
+        "Only owner can access token metadata"
+      );
+    });
+
+    it("returns the token metadata", async () => {
+      await gangstaEggs.mint(ipfsCid, {
+        value: ethers.utils.parseEther("0.04"),
+      });
+      expect(await gangstaEggs.tokenMetadata(0)).to.deep.equal([
+        ethers.BigNumber.from(0),
+        owner.address,
+        [ipfsCid],
+      ]);
     });
   });
 });
