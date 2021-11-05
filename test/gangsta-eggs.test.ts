@@ -5,8 +5,15 @@ import { ethers } from "hardhat";
 
 describe("GangstaEggs", function () {
   let gangstaEggs: Contract;
+  let gangstaChicks: Contract;
   let owner: SignerWithAddress;
   const ipfsCid = "yolocroute";
+
+  beforeEach(async () => {
+    const GangstaChicks = await ethers.getContractFactory("GangstaChicks");
+    gangstaChicks = await GangstaChicks.deploy();
+    await gangstaChicks.deployed();
+  });
 
   beforeEach(async () => {
     const GangstaEggs = await ethers.getContractFactory("GangstaEggs");
@@ -101,6 +108,29 @@ describe("GangstaEggs", function () {
           value: ethers.utils.parseEther("0.04"),
         })
       ).to.be.revertedWith("Pausable: paused");
+    });
+  });
+
+  describe("setGangstaChicks()", () => {
+    it("cannot set a zero address contract", async () => {
+      await expect(
+        gangstaEggs.setGangstaChicks(ethers.constants.AddressZero)
+      ).to.be.revertedWith("GangstaChicks address cannot be 0x0");
+    });
+
+    it("cannot set a contract that does not implement the IGangstaChicks interface", async () => {
+      const GangstaEggs = await ethers.getContractFactory("GangstaEggs");
+      const otherContract = await GangstaEggs.deploy();
+      await otherContract.deployed();
+      await expect(
+        gangstaEggs.setGangstaChicks(otherContract.address)
+      ).to.be.revertedWith(
+        "GangstaChicks address does not support IGangstaChicks interface"
+      );
+    });
+
+    it("succeeds to set the contract address if the address is a GangstaChick contract", async () => {
+      await gangstaEggs.setGangstaChicks(gangstaChicks.address);
     });
   });
 });
