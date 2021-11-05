@@ -1,14 +1,18 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
 describe("GangstaEggs", function () {
   let gangstaEggs: Contract;
+  let owner: SignerWithAddress;
 
   beforeEach(async () => {
     const GangstaEggs = await ethers.getContractFactory("GangstaEggs");
     gangstaEggs = await GangstaEggs.deploy();
     await gangstaEggs.deployed();
+    const signers = await ethers.getSigners();
+    owner = signers[0];
   });
 
   it("can be paused by the pauser role", async () => {
@@ -38,5 +42,50 @@ describe("GangstaEggs", function () {
     await gangstaEggs.setBaseTokenURI(baseTokenUri);
 
     expect(await gangstaEggs.tokenURI(0)).to.equal("https://example.com/0");
+  });
+
+  describe("setMintingPrice()", () => {
+    it("cannot set a null price", async () => {
+      await expect(gangstaEggs.setMintingPrice(0)).to.be.reverted;
+    });
+  });
+
+  describe("mint()", () => {
+    it("needs payment", async () => {
+      await expect(gangstaEggs.mint()).to.be.reverted;
+    });
+
+    it("accepts minting when payment is gte minting price", async () => {
+      await expect(
+        gangstaEggs.mint({
+          value: ethers.utils.parseEther("0.04"),
+        })
+      )
+        .to.emit(gangstaEggs, "Transfer")
+        .withArgs(ethers.constants.AddressZero, owner.address, 0);
+      await expect(
+        gangstaEggs.mint({
+          value: ethers.utils.parseEther("0.08"),
+        })
+      )
+        .to.emit(gangstaEggs, "Transfer")
+        .withArgs(ethers.constants.AddressZero, owner.address, 1);
+
+      await gangstaEggs.setMintingPrice(ethers.utils.parseEther("2"));
+
+      await expect(
+        gangstaEggs.mint({
+          value: ethers.utils.parseEther("0.04"),
+        })
+      ).to.be.reverted;
+      await expect(
+        gangstaEggs.mint({
+          value: ethers.utils.parseEther("2"),
+        })
+      )
+        .to.emit(gangstaEggs, "Transfer")
+        .withArgs(ethers.constants.AddressZero, owner.address, 2);
+      console.log(ethers.utils.parseEther("2"));
+    });
   });
 });

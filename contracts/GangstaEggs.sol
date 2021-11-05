@@ -15,10 +15,21 @@ contract GangstaEggs is ERC721, Pausable, AccessControl {
 
     string private _baseTokenURI;
 
+    uint256 private _mintingPrice;
+
+    enum TokenType {
+        EGG,
+        CHICK
+    }
+
+    // Mapping from token id to token type
+    mapping(uint256 => TokenType) private _tokenTypes;
+
     constructor() ERC721("GangstaEggs", "GEGG") {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(PAUSER_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, msg.sender);
+        _mintingPrice = 0.04 ether;
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -37,6 +48,17 @@ contract GangstaEggs is ERC721, Pausable, AccessControl {
     function setBaseTokenURI(string memory _newBaseTokenURI) public onlyRole(DEFAULT_ADMIN_ROLE) {
         require(bytes(_newBaseTokenURI).length > 0, "Base token URI must not be empty");
         _baseTokenURI = _newBaseTokenURI;
+    }
+
+    function setMintingPrice(uint256 _newMintingPrice) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(_newMintingPrice > 0, "Minting price must be greater than 0");
+        _mintingPrice = _newMintingPrice;
+    }
+
+    function mint() public payable {
+        require(msg.value >= _mintingPrice, "Minting price is higher than provided payment");
+        _safeMint(_msgSender(), _tokenIdCounter.current());
+        _tokenIdCounter.increment();
     }
 
     function _baseURI() internal view override(ERC721) returns (string memory) {
