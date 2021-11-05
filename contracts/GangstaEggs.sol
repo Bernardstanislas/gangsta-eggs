@@ -39,6 +39,10 @@ contract GangstaEggs is ERC721, Pausable, AccessControl {
         _baseTokenURI = _newBaseTokenURI;
     }
 
+    function _baseURI() internal view override(ERC721) returns (string memory) {
+        return _baseTokenURI;
+    }
+
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
         internal
         whenNotPaused
