@@ -11,7 +11,7 @@ export const Menu = () => {
             <a href="https://twitter.com/GangstaEggs">
               <FontAwesomeIcon icon={["fab", "twitter"]} size="2x" />
             </a>
-            <a href="https://discord.gg/eUSKPXMj">
+            <a href="https://discord.gg/FZdnWbYseQ">
               <FontAwesomeIcon icon={["fab", "discord"]} size="2x" />
             </a>
           </div>
