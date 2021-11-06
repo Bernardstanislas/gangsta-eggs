@@ -4,14 +4,26 @@
 import { providers, Signer, ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
-import GangstaEggsDeployment from "./deployments/ropsten/GangstaEggs.json";
+import GangstaEggs_ImplementationDeployment from "./deployments/hardhat/GangstaEggs_Implementation.json";
+import GangstaEggs_ProxyDeployment from "./deployments/hardhat/GangstaEggs_Proxy.json";
+import SharedWallet_ImplementationDeployment from "./deployments/hardhat/SharedWallet_Implementation.json";
+import SharedWallet_ProxyDeployment from "./deployments/hardhat/SharedWallet_Proxy.json";
+import { GangstaChicks } from "./typechain/GangstaChicks";
+import { GangstaChicks__factory } from "./typechain/factories/GangstaChicks__factory";
+import SharedWalletDeployment from "./deployments/hardhat/SharedWallet.json";
+import { SharedWallet } from "./typechain/SharedWallet";
+import { SharedWallet__factory } from "./typechain/factories/SharedWallet__factory";
+import { RoleBasedAccess } from "./typechain/RoleBasedAccess";
+import { RoleBasedAccess__factory } from "./typechain/factories/RoleBasedAccess__factory";
+import GangstaEggsDeployment from "./deployments/hardhat/GangstaEggs.json";
 import { GangstaEggs } from "./typechain/GangstaEggs";
 import { GangstaEggs__factory } from "./typechain/factories/GangstaEggs__factory";
-import GreeterDeployment from "./deployments/ropsten/Greeter.json";
-import { Greeter } from "./typechain/Greeter";
-import { Greeter__factory } from "./typechain/factories/Greeter__factory";
-import { ERC721Upgradeable } from "./typechain/ERC721Upgradeable";
-import { ERC721Upgradeable__factory } from "./typechain/factories/ERC721Upgradeable__factory";
+import { PriceReference } from "./typechain/PriceReference";
+import { PriceReference__factory } from "./typechain/factories/PriceReference__factory";
+import { PaymentSplitter } from "./typechain/PaymentSplitter";
+import { PaymentSplitter__factory } from "./typechain/factories/PaymentSplitter__factory";
+import { ERC721 } from "./typechain/ERC721";
+import { ERC721__factory } from "./typechain/factories/ERC721__factory";
 
 const emptyContract = {
     instance: undefined,
@@ -31,9 +43,17 @@ const defaultSymfoniContext: SymfoniContextInterface = {
     providers: []
 };
 export const SymfoniContext = React.createContext<SymfoniContextInterface>(defaultSymfoniContext);
+export const GangstaEggs_ImplementationContext = React.createContext<SymfoniGangstaEggs>(emptyContract);
+export const GangstaEggs_ProxyContext = React.createContext<SymfoniGangstaEggs>(emptyContract);
+export const SharedWallet_ImplementationContext = React.createContext<SymfoniSharedWallet>(emptyContract);
+export const SharedWallet_ProxyContext = React.createContext<SymfoniSharedWallet>(emptyContract);
+export const GangstaChicksContext = React.createContext<SymfoniGangstaChicks>(emptyContract);
+export const SharedWalletContext = React.createContext<SymfoniSharedWallet>(emptyContract);
+export const RoleBasedAccessContext = React.createContext<SymfoniRoleBasedAccess>(emptyContract);
 export const GangstaEggsContext = React.createContext<SymfoniGangstaEggs>(emptyContract);
-export const GreeterContext = React.createContext<SymfoniGreeter>(emptyContract);
-export const ERC721UpgradeableContext = React.createContext<SymfoniERC721Upgradeable>(emptyContract);
+export const PriceReferenceContext = React.createContext<SymfoniPriceReference>(emptyContract);
+export const PaymentSplitterContext = React.createContext<SymfoniPaymentSplitter>(emptyContract);
+export const ERC721Context = React.createContext<SymfoniERC721>(emptyContract);
 
 export interface SymfoniContextInterface {
     init: (provider?: string) => void;
@@ -54,14 +74,54 @@ export interface SymfoniGangstaEggs {
     factory?: GangstaEggs__factory;
 }
 
-export interface SymfoniGreeter {
-    instance?: Greeter;
-    factory?: Greeter__factory;
+export interface SymfoniGangstaEggs {
+    instance?: GangstaEggs;
+    factory?: GangstaEggs__factory;
 }
 
-export interface SymfoniERC721Upgradeable {
-    instance?: ERC721Upgradeable;
-    factory?: ERC721Upgradeable__factory;
+export interface SymfoniSharedWallet {
+    instance?: SharedWallet;
+    factory?: SharedWallet__factory;
+}
+
+export interface SymfoniSharedWallet {
+    instance?: SharedWallet;
+    factory?: SharedWallet__factory;
+}
+
+export interface SymfoniGangstaChicks {
+    instance?: GangstaChicks;
+    factory?: GangstaChicks__factory;
+}
+
+export interface SymfoniSharedWallet {
+    instance?: SharedWallet;
+    factory?: SharedWallet__factory;
+}
+
+export interface SymfoniRoleBasedAccess {
+    instance?: RoleBasedAccess;
+    factory?: RoleBasedAccess__factory;
+}
+
+export interface SymfoniGangstaEggs {
+    instance?: GangstaEggs;
+    factory?: GangstaEggs__factory;
+}
+
+export interface SymfoniPriceReference {
+    instance?: PriceReference;
+    factory?: PriceReference__factory;
+}
+
+export interface SymfoniPaymentSplitter {
+    instance?: PaymentSplitter;
+    factory?: PaymentSplitter__factory;
+}
+
+export interface SymfoniERC721 {
+    instance?: ERC721;
+    factory?: ERC721__factory;
 }
 
 export const Symfoni: React.FC<SymfoniProps> = ({
@@ -78,9 +138,17 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [currentAddress, setCurrentAddress] = useState<string>(defaultCurrentAddress);
     const [fallbackProvider] = useState<string | undefined>(undefined);
     const [providerPriority, setProviderPriority] = useState<string[]>(["web3modal", "hardhat"]);
+    const [GangstaEggs_Implementation, setGangstaEggs_Implementation] = useState<SymfoniGangstaEggs>(emptyContract);
+    const [GangstaEggs_Proxy, setGangstaEggs_Proxy] = useState<SymfoniGangstaEggs>(emptyContract);
+    const [SharedWallet_Implementation, setSharedWallet_Implementation] = useState<SymfoniSharedWallet>(emptyContract);
+    const [SharedWallet_Proxy, setSharedWallet_Proxy] = useState<SymfoniSharedWallet>(emptyContract);
+    const [GangstaChicks, setGangstaChicks] = useState<SymfoniGangstaChicks>(emptyContract);
+    const [SharedWallet, setSharedWallet] = useState<SymfoniSharedWallet>(emptyContract);
+    const [RoleBasedAccess, setRoleBasedAccess] = useState<SymfoniRoleBasedAccess>(emptyContract);
     const [GangstaEggs, setGangstaEggs] = useState<SymfoniGangstaEggs>(emptyContract);
-    const [Greeter, setGreeter] = useState<SymfoniGreeter>(emptyContract);
-    const [ERC721Upgradeable, setERC721Upgradeable] = useState<SymfoniERC721Upgradeable>(emptyContract);
+    const [PriceReference, setPriceReference] = useState<SymfoniPriceReference>(emptyContract);
+    const [PaymentSplitter, setPaymentSplitter] = useState<SymfoniPaymentSplitter>(emptyContract);
+    const [ERC721, setERC721] = useState<SymfoniERC721>(emptyContract);
     useEffect(() => {
         if (messages.length > 0)
             console.debug(messages.pop())
@@ -160,9 +228,17 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 setMessages(old => [...old, text])
             }
             const finishWithContracts = (text: string) => {
+                setGangstaEggs_Implementation(getGangstaEggs_Implementation(_provider, _signer))
+                setGangstaEggs_Proxy(getGangstaEggs_Proxy(_provider, _signer))
+                setSharedWallet_Implementation(getSharedWallet_Implementation(_provider, _signer))
+                setSharedWallet_Proxy(getSharedWallet_Proxy(_provider, _signer))
+                setGangstaChicks(getGangstaChicks(_provider, _signer))
+                setSharedWallet(getSharedWallet(_provider, _signer))
+                setRoleBasedAccess(getRoleBasedAccess(_provider, _signer))
                 setGangstaEggs(getGangstaEggs(_provider, _signer))
-                setGreeter(getGreeter(_provider, _signer))
-                setERC721Upgradeable(getERC721Upgradeable(_provider, _signer))
+                setPriceReference(getPriceReference(_provider, _signer))
+                setPaymentSplitter(getPaymentSplitter(_provider, _signer))
+                setERC721(getERC721(_provider, _signer))
                 finish(text)
             }
             if (!autoInit && initializeCounter === 0) return finish("Auto init turned off.")
@@ -191,6 +267,79 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return () => { subscribed = false }
     }, [initializeCounter])
 
+    const getGangstaEggs_Implementation = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = GangstaEggs_ImplementationDeployment.receipt.contractAddress
+        const instance = _signer ? GangstaEggs__factory.connect(contractAddress, _signer) : GangstaEggs__factory.connect(contractAddress, _provider)
+        const contract: SymfoniGangstaEggs = {
+            instance: instance,
+            factory: _signer ? new GangstaEggs__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getGangstaEggs_Proxy = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = GangstaEggs_ProxyDeployment.receipt.contractAddress
+        const instance = _signer ? GangstaEggs__factory.connect(contractAddress, _signer) : GangstaEggs__factory.connect(contractAddress, _provider)
+        const contract: SymfoniGangstaEggs = {
+            instance: instance,
+            factory: _signer ? new GangstaEggs__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getSharedWallet_Implementation = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = SharedWallet_ImplementationDeployment.receipt.contractAddress
+        const instance = _signer ? SharedWallet__factory.connect(contractAddress, _signer) : SharedWallet__factory.connect(contractAddress, _provider)
+        const contract: SymfoniSharedWallet = {
+            instance: instance,
+            factory: _signer ? new SharedWallet__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getSharedWallet_Proxy = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = SharedWallet_ProxyDeployment.receipt.contractAddress
+        const instance = _signer ? SharedWallet__factory.connect(contractAddress, _signer) : SharedWallet__factory.connect(contractAddress, _provider)
+        const contract: SymfoniSharedWallet = {
+            instance: instance,
+            factory: _signer ? new SharedWallet__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getGangstaChicks = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? GangstaChicks__factory.connect(ethers.constants.AddressZero, _signer) : GangstaChicks__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniGangstaChicks = {
+            instance: instance,
+            factory: _signer ? new GangstaChicks__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getSharedWallet = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = SharedWalletDeployment.receipt.contractAddress
+        const instance = _signer ? SharedWallet__factory.connect(contractAddress, _signer) : SharedWallet__factory.connect(contractAddress, _provider)
+        const contract: SymfoniSharedWallet = {
+            instance: instance,
+            factory: _signer ? new SharedWallet__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getRoleBasedAccess = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? RoleBasedAccess__factory.connect(ethers.constants.AddressZero, _signer) : RoleBasedAccess__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniRoleBasedAccess = {
+            instance: instance,
+            factory: _signer ? new RoleBasedAccess__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
     const getGangstaEggs = (_provider: providers.Provider, _signer?: Signer) => {
 
         const contractAddress = GangstaEggsDeployment.receipt.contractAddress
@@ -202,22 +351,29 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getGreeter = (_provider: providers.Provider, _signer?: Signer) => {
-
-        const contractAddress = GreeterDeployment.receipt.contractAddress
-        const instance = _signer ? Greeter__factory.connect(contractAddress, _signer) : Greeter__factory.connect(contractAddress, _provider)
-        const contract: SymfoniGreeter = {
+    const getPriceReference = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? PriceReference__factory.connect(ethers.constants.AddressZero, _signer) : PriceReference__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniPriceReference = {
             instance: instance,
-            factory: _signer ? new Greeter__factory(_signer) : undefined,
+            factory: _signer ? new PriceReference__factory(_signer) : undefined,
         }
         return contract
     }
         ;
-    const getERC721Upgradeable = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? ERC721Upgradeable__factory.connect(ethers.constants.AddressZero, _signer) : ERC721Upgradeable__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniERC721Upgradeable = {
+    const getPaymentSplitter = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? PaymentSplitter__factory.connect(ethers.constants.AddressZero, _signer) : PaymentSplitter__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniPaymentSplitter = {
             instance: instance,
-            factory: _signer ? new ERC721Upgradeable__factory(_signer) : undefined,
+            factory: _signer ? new PaymentSplitter__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getERC721 = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? ERC721__factory.connect(ethers.constants.AddressZero, _signer) : ERC721__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniERC721 = {
+            instance: instance,
+            factory: _signer ? new ERC721__factory(_signer) : undefined,
         }
         return contract
     }
@@ -236,22 +392,38 @@ export const Symfoni: React.FC<SymfoniProps> = ({
             <ProviderContext.Provider value={[provider, setProvider]}>
                 <SignerContext.Provider value={[signer, setSigner]}>
                     <CurrentAddressContext.Provider value={[currentAddress, setCurrentAddress]}>
-                        <GangstaEggsContext.Provider value={GangstaEggs}>
-                            <GreeterContext.Provider value={Greeter}>
-                                <ERC721UpgradeableContext.Provider value={ERC721Upgradeable}>
-                                    {showLoading && loading ?
-                                        props.loadingComponent
-                                            ? props.loadingComponent
-                                            : <div>
-                                                {messages.map((msg, i) => (
-                                                    <p key={i}>{msg}</p>
-                                                ))}
-                                            </div>
-                                        : props.children
-                                    }
-                                </ERC721UpgradeableContext.Provider >
-                            </GreeterContext.Provider >
-                        </GangstaEggsContext.Provider >
+                        <GangstaEggs_ImplementationContext.Provider value={GangstaEggs_Implementation}>
+                            <GangstaEggs_ProxyContext.Provider value={GangstaEggs_Proxy}>
+                                <SharedWallet_ImplementationContext.Provider value={SharedWallet_Implementation}>
+                                    <SharedWallet_ProxyContext.Provider value={SharedWallet_Proxy}>
+                                        <GangstaChicksContext.Provider value={GangstaChicks}>
+                                            <SharedWalletContext.Provider value={SharedWallet}>
+                                                <RoleBasedAccessContext.Provider value={RoleBasedAccess}>
+                                                    <GangstaEggsContext.Provider value={GangstaEggs}>
+                                                        <PriceReferenceContext.Provider value={PriceReference}>
+                                                            <PaymentSplitterContext.Provider value={PaymentSplitter}>
+                                                                <ERC721Context.Provider value={ERC721}>
+                                                                    {showLoading && loading ?
+                                                                        props.loadingComponent
+                                                                            ? props.loadingComponent
+                                                                            : <div>
+                                                                                {messages.map((msg, i) => (
+                                                                                    <p key={i}>{msg}</p>
+                                                                                ))}
+                                                                            </div>
+                                                                        : props.children
+                                                                    }
+                                                                </ERC721Context.Provider >
+                                                            </PaymentSplitterContext.Provider >
+                                                        </PriceReferenceContext.Provider >
+                                                    </GangstaEggsContext.Provider >
+                                                </RoleBasedAccessContext.Provider >
+                                            </SharedWalletContext.Provider >
+                                        </GangstaChicksContext.Provider >
+                                    </SharedWallet_ProxyContext.Provider >
+                                </SharedWallet_ImplementationContext.Provider >
+                            </GangstaEggs_ProxyContext.Provider >
+                        </GangstaEggs_ImplementationContext.Provider >
                     </CurrentAddressContext.Provider>
                 </SignerContext.Provider>
             </ProviderContext.Provider>
