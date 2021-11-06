@@ -4,22 +4,22 @@
 import { providers, Signer, ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Web3Modal, { IProviderOptions } from "web3modal";
-import GangstaEggs_ImplementationDeployment from "./deployments/hardhat/GangstaEggs_Implementation.json";
-import GangstaEggs_ProxyDeployment from "./deployments/hardhat/GangstaEggs_Proxy.json";
-import SharedWallet_ImplementationDeployment from "./deployments/hardhat/SharedWallet_Implementation.json";
-import SharedWallet_ProxyDeployment from "./deployments/hardhat/SharedWallet_Proxy.json";
+import GangstaEggs_ImplementationDeployment from "./deployments/mumbai/GangstaEggs_Implementation.json";
+import GangstaEggs_ProxyDeployment from "./deployments/mumbai/GangstaEggs_Proxy.json";
+import SharedWallet_ImplementationDeployment from "./deployments/mumbai/SharedWallet_Implementation.json";
+import SharedWallet_ProxyDeployment from "./deployments/mumbai/SharedWallet_Proxy.json";
 import { GangstaChicks } from "./typechain/GangstaChicks";
 import { GangstaChicks__factory } from "./typechain/factories/GangstaChicks__factory";
-import SharedWalletDeployment from "./deployments/hardhat/SharedWallet.json";
-import { SharedWallet } from "./typechain/SharedWallet";
-import { SharedWallet__factory } from "./typechain/factories/SharedWallet__factory";
-import { RoleBasedAccess } from "./typechain/RoleBasedAccess";
-import { RoleBasedAccess__factory } from "./typechain/factories/RoleBasedAccess__factory";
-import GangstaEggsDeployment from "./deployments/hardhat/GangstaEggs.json";
+import GangstaEggsDeployment from "./deployments/mumbai/GangstaEggs.json";
 import { GangstaEggs } from "./typechain/GangstaEggs";
 import { GangstaEggs__factory } from "./typechain/factories/GangstaEggs__factory";
 import { PriceReference } from "./typechain/PriceReference";
 import { PriceReference__factory } from "./typechain/factories/PriceReference__factory";
+import SharedWalletDeployment from "./deployments/mumbai/SharedWallet.json";
+import { SharedWallet } from "./typechain/SharedWallet";
+import { SharedWallet__factory } from "./typechain/factories/SharedWallet__factory";
+import { RoleBasedAccess } from "./typechain/RoleBasedAccess";
+import { RoleBasedAccess__factory } from "./typechain/factories/RoleBasedAccess__factory";
 import { PaymentSplitter } from "./typechain/PaymentSplitter";
 import { PaymentSplitter__factory } from "./typechain/factories/PaymentSplitter__factory";
 import { ERC721 } from "./typechain/ERC721";
@@ -48,10 +48,10 @@ export const GangstaEggs_ProxyContext = React.createContext<SymfoniGangstaEggs>(
 export const SharedWallet_ImplementationContext = React.createContext<SymfoniSharedWallet>(emptyContract);
 export const SharedWallet_ProxyContext = React.createContext<SymfoniSharedWallet>(emptyContract);
 export const GangstaChicksContext = React.createContext<SymfoniGangstaChicks>(emptyContract);
-export const SharedWalletContext = React.createContext<SymfoniSharedWallet>(emptyContract);
-export const RoleBasedAccessContext = React.createContext<SymfoniRoleBasedAccess>(emptyContract);
 export const GangstaEggsContext = React.createContext<SymfoniGangstaEggs>(emptyContract);
 export const PriceReferenceContext = React.createContext<SymfoniPriceReference>(emptyContract);
+export const SharedWalletContext = React.createContext<SymfoniSharedWallet>(emptyContract);
+export const RoleBasedAccessContext = React.createContext<SymfoniRoleBasedAccess>(emptyContract);
 export const PaymentSplitterContext = React.createContext<SymfoniPaymentSplitter>(emptyContract);
 export const ERC721Context = React.createContext<SymfoniERC721>(emptyContract);
 
@@ -94,16 +94,6 @@ export interface SymfoniGangstaChicks {
     factory?: GangstaChicks__factory;
 }
 
-export interface SymfoniSharedWallet {
-    instance?: SharedWallet;
-    factory?: SharedWallet__factory;
-}
-
-export interface SymfoniRoleBasedAccess {
-    instance?: RoleBasedAccess;
-    factory?: RoleBasedAccess__factory;
-}
-
 export interface SymfoniGangstaEggs {
     instance?: GangstaEggs;
     factory?: GangstaEggs__factory;
@@ -112,6 +102,16 @@ export interface SymfoniGangstaEggs {
 export interface SymfoniPriceReference {
     instance?: PriceReference;
     factory?: PriceReference__factory;
+}
+
+export interface SymfoniSharedWallet {
+    instance?: SharedWallet;
+    factory?: SharedWallet__factory;
+}
+
+export interface SymfoniRoleBasedAccess {
+    instance?: RoleBasedAccess;
+    factory?: RoleBasedAccess__factory;
 }
 
 export interface SymfoniPaymentSplitter {
@@ -143,10 +143,10 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [SharedWallet_Implementation, setSharedWallet_Implementation] = useState<SymfoniSharedWallet>(emptyContract);
     const [SharedWallet_Proxy, setSharedWallet_Proxy] = useState<SymfoniSharedWallet>(emptyContract);
     const [GangstaChicks, setGangstaChicks] = useState<SymfoniGangstaChicks>(emptyContract);
-    const [SharedWallet, setSharedWallet] = useState<SymfoniSharedWallet>(emptyContract);
-    const [RoleBasedAccess, setRoleBasedAccess] = useState<SymfoniRoleBasedAccess>(emptyContract);
     const [GangstaEggs, setGangstaEggs] = useState<SymfoniGangstaEggs>(emptyContract);
     const [PriceReference, setPriceReference] = useState<SymfoniPriceReference>(emptyContract);
+    const [SharedWallet, setSharedWallet] = useState<SymfoniSharedWallet>(emptyContract);
+    const [RoleBasedAccess, setRoleBasedAccess] = useState<SymfoniRoleBasedAccess>(emptyContract);
     const [PaymentSplitter, setPaymentSplitter] = useState<SymfoniPaymentSplitter>(emptyContract);
     const [ERC721, setERC721] = useState<SymfoniERC721>(emptyContract);
     useEffect(() => {
@@ -233,10 +233,10 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 setSharedWallet_Implementation(getSharedWallet_Implementation(_provider, _signer))
                 setSharedWallet_Proxy(getSharedWallet_Proxy(_provider, _signer))
                 setGangstaChicks(getGangstaChicks(_provider, _signer))
-                setSharedWallet(getSharedWallet(_provider, _signer))
-                setRoleBasedAccess(getRoleBasedAccess(_provider, _signer))
                 setGangstaEggs(getGangstaEggs(_provider, _signer))
                 setPriceReference(getPriceReference(_provider, _signer))
+                setSharedWallet(getSharedWallet(_provider, _signer))
+                setRoleBasedAccess(getRoleBasedAccess(_provider, _signer))
                 setPaymentSplitter(getPaymentSplitter(_provider, _signer))
                 setERC721(getERC721(_provider, _signer))
                 finish(text)
@@ -320,26 +320,6 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getSharedWallet = (_provider: providers.Provider, _signer?: Signer) => {
-
-        const contractAddress = SharedWalletDeployment.receipt.contractAddress
-        const instance = _signer ? SharedWallet__factory.connect(contractAddress, _signer) : SharedWallet__factory.connect(contractAddress, _provider)
-        const contract: SymfoniSharedWallet = {
-            instance: instance,
-            factory: _signer ? new SharedWallet__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
-    const getRoleBasedAccess = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? RoleBasedAccess__factory.connect(ethers.constants.AddressZero, _signer) : RoleBasedAccess__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniRoleBasedAccess = {
-            instance: instance,
-            factory: _signer ? new RoleBasedAccess__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getGangstaEggs = (_provider: providers.Provider, _signer?: Signer) => {
 
         const contractAddress = GangstaEggsDeployment.receipt.contractAddress
@@ -356,6 +336,26 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         const contract: SymfoniPriceReference = {
             instance: instance,
             factory: _signer ? new PriceReference__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getSharedWallet = (_provider: providers.Provider, _signer?: Signer) => {
+
+        const contractAddress = SharedWalletDeployment.receipt.contractAddress
+        const instance = _signer ? SharedWallet__factory.connect(contractAddress, _signer) : SharedWallet__factory.connect(contractAddress, _provider)
+        const contract: SymfoniSharedWallet = {
+            instance: instance,
+            factory: _signer ? new SharedWallet__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getRoleBasedAccess = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? RoleBasedAccess__factory.connect(ethers.constants.AddressZero, _signer) : RoleBasedAccess__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniRoleBasedAccess = {
+            instance: instance,
+            factory: _signer ? new RoleBasedAccess__factory(_signer) : undefined,
         }
         return contract
     }
@@ -397,10 +397,10 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                 <SharedWallet_ImplementationContext.Provider value={SharedWallet_Implementation}>
                                     <SharedWallet_ProxyContext.Provider value={SharedWallet_Proxy}>
                                         <GangstaChicksContext.Provider value={GangstaChicks}>
-                                            <SharedWalletContext.Provider value={SharedWallet}>
-                                                <RoleBasedAccessContext.Provider value={RoleBasedAccess}>
-                                                    <GangstaEggsContext.Provider value={GangstaEggs}>
-                                                        <PriceReferenceContext.Provider value={PriceReference}>
+                                            <GangstaEggsContext.Provider value={GangstaEggs}>
+                                                <PriceReferenceContext.Provider value={PriceReference}>
+                                                    <SharedWalletContext.Provider value={SharedWallet}>
+                                                        <RoleBasedAccessContext.Provider value={RoleBasedAccess}>
                                                             <PaymentSplitterContext.Provider value={PaymentSplitter}>
                                                                 <ERC721Context.Provider value={ERC721}>
                                                                     {showLoading && loading ?
@@ -415,10 +415,10 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                                                     }
                                                                 </ERC721Context.Provider >
                                                             </PaymentSplitterContext.Provider >
-                                                        </PriceReferenceContext.Provider >
-                                                    </GangstaEggsContext.Provider >
-                                                </RoleBasedAccessContext.Provider >
-                                            </SharedWalletContext.Provider >
+                                                        </RoleBasedAccessContext.Provider >
+                                                    </SharedWalletContext.Provider >
+                                                </PriceReferenceContext.Provider >
+                                            </GangstaEggsContext.Provider >
                                         </GangstaChicksContext.Provider >
                                     </SharedWallet_ProxyContext.Provider >
                                 </SharedWallet_ImplementationContext.Provider >
