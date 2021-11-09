@@ -58,4 +58,12 @@ describe("GenerationTracker", function () {
       expect(await generationTracker.eggGeneration(123)).to.equal(2);
     });
   });
+
+  describe("eggGeneration", () => {
+    it("reverts if asked egg is not registered", async () => {
+      await expect(generationTracker.eggGeneration(123)).to.be.revertedWith(
+        "Egg not registered"
+      );
+    });
+  });
 });
