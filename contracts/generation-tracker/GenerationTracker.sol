@@ -4,13 +4,15 @@ pragma solidity ^0.8.6;
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "../interfaces/IGenerationTracker.sol";
 
 contract GenerationTracker is IGenerationTracker, Initializable, AccessControlUpgradeable  {
+    using CountersUpgradeable for CountersUpgradeable.Counter;
     using SafeMathUpgradeable for uint256;
 
     mapping(uint256 => Generation) private eggsGeneration;
-    uint256 private _firstGenerationEggsCount;
+    CountersUpgradeable.Counter private _firstGenerationEggsCounter;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
     bytes32 public constant LAYER_ROLE = keccak256("LAYER");
@@ -28,7 +30,7 @@ contract GenerationTracker is IGenerationTracker, Initializable, AccessControlUp
     function registerNewlyMintedEgg(uint256 _eggId) external override onlyRole(MINTER_ROLE) {
         require(eggsGeneration[_eggId] == Generation.UNKNOWN, "Egg already registered");
         eggsGeneration[_eggId] = Generation.FIRST;
-        _firstGenerationEggsCount = _firstGenerationEggsCount.add(1);
+        _firstGenerationEggsCounter.increment();
     }
 
     function registerNewlyLayedEgg(uint256 _eggId) external override onlyRole(LAYER_ROLE) {
@@ -42,6 +44,6 @@ contract GenerationTracker is IGenerationTracker, Initializable, AccessControlUp
     }
 
     function firstGenerationEggsCount() external override view returns (uint256) {
-        return _firstGenerationEggsCount;
+        return _firstGenerationEggsCounter.current();
     }
 }
