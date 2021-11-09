@@ -3,9 +3,9 @@ pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "../interfaces/IEggGeneration.sol";
+import "../interfaces/IGenerationTracker.sol";
 
-contract EggGeneration is IEggGeneration, Initializable, AccessControlUpgradeable  {
+contract GenerationTracker is IGenerationTracker, Initializable, AccessControlUpgradeable  {
     mapping(uint256 => Generation) private eggsGeneration;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
