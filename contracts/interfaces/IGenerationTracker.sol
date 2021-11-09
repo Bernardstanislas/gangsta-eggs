@@ -9,8 +9,8 @@ interface IGenerationTracker {
     }
 
     function registerNewlyMintedEgg(uint256 _eggId) external;
-
     function registerNewlyLayedEgg(uint256 _eggId) external;
 
     function eggGeneration(uint256 _eggId) external view returns (Generation);
+    function firstGenerationEggsCount() external view returns (uint256);
 }

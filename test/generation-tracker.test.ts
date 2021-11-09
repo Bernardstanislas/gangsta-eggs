@@ -39,6 +39,13 @@ describe("GenerationTracker", function () {
 
       expect(await generationTracker.eggGeneration(123)).to.equal(1);
     });
+
+    it("fails if egg is already registered", async () => {
+      await generationTracker.connect(minter).registerNewlyMintedEgg(123);
+      await expect(
+        generationTracker.connect(minter).registerNewlyMintedEgg(123)
+      ).to.be.revertedWith("Egg already registered");
+    });
   });
 
   describe("registerNewlyLayedEgg", () => {
@@ -64,6 +71,23 @@ describe("GenerationTracker", function () {
       await expect(generationTracker.eggGeneration(123)).to.be.revertedWith(
         "Egg not registered"
       );
+    });
+  });
+
+  describe("firstGenerationEggsCount", () => {
+    it("starts at 0", async () => {
+      expect(await generationTracker.firstGenerationEggsCount()).to.equal(0);
+    });
+
+    it("gets incremented at each registration", async () => {
+      await generationTracker.connect(minter).registerNewlyMintedEgg(123);
+      expect(await generationTracker.firstGenerationEggsCount()).to.equal(1);
+
+      await generationTracker.connect(layer).registerNewlyLayedEgg(124);
+      expect(await generationTracker.firstGenerationEggsCount()).to.equal(1);
+
+      await generationTracker.connect(minter).registerNewlyMintedEgg(125);
+      expect(await generationTracker.firstGenerationEggsCount()).to.equal(2);
     });
   });
 });
