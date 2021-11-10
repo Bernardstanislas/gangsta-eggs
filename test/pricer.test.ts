@@ -99,4 +99,18 @@ describe("Pricer", function () {
       );
     });
   });
+
+  describe("setGenerationTracker()", () => {
+    it("should revert when provided a contract that is not a generation tracker", async () => {
+      const otherContract = await upgrades.deployProxy(
+        await ethers.getContractFactory("Pricer"),
+        [generationTracker.address]
+      );
+      await expect(
+        pricer.setGenerationTracker(otherContract.address)
+      ).to.be.revertedWith(
+        "GenerationTracker does not support IGenerationTracker interface"
+      );
+    });
+  });
 });

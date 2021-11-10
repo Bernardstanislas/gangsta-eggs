@@ -4,11 +4,13 @@ pragma solidity ^0.8.6;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
 import "../interfaces/IPricer.sol";
 import "../interfaces/IGenerationTracker.sol";
 
 contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
     using SafeMathUpgradeable for uint256;
+    using ERC165CheckerUpgradeable for address;
 
     uint256 private _airdroppedEggsLimit;
     uint256 private _eggsStartingPrice;
@@ -29,7 +31,7 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
         _eggsEndingPrice = 0.06 ether;
         _firstGenerationSize = 4444;
         _breedingPrice = 0.02 ether;
-        _generationTracker = IGenerationTracker(_tracker);
+        _setGenerationTracker(_tracker);
     }
 
     function setAirdroppedEggsLimit(uint256 _limit) public onlyRole(CFO_ROLE) {
@@ -60,6 +62,10 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
         _breedingPrice = _price;
     }
 
+    function setGenerationTracker(address _tracker) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        _setGenerationTracker(_tracker);
+    }
+
     function mintingPrice() external view override returns (uint256) {
         uint256 eggCount = _generationTracker.firstGenerationEggsCount();
         require(eggCount <= _firstGenerationSize);
@@ -78,5 +84,11 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
 
     function breedingPrice() external view override returns (uint256) {
         return _breedingPrice;
+    }
+
+    function _setGenerationTracker(address _tracker) internal {
+        require(_tracker != address(0));
+        require(_tracker.supportsInterface(type(IGenerationTracker).interfaceId), "GenerationTracker does not support IGenerationTracker interface");
+        _generationTracker = IGenerationTracker(_tracker);
     }
 }

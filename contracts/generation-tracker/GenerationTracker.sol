@@ -5,9 +5,10 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
 import "../interfaces/IGenerationTracker.sol";
 
-contract GenerationTracker is IGenerationTracker, Initializable, AccessControlUpgradeable  {
+contract GenerationTracker is IGenerationTracker, Initializable, ERC165StorageUpgradeable, AccessControlUpgradeable  {
     using CountersUpgradeable for CountersUpgradeable.Counter;
     using SafeMathUpgradeable for uint256;
 
@@ -21,7 +22,9 @@ contract GenerationTracker is IGenerationTracker, Initializable, AccessControlUp
         require(_minter != address(0), "Minter address cannot be 0");
         require(_layer != address(0), "Layer address cannot be 0");
         __AccessControl_init();
+        __ERC165Storage_init();
 
+        _registerInterface(type(IGenerationTracker).interfaceId);
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, _minter);
         _setupRole(LAYER_ROLE, _layer);
@@ -45,5 +48,9 @@ contract GenerationTracker is IGenerationTracker, Initializable, AccessControlUp
 
     function firstGenerationEggsCount() external override view returns (uint256) {
         return _firstGenerationEggsCounter.current();
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165StorageUpgradeable, AccessControlUpgradeable) returns (bool) {
+        return super.supportsInterface(interfaceId);
     }
 }
