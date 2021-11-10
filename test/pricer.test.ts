@@ -35,7 +35,7 @@ describe("Pricer", function () {
       await pricer.setAirdroppedEggsLimit(airdropLimit);
       await pricer.setEggsStartingPrice(startingPrice);
       await pricer.setEggsEndingPrice(endingPrice);
-      await pricer.setFirstGenerationEggsCount(totalCount);
+      await pricer.setFirstGenerationSize(totalCount);
     };
 
     it("should first equal 0", async () => {
