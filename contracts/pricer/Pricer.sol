@@ -16,7 +16,6 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
     uint256 private _firstGenerationEggsCount;
     uint256 private _breedingPrice;
     IGenerationTracker private _generationTracker;
-    uint256 private constant _precisionFactor = 100000000;
     
     bytes32 public constant CFO_ROLE = keccak256("CFO_ROLE");
 
@@ -66,11 +65,11 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
             return 0;
         } else {
             require(eggCount > 0, "Linear pricing starts when airdrop is finished");
-            uint256 price = _eggsStartingPrice.add(
-                _eggsEndingPrice.sub(_eggsStartingPrice).mul(
-                    eggCount.sub(_airdroppedEggsLimit).mul(_precisionFactor).div(_firstGenerationEggsCount.sub(_airdroppedEggsLimit))
-                ).div(_precisionFactor)
-            );
+            uint256 _priceDelta = _eggsEndingPrice.sub(_eggsStartingPrice);
+            uint256 _payableEggsCount = _firstGenerationEggsCount.sub(_airdroppedEggsLimit);
+            uint256 price = _eggsStartingPrice
+                .add(_priceDelta.mul(eggCount).div(_payableEggsCount))
+                .sub(_priceDelta.mul(_airdroppedEggsLimit).div(_payableEggsCount));
             return price;
         }
     }

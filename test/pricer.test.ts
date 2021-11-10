@@ -68,6 +68,18 @@ describe("Pricer", function () {
       );
     });
 
+    it("should end on target price", async () => {
+      await reduceLimits();
+      await Promise.all(
+        Array(totalCount)
+          .fill(0)
+          .map((_, index) =>
+            generationTracker.connect(minter).registerNewlyMintedEgg(index)
+          )
+      );
+      expect(await pricer.mintingPrice()).to.eq(endingPrice);
+    });
+
     it("should be precise enough", async () => {
       await Promise.all(
         Array(200)
@@ -83,7 +95,7 @@ describe("Pricer", function () {
       const price2 = await pricer.mintingPrice();
 
       expect(price2.sub(price1)).to.equal(
-        ethers.utils.parseEther("0.0000106029")
+        ethers.utils.parseEther("0.000010603204524033")
       );
     });
   });
