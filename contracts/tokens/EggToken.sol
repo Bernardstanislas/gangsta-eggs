@@ -8,8 +8,10 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
+import "../interfaces/IEggToken.sol";
 
-contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable {
+contract EggToken is IEggToken, Initializable, ERC165StorageUpgradeable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -26,6 +28,7 @@ contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
         __AccessControl_init();
         __ERC721Burnable_init();
 
+        _registerInterface(type(IEggToken).interfaceId);
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(PAUSER_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, msg.sender);
@@ -43,14 +46,14 @@ contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
+    function safeMint(address to, string memory uri) external onlyRole(MINTER_ROLE) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
 
-    function safeBurn(uint256 tokenId) public onlyRole(MINTER_ROLE) {
+    function safeBurn(uint256 tokenId) external onlyRole(MINTER_ROLE) {
         _burn(tokenId);
     }
 
@@ -83,7 +86,7 @@ contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721Upgradeable, AccessControlUpgradeable)
+        override(ERC165StorageUpgradeable, ERC721Upgradeable, AccessControlUpgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
