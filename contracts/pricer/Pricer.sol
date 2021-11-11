@@ -62,10 +62,6 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
         _breedingPrice = _price;
     }
 
-    function setGenerationTracker(address _tracker) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        _setGenerationTracker(_tracker);
-    }
-
     function mintingPrice() external view override returns (uint256) {
         uint256 eggCount = _generationTracker.firstGenerationEggsCount();
         require(eggCount <= _firstGenerationSize);
