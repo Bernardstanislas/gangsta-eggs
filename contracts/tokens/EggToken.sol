@@ -46,14 +46,14 @@ contract EggToken is IEggToken, Initializable, ERC165StorageUpgradeable, ERC721U
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) external onlyRole(MINTER_ROLE) {
+    function safeMint(address to, string memory uri) external override onlyRole(MINTER_ROLE) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
     }
 
-    function safeBurn(uint256 tokenId) external onlyRole(MINTER_ROLE) {
+    function safeBurn(uint256 tokenId) external override onlyRole(MINTER_ROLE) {
         _burn(tokenId);
     }
 

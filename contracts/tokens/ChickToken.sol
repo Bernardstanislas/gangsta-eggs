@@ -44,7 +44,7 @@ contract ChickToken is IChickToken, Initializable, ERC165StorageUpgradeable, ERC
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) external onlyRole(MINTER_ROLE) {
+    function safeMint(address to, string memory uri) external override onlyRole(MINTER_ROLE) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
