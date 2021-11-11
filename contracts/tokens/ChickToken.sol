@@ -5,11 +5,10 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
-contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable {
+contract ChickToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -20,11 +19,10 @@ contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
     constructor() initializer {}
 
     function initialize() initializer public {
-        __ERC721_init("GangstaEgg", "GEGG");
+        __ERC721_init("GangstaChick", "GCHK");
         __ERC721URIStorage_init();
         __Pausable_init();
         __AccessControl_init();
-        __ERC721Burnable_init();
 
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(PAUSER_ROLE, msg.sender);
@@ -32,7 +30,7 @@ contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "https://api.gangsta-eggs.com/eggs/";
+        return "https://api.gangsta-eggs.com/chicks/";
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -48,10 +46,6 @@ contract EggToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeab
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-    }
-
-    function safeBurn(uint256 tokenId) public onlyRole(MINTER_ROLE) {
-        _burn(tokenId);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
