@@ -9,9 +9,10 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Burnab
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
 import "../interfaces/IEggToken.sol";
 
-contract EggToken is IEggToken, Initializable, ERC165StorageUpgradeable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable {
+contract EggToken is Initializable, ERC165StorageUpgradeable, ERC721Upgradeable, ERC721URIStorageUpgradeable, IEggToken, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -86,7 +87,7 @@ contract EggToken is IEggToken, Initializable, ERC165StorageUpgradeable, ERC721U
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC165StorageUpgradeable, ERC721Upgradeable, AccessControlUpgradeable)
+        override(ERC165StorageUpgradeable, ERC721Upgradeable, AccessControlUpgradeable, IERC165Upgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

@@ -8,9 +8,10 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
 import "../interfaces/IChickToken.sol";
 
-contract ChickToken is IChickToken, Initializable, ERC165StorageUpgradeable, ERC721Upgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, AccessControlUpgradeable {
+contract ChickToken is Initializable, ERC165StorageUpgradeable, ERC721Upgradeable, ERC721URIStorageUpgradeable, IChickToken, PausableUpgradeable, AccessControlUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -80,7 +81,7 @@ contract ChickToken is IChickToken, Initializable, ERC165StorageUpgradeable, ERC
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC165StorageUpgradeable, ERC721Upgradeable, AccessControlUpgradeable)
+        override(ERC165StorageUpgradeable, ERC721Upgradeable, AccessControlUpgradeable, IERC165Upgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

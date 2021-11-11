@@ -29,7 +29,8 @@ contract BreedingTracker is IBreedingTracker, Initializable, ERC165StorageUpgrad
         _setChickToken(chickToken);
     }
 
-    function registerBreeding(uint256 chick1, uint256 chick2) external override onlyRole(BREEDER_ROLE) {
+    function safeRegisterBreeding(uint256 chick1, uint256 chick2) external override onlyRole(BREEDER_ROLE) {
+        require(_chickToken.ownerOf(chick1) == _chickToken.ownerOf(chick2), "Chick1 and chick2 must be owned by the same owner");
         require(breedings[chick1].length < BREEDING_LIMIT, "First chick cannot breed anymore");
         require(breedings[chick2].length < BREEDING_LIMIT, "Second chick cannot breed anymore");
         require(chick1 != chick2, "Chick1 and chick2 cannot be the same");
@@ -39,7 +40,6 @@ contract BreedingTracker is IBreedingTracker, Initializable, ERC165StorageUpgrad
         for (uint i = 0; i < breedings[chick2].length - 1; i++) {
             require(breedings[chick2][i] != chick1, "Chick1 and chick2 have already breeded");
         }
-        require(_chickToken.ownerOf(chick1) == _chickToken.ownerOf(chick2), "Chick1 and chick2 must be owned by the same owner");
         breedings[chick1].push(chick2);
         breedings[chick2].push(chick1);
     }
