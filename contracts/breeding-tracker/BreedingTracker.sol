@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
+import "hardhat/console.sol";
 import "../interfaces/IBreedingTracker.sol";
 import "../interfaces/IChickToken.sol";
 
@@ -34,14 +35,17 @@ contract BreedingTracker is IBreedingTracker, Initializable, ERC165StorageUpgrad
         require(breedings[chick1].length < BREEDING_LIMIT, "First chick cannot breed anymore");
         require(breedings[chick2].length < BREEDING_LIMIT, "Second chick cannot breed anymore");
         require(chick1 != chick2, "Chick1 and chick2 cannot be the same");
-        for (uint i = 0; i < breedings[chick1].length - 1; i++) {
+        for (uint256 i = 0; i < breedings[chick1].length; i = i.add(1)) {
             require(breedings[chick1][i] != chick2, "Chick1 and chick2 have already breeded");
         }
-        for (uint i = 0; i < breedings[chick2].length - 1; i++) {
+        for (uint256 i = 0; i < breedings[chick2].length; i = i.add(1)) {
             require(breedings[chick2][i] != chick1, "Chick1 and chick2 have already breeded");
         }
         breedings[chick1].push(chick2);
         breedings[chick2].push(chick1);
+
+        emit Breeding(chick1, chick2);
+        emit Breeding(chick2, chick1);
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165StorageUpgradeable, AccessControlUpgradeable) returns (bool) {
