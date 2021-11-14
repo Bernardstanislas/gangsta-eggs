@@ -5,10 +5,11 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
 import "../interfaces/IPricer.sol";
 import "../interfaces/IGenerationTracker.sol";
 
-contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
+contract Pricer is IPricer, Initializable, ERC165StorageUpgradeable, AccessControlUpgradeable  {
     using SafeMathUpgradeable for uint256;
     using ERC165CheckerUpgradeable for address;
 
@@ -23,7 +24,9 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
 
     function initialize(address _tracker) initializer public {
         __AccessControl_init();
+        __ERC165Storage_init();
 
+        _registerInterface(type(IPricer).interfaceId);
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(CFO_ROLE, msg.sender);
         _airdroppedEggsLimit = 200;
@@ -86,5 +89,9 @@ contract Pricer is IPricer, Initializable, AccessControlUpgradeable  {
         require(_tracker != address(0));
         require(_tracker.supportsInterface(type(IGenerationTracker).interfaceId), "GenerationTracker does not support IGenerationTracker interface");
         _generationTracker = IGenerationTracker(_tracker);
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165StorageUpgradeable, AccessControlUpgradeable) returns (bool) {
+        return super.supportsInterface(interfaceId);
     }
 }
