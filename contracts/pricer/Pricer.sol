@@ -85,6 +85,11 @@ contract Pricer is IPricer, Initializable, ERC165StorageUpgradeable, AccessContr
         return _breedingPrice;
     }
 
+    function airdropFinished() external view override returns (bool) {
+        uint256 eggCount = _generationTracker.firstGenerationEggsCount();
+        return eggCount >= _airdroppedEggsLimit;
+    }
+
     function _setGenerationTracker(address _tracker) internal {
         require(_tracker != address(0));
         require(_tracker.supportsInterface(type(IGenerationTracker).interfaceId), "GenerationTracker does not support IGenerationTracker interface");

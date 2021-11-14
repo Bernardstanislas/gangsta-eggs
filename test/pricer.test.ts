@@ -8,6 +8,18 @@ describe("Pricer", function () {
   let generationTracker: Contract;
   let minter: SignerWithAddress;
 
+  const airdropLimit = 10;
+  const startingPrice = ethers.utils.parseEther("0.01");
+  const endingPrice = ethers.utils.parseEther("0.08");
+  const totalCount = 50;
+
+  const reduceLimits = async () => {
+    await pricer.setAirdroppedEggsLimit(airdropLimit);
+    await pricer.setEggsStartingPrice(startingPrice);
+    await pricer.setEggsEndingPrice(endingPrice);
+    await pricer.setFirstGenerationSize(totalCount);
+  };
+
   beforeEach(async () => {
     const GenerationTracker = await ethers.getContractFactory(
       "GenerationTracker"
@@ -26,18 +38,6 @@ describe("Pricer", function () {
   });
 
   describe("mintingPrice()", () => {
-    const airdropLimit = 10;
-    const startingPrice = ethers.utils.parseEther("0.01");
-    const endingPrice = ethers.utils.parseEther("0.08");
-    const totalCount = 50;
-
-    const reduceLimits = async () => {
-      await pricer.setAirdroppedEggsLimit(airdropLimit);
-      await pricer.setEggsStartingPrice(startingPrice);
-      await pricer.setEggsEndingPrice(endingPrice);
-      await pricer.setFirstGenerationSize(totalCount);
-    };
-
     it("should first equal 0", async () => {
       expect(await pricer.mintingPrice()).to.eq(0);
     });
@@ -97,6 +97,28 @@ describe("Pricer", function () {
       expect(price2.sub(price1)).to.equal(
         ethers.utils.parseEther("0.000010603204524033")
       );
+    });
+  });
+
+  describe("airdropFinished()", () => {
+    it("returns false during airdrop", async () => {
+      expect(await pricer.airdropFinished()).to.equal(false);
+    });
+
+    it("returns true when airdrop is finished", async () => {
+      await reduceLimits();
+      await Promise.all(
+        Array(airdropLimit)
+          .fill(0)
+          .map((_, index) =>
+            generationTracker.connect(minter).registerNewlyMintedEgg(index)
+          )
+      );
+      expect(await pricer.airdropFinished()).to.equal(true);
+      await generationTracker
+        .connect(minter)
+        .registerNewlyMintedEgg(airdropLimit + 1);
+      expect(await pricer.airdropFinished()).to.equal(true);
     });
   });
 });
