@@ -1,4 +1,4 @@
-// import { expect } from "chai";
+import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers, upgrades } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -27,8 +27,11 @@ describe("MintingQuota", function () {
   });
 
   describe("safeRegisterMinting", () => {
-    it("lets the caller mint", async () => {
+    it("lets one minting during airdrop", async () => {
       await mintingQuota.safeRegisterMinting(signers[2].address);
+      await expect(
+        mintingQuota.safeRegisterMinting(signers[2].address)
+      ).to.be.revertedWith("Cannot mint anymore");
     });
   });
 });

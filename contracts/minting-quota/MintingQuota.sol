@@ -14,6 +14,7 @@ contract MintingQuota is IMintingQuota, Initializable, ERC165StorageUpgradeable,
     using ERC165CheckerUpgradeable for address;
 
     uint8 private constant MAX_MINTING_QUOTAS = 10;
+    uint8 private constant AIRDROP_MINTING_QUOTAS = 1;
 
     IPricer private _pricer;
     mapping (address => uint256) private _mintingCount;
@@ -32,7 +33,12 @@ contract MintingQuota is IMintingQuota, Initializable, ERC165StorageUpgradeable,
     }
 
     function _canMint(address _to) internal view returns (bool) {
-        return _mintingCount[_to] < MAX_MINTING_QUOTAS;
+        bool airdropFinished = _pricer.airdropFinished();
+        if (airdropFinished) {
+            return _mintingCount[_to] < MAX_MINTING_QUOTAS;
+        } else {
+            return _mintingCount[_to] < AIRDROP_MINTING_QUOTAS;
+        }
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165StorageUpgradeable) returns (bool) {
