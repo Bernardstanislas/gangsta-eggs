@@ -9,6 +9,8 @@ describe("MintingQuota", function () {
   let pricer: Contract;
   let generationTracker: Contract;
 
+  const airdropLimit = 3;
+
   beforeEach(async () => {
     signers = await ethers.getSigners();
     generationTracker = await upgrades.deployProxy(
@@ -29,6 +31,35 @@ describe("MintingQuota", function () {
   describe("safeRegisterMinting", () => {
     it("lets one minting during airdrop", async () => {
       await mintingQuota.safeRegisterMinting(signers[2].address);
+      await expect(
+        mintingQuota.safeRegisterMinting(signers[2].address)
+      ).to.be.revertedWith("Cannot mint anymore");
+    });
+
+    it("lets 10 mintings after airdrop", async () => {
+      await pricer.setAirdroppedEggsLimit(airdropLimit);
+      await mintingQuota.safeRegisterMinting(signers[2].address);
+      await expect(
+        mintingQuota.safeRegisterMinting(signers[2].address)
+      ).to.be.revertedWith("Cannot mint anymore");
+
+      await Promise.all(
+        Array(3)
+          .fill(0)
+          .map(async (_elem, index) => {
+            await generationTracker
+              .connect(signers[1])
+              .registerNewlyMintedEgg(index);
+          })
+      );
+
+      await Promise.all(
+        Array(9)
+          .fill(0)
+          .map(async (_elem, index) => {
+            await mintingQuota.safeRegisterMinting(signers[2].address);
+          })
+      );
       await expect(
         mintingQuota.safeRegisterMinting(signers[2].address)
       ).to.be.revertedWith("Cannot mint anymore");
