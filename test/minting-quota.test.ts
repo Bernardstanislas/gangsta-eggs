@@ -28,7 +28,7 @@ describe("MintingQuota", function () {
     await generationTracker.deployed();
   });
 
-  describe("safeRegisterMinting", () => {
+  describe("safeRegisterMinting()", () => {
     it("lets one minting during airdrop", async () => {
       await mintingQuota.safeRegisterMinting(signers[2].address);
       await expect(
@@ -63,6 +63,41 @@ describe("MintingQuota", function () {
       await expect(
         mintingQuota.safeRegisterMinting(signers[2].address)
       ).to.be.revertedWith("Cannot mint anymore");
+    });
+  });
+
+  describe("remainingMinting()", () => {
+    let ladAddress: string;
+
+    beforeEach(async () => {
+      ladAddress = signers[2].address;
+    });
+
+    it("is updated during airdrop", async () => {
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(1);
+      await mintingQuota.safeRegisterMinting(ladAddress);
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(0);
+    });
+
+    it("is updated after airdrop", async () => {
+      await pricer.setAirdroppedEggsLimit(airdropLimit);
+      await mintingQuota.safeRegisterMinting(ladAddress);
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(0);
+
+      await Promise.all(
+        Array(3)
+          .fill(0)
+          .map(async (_elem, index) => {
+            await generationTracker
+              .connect(signers[1])
+              .registerNewlyMintedEgg(index);
+          })
+      );
+
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(9);
+
+      await mintingQuota.safeRegisterMinting(ladAddress);
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(8);
     });
   });
 });

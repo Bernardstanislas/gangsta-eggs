@@ -32,13 +32,17 @@ contract MintingQuota is IMintingQuota, Initializable, ERC165StorageUpgradeable,
         _mintingCount[_to] = _mintingCount[_to].add(1);
     }
 
-    function _canMint(address _to) internal view returns (bool) {
+    function remainingMinting(address _to) public view returns (uint256) {
         bool airdropFinished = _pricer.airdropFinished();
         if (airdropFinished) {
-            return _mintingCount[_to] < MAX_MINTING_QUOTAS;
+            return uint256(MAX_MINTING_QUOTAS).sub(_mintingCount[_to]);
         } else {
-            return _mintingCount[_to] < AIRDROP_MINTING_QUOTAS;
+            return uint256(AIRDROP_MINTING_QUOTAS).sub(_mintingCount[_to]);
         }
+    }
+
+    function _canMint(address _to) internal view returns (bool) {
+        return remainingMinting(_to) > 0;
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165StorageUpgradeable) returns (bool) {
