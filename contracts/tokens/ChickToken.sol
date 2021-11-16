@@ -11,79 +11,93 @@ import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpg
 import "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
 import "../interfaces/IChickToken.sol";
 
-contract ChickToken is Initializable, ERC165StorageUpgradeable, ERC721Upgradeable, ERC721URIStorageUpgradeable, IChickToken, PausableUpgradeable, AccessControlUpgradeable {
-    using CountersUpgradeable for CountersUpgradeable.Counter;
+contract ChickToken is
+  Initializable,
+  ERC165StorageUpgradeable,
+  ERC721Upgradeable,
+  ERC721URIStorageUpgradeable,
+  IChickToken,
+  PausableUpgradeable,
+  AccessControlUpgradeable
+{
+  using CountersUpgradeable for CountersUpgradeable.Counter;
 
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    CountersUpgradeable.Counter private _tokenIdCounter;
+  bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+  bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+  CountersUpgradeable.Counter private _tokenIdCounter;
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
+  function initialize() public initializer {
+    __ERC721_init("GangstaChick", "GCHK");
+    __ERC721URIStorage_init();
+    __Pausable_init();
+    __AccessControl_init();
 
-    function initialize() initializer public {
-        __ERC721_init("GangstaChick", "GCHK");
-        __ERC721URIStorage_init();
-        __Pausable_init();
-        __AccessControl_init();
+    _registerInterface(type(IChickToken).interfaceId);
+    _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    _setupRole(PAUSER_ROLE, msg.sender);
+    _setupRole(MINTER_ROLE, msg.sender);
+  }
 
-        _registerInterface(type(IChickToken).interfaceId);
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(PAUSER_ROLE, msg.sender);
-        _setupRole(MINTER_ROLE, msg.sender);
-    }
+  function _baseURI() internal pure override returns (string memory) {
+    return "https://api.gangsta-eggs.com/chicks/";
+  }
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "https://api.gangsta-eggs.com/chicks/";
-    }
+  function pause() public onlyRole(PAUSER_ROLE) {
+    _pause();
+  }
 
-    function pause() public onlyRole(PAUSER_ROLE) {
-        _pause();
-    }
+  function unpause() public onlyRole(PAUSER_ROLE) {
+    _unpause();
+  }
 
-    function unpause() public onlyRole(PAUSER_ROLE) {
-        _unpause();
-    }
+  function safeMint(address to, string memory uri)
+    external
+    override
+    onlyRole(MINTER_ROLE)
+  {
+    uint256 tokenId = _tokenIdCounter.current();
+    _tokenIdCounter.increment();
+    _safeMint(to, tokenId);
+    _setTokenURI(tokenId, uri);
+  }
 
-    function safeMint(address to, string memory uri) external override onlyRole(MINTER_ROLE) {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
-    }
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokenId
+  ) internal override whenNotPaused {
+    super._beforeTokenTransfer(from, to, tokenId);
+  }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        whenNotPaused
-        override
-    {
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
+  // The following functions are overrides required by Solidity.
 
-    // The following functions are overrides required by Solidity.
+  function _burn(uint256 tokenId)
+    internal
+    override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+  {
+    super._burn(tokenId);
+  }
 
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
-    {
-        super._burn(tokenId);
-    }
+  function tokenURI(uint256 tokenId)
+    public
+    view
+    override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+    returns (string memory)
+  {
+    return super.tokenURI(tokenId);
+  }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
-        returns (string memory)
-    {
-        return super.tokenURI(tokenId);
-    }
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC165StorageUpgradeable, ERC721Upgradeable, AccessControlUpgradeable, IERC165Upgradeable)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
-    }
+  function supportsInterface(bytes4 interfaceId)
+    public
+    view
+    override(
+      ERC165StorageUpgradeable,
+      ERC721Upgradeable,
+      AccessControlUpgradeable,
+      IERC165Upgradeable
+    )
+    returns (bool)
+  {
+    return super.supportsInterface(interfaceId);
+  }
 }

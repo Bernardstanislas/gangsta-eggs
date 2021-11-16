@@ -2,5 +2,5 @@
 pragma solidity ^0.8.6;
 
 interface IMintingQuota {
-    function safeRegisterMinting(address _to) external;
+  function safeRegisterMinting(address _to) external;
 }
