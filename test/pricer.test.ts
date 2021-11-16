@@ -13,13 +13,6 @@ describe("Pricer", function () {
   const endingPrice = ethers.utils.parseEther("0.08");
   const totalCount = 50;
 
-  const reduceLimits = async () => {
-    await pricer.setAirdroppedEggsLimit(airdropLimit);
-    await pricer.setEggsStartingPrice(startingPrice);
-    await pricer.setEggsEndingPrice(endingPrice);
-    await pricer.setFirstGenerationSize(totalCount);
-  };
-
   beforeEach(async () => {
     const GenerationTracker = await ethers.getContractFactory(
       "GenerationTracker"
@@ -33,7 +26,14 @@ describe("Pricer", function () {
     ]);
     await generationTracker.deployed();
     const Pricer = await ethers.getContractFactory("Pricer");
-    pricer = await upgrades.deployProxy(Pricer, [generationTracker.address]);
+    pricer = await upgrades.deployProxy(Pricer, [
+      generationTracker.address,
+      airdropLimit,
+      startingPrice,
+      endingPrice,
+      totalCount,
+      ethers.utils.parseEther("0.02"),
+    ]);
     await pricer.deployed();
   });
 
@@ -43,7 +43,6 @@ describe("Pricer", function () {
     });
 
     it("should then be greater than 0 when the airdrop is done", async () => {
-      await reduceLimits();
       await Promise.all(
         Array(10)
           .fill(0)
@@ -55,7 +54,6 @@ describe("Pricer", function () {
     });
 
     it("should be linear", async () => {
-      await reduceLimits();
       await Promise.all(
         Array(airdropLimit + Math.floor((1 / 4) * (totalCount - airdropLimit)))
           .fill(0)
@@ -69,7 +67,6 @@ describe("Pricer", function () {
     });
 
     it("should end on target price", async () => {
-      await reduceLimits();
       await Promise.all(
         Array(totalCount)
           .fill(0)
@@ -81,6 +78,13 @@ describe("Pricer", function () {
     });
 
     it("should be precise enough", async () => {
+      await pricer.setParameters(
+        200,
+        ethers.utils.parseEther("0.015"),
+        ethers.utils.parseEther("0.06"),
+        4444,
+        ethers.utils.parseEther("0.02")
+      );
       await Promise.all(
         Array(200)
           .fill(0)
@@ -106,7 +110,6 @@ describe("Pricer", function () {
     });
 
     it("returns true when airdrop is finished", async () => {
-      await reduceLimits();
       await Promise.all(
         Array(airdropLimit)
           .fill(0)

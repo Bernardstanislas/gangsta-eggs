@@ -10,6 +10,9 @@ describe("MintingQuota", function () {
   let generationTracker: Contract;
 
   const airdropLimit = 3;
+  const startingPrice = ethers.utils.parseEther("0.01");
+  const endingPrice = ethers.utils.parseEther("0.08");
+  const totalCount = 50;
 
   beforeEach(async () => {
     signers = await ethers.getSigners();
@@ -19,7 +22,14 @@ describe("MintingQuota", function () {
     );
     pricer = await upgrades.deployProxy(
       await ethers.getContractFactory("Pricer"),
-      [generationTracker.address]
+      [
+        generationTracker.address,
+        airdropLimit,
+        startingPrice,
+        endingPrice,
+        totalCount,
+        ethers.utils.parseEther("0.02"),
+      ]
     );
     mintingQuota = await upgrades.deployProxy(
       await ethers.getContractFactory("MintingQuota"),
@@ -37,7 +47,6 @@ describe("MintingQuota", function () {
     });
 
     it("lets 10 mintings after airdrop", async () => {
-      await pricer.setAirdroppedEggsLimit(airdropLimit);
       await mintingQuota.safeRegisterMinting(signers[2].address);
       await expect(
         mintingQuota.safeRegisterMinting(signers[2].address)
@@ -80,7 +89,6 @@ describe("MintingQuota", function () {
     });
 
     it("is updated after airdrop", async () => {
-      await pricer.setAirdroppedEggsLimit(airdropLimit);
       await mintingQuota.safeRegisterMinting(ladAddress);
       expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(0);
 
