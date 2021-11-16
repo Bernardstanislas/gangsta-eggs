@@ -22,7 +22,7 @@ export const FAQ = () => {
             value over time.
           </p>
         </Accordion>
-        <Accordion title="What can I do with my Gangstaegg?">
+        <Accordion title="How does it work?">
           <p>
             Each egg is unique and awesome in its own way with a specific rarity
             level based on its attributes. Will you be able to mint the{" "}
@@ -49,11 +49,29 @@ export const FAQ = () => {
           </p>
         </Accordion>
         <Accordion title="Where can I buy my eggs?">
-          <p>You’ll be able to mint Eggs on the website on 15/12/2021.</p>
+          <p>You’ll be able to mint Eggs on the website on 12/01/2021.</p>
           <p>Secondary sales will be available on OpenSea.</p>
         </Accordion>
+        <Accordion title="Where are the smart contracts deployed?">
+          <p>
+            We chose Polygon to release Gangsta Eggs due to exceedingly high gas
+            fees on the Ethereum mainchain.
+          </p>
+          <p>
+            Polygon is a Proof-of-stake sidechain, which makes it a more
+            eco-friendly blockchain than the proof-of-work Ethereum mainchain.
+          </p>
+          <p>
+            But don't worry, you can use your existing Ethereum wallet to pay
+            for minting and collect your NFTs!
+          </p>
+        </Accordion>
         <Accordion title="How much does it cost?">
-          <p>Egg minting: fixed price of 0.04 ETH, 0.02ETH during presale</p>
+          <p>
+            Egg minting: first 200 eggs will be mintable{" "}
+            <strong>for free</strong>, then with a linear price increasing from{" "}
+            <strong>0.015ETH</strong> to <strong>0.05ETH</strong>
+          </p>
           <p>Chicks are free (burn egg + gas fees only)</p>
           <p>Breeding cost: 0.02 ETH</p>
           <p>
@@ -83,16 +101,27 @@ export const FAQ = () => {
           </p>
         </Accordion>
         <Accordion title="Can I mint as many eggs as I want?">
+          <p>No. To avoid supply concentration, you can mint up to 10 eggs.</p>
           <p>
-            No. To avoid supply concentration, you can mint up to 10 eggs
-            maximum.
+            Moreover, you will be able to mint <strong>1 egg max</strong> for
+            free among the first 200.
           </p>
         </Accordion>
         <Accordion title="Will there be a presale?">
           <p>
-            Yes. To access the presale, you must register to the whitelist
-            (limited registrations). For more information, join our discord
-            community.
+            No. But if you mint one of the first 200 Eggs, you'll get it{" "}
+            <strong>for free</strong> (1 per person max)! Invite your friends so
+            they don't miss out!
+          </p>
+          <p>
+            <strong>Extra free Eggs</strong> will be given out through server
+            and social media related <strong>GIVEAWAYS</strong>
+          </p>
+        </Accordion>
+        <Accordion title="Will I own the intellectual rights to my Eggs/Chicks after purchase?">
+          <p>
+            Yes, you will keep a lifetime ownership rights on your Eggs and
+            Chicks.
           </p>
         </Accordion>
       </div>
