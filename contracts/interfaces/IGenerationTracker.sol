@@ -8,6 +8,9 @@ interface IGenerationTracker {
     SECOND
   }
 
+  event MintedEggRegistered(uint256 id);
+  event LayedEggRegistered(uint256 id);
+
   function registerNewlyMintedEgg(uint256 _eggId) external;
 
   function registerNewlyLayedEgg(uint256 _eggId) external;

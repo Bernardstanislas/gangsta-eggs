@@ -23,6 +23,14 @@ contract GenerationTracker is
   bytes32 public constant MINTER_ROLE = keccak256("MINTER");
   bytes32 public constant LAYER_ROLE = keccak256("LAYER");
 
+  modifier notRegistered(uint256 _eggId) {
+    require(
+      eggsGeneration[_eggId] == Generation.UNKNOWN,
+      "Egg already registered"
+    );
+    _;
+  }
+
   function initialize(address _minter, address _layer) public initializer {
     require(_minter != address(0), "Minter address cannot be 0");
     require(_layer != address(0), "Layer address cannot be 0");
@@ -39,25 +47,21 @@ contract GenerationTracker is
     external
     override
     onlyRole(MINTER_ROLE)
+    notRegistered(_eggId)
   {
-    require(
-      eggsGeneration[_eggId] == Generation.UNKNOWN,
-      "Egg already registered"
-    );
     eggsGeneration[_eggId] = Generation.FIRST;
     _firstGenerationEggsCounter.increment();
+    emit MintedEggRegistered(_eggId);
   }
 
   function registerNewlyLayedEgg(uint256 _eggId)
     external
     override
     onlyRole(LAYER_ROLE)
+    notRegistered(_eggId)
   {
-    require(
-      eggsGeneration[_eggId] == Generation.UNKNOWN,
-      "Egg already registered"
-    );
     eggsGeneration[_eggId] = Generation.SECOND;
+    emit LayedEggRegistered(_eggId);
   }
 
   function eggGeneration(uint256 _eggId)
