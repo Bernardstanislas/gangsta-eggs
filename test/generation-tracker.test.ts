@@ -23,7 +23,7 @@ describe("GenerationTracker", function () {
     await generationTracker.deployed();
   });
 
-  describe("registerNewlyMintedEgg", () => {
+  describe("registerNewlyMintedEgg()", () => {
     it("needs the MINTER role", async () => {
       await generationTracker.connect(minter).registerNewlyMintedEgg(123);
 
@@ -48,7 +48,7 @@ describe("GenerationTracker", function () {
     });
   });
 
-  describe("registerNewlyLayedEgg", () => {
+  describe("registerNewlyLayedEgg()", () => {
     it("needs the LAYER role", async () => {
       await generationTracker.connect(layer).registerNewlyLayedEgg(123);
 
@@ -66,7 +66,7 @@ describe("GenerationTracker", function () {
     });
   });
 
-  describe("eggGeneration", () => {
+  describe("eggGeneration()", () => {
     it("reverts if asked egg is not registered", async () => {
       await expect(generationTracker.eggGeneration(123)).to.be.revertedWith(
         "Egg not registered"
@@ -74,7 +74,7 @@ describe("GenerationTracker", function () {
     });
   });
 
-  describe("firstGenerationEggsCount", () => {
+  describe("firstGenerationEggsCount()", () => {
     it("starts at 0", async () => {
       expect(await generationTracker.firstGenerationEggsCount()).to.equal(0);
     });
