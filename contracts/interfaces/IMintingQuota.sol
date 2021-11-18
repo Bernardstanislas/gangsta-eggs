@@ -3,4 +3,6 @@ pragma solidity ^0.8.6;
 
 interface IMintingQuota {
   function safeRegisterMinting(address _to) external;
+
+  function remainingMinting(address _to) external view returns (uint256);
 }

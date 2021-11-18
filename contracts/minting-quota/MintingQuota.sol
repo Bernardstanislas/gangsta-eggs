@@ -37,7 +37,12 @@ contract MintingQuota is
     _mintingCount[_to] = _mintingCount[_to].add(1);
   }
 
-  function remainingMinting(address _to) public view returns (uint256) {
+  function remainingMinting(address _to)
+    public
+    view
+    override
+    returns (uint256)
+  {
     bool airdropFinished = _pricer.airdropFinished();
     if (airdropFinished) {
       return uint256(MAX_MINTING_QUOTAS).sub(_mintingCount[_to]);

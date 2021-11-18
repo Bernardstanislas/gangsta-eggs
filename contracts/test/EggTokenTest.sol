@@ -57,11 +57,13 @@ contract EggTokenTest is
     external
     override
     onlyRole(MINTER_ROLE)
+    returns (uint256)
   {
     uint256 tokenId = _tokenIdCounter.current();
     _tokenIdCounter.increment();
     _safeMint(to, tokenId);
     _setTokenURI(tokenId, uri);
+    return tokenId;
   }
 
   function safeBurn(uint256 tokenId) external override onlyRole(MINTER_ROLE) {

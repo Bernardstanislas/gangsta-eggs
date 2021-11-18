@@ -34,4 +34,12 @@ describe("EggToken", function () {
       );
     });
   });
+
+  describe("safeMint()", () => {
+    it("returns the egg id", async () => {
+      expect(
+        await eggToken.callStatic.safeMint(someFolk.address, "croute")
+      ).to.equal(0);
+    });
+  });
 });
