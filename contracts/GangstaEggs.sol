@@ -71,6 +71,7 @@ contract GangstaEggs is Initializable, OwnableUpgradeable {
 
   function airdropEgg(address to_, string memory ipfsHash_)
     public
+    onlyOwner
     mintingEnabled
   {
     _mintEgg(to_, ipfsHash_);
