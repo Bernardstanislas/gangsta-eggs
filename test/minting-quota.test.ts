@@ -18,7 +18,7 @@ describe("MintingQuota", function () {
     signers = await ethers.getSigners();
     generationTracker = await upgrades.deployProxy(
       await ethers.getContractFactory("GenerationTracker"),
-      [signers[1].address, signers[2].address]
+      []
     );
     pricer = await upgrades.deployProxy(
       await ethers.getContractFactory("Pricer"),
@@ -56,9 +56,7 @@ describe("MintingQuota", function () {
         Array(3)
           .fill(0)
           .map(async (_elem, index) => {
-            await generationTracker
-              .connect(signers[1])
-              .registerNewlyMintedEgg(index);
+            await generationTracker.registerNewlyMintedEgg(index);
           })
       );
 
@@ -96,9 +94,7 @@ describe("MintingQuota", function () {
         Array(3)
           .fill(0)
           .map(async (_elem, index) => {
-            await generationTracker
-              .connect(signers[1])
-              .registerNewlyMintedEgg(index);
+            await generationTracker.registerNewlyMintedEgg(index);
           })
       );
 

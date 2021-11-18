@@ -1,4 +1,3 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers, upgrades } from "hardhat";
@@ -6,7 +5,6 @@ import { ethers, upgrades } from "hardhat";
 describe("Pricer", function () {
   let pricer: Contract;
   let generationTracker: Contract;
-  let minter: SignerWithAddress;
 
   const airdropLimit = 10;
   const startingPrice = ethers.utils.parseEther("0.01");
@@ -17,13 +15,7 @@ describe("Pricer", function () {
     const GenerationTracker = await ethers.getContractFactory(
       "GenerationTracker"
     );
-    const signers = await ethers.getSigners();
-    minter = signers[1];
-    const layer = signers[2];
-    generationTracker = await upgrades.deployProxy(GenerationTracker, [
-      minter.address,
-      layer.address,
-    ]);
+    generationTracker = await upgrades.deployProxy(GenerationTracker, []);
     await generationTracker.deployed();
     const Pricer = await ethers.getContractFactory("Pricer");
     pricer = await upgrades.deployProxy(Pricer, [
@@ -46,9 +38,7 @@ describe("Pricer", function () {
       await Promise.all(
         Array(10)
           .fill(0)
-          .map((_, index) =>
-            generationTracker.connect(minter).registerNewlyMintedEgg(index)
-          )
+          .map((_, index) => generationTracker.registerNewlyMintedEgg(index))
       );
       expect(await pricer.mintingPrice()).to.eq(startingPrice);
     });
@@ -57,9 +47,7 @@ describe("Pricer", function () {
       await Promise.all(
         Array(airdropLimit + Math.floor((1 / 4) * (totalCount - airdropLimit)))
           .fill(0)
-          .map((_, index) =>
-            generationTracker.connect(minter).registerNewlyMintedEgg(index)
-          )
+          .map((_, index) => generationTracker.registerNewlyMintedEgg(index))
       );
       expect(await pricer.mintingPrice()).to.eq(
         startingPrice.add(endingPrice.sub(startingPrice).div(4))
@@ -70,9 +58,7 @@ describe("Pricer", function () {
       await Promise.all(
         Array(totalCount)
           .fill(0)
-          .map((_, index) =>
-            generationTracker.connect(minter).registerNewlyMintedEgg(index)
-          )
+          .map((_, index) => generationTracker.registerNewlyMintedEgg(index))
       );
       expect(await pricer.mintingPrice()).to.eq(endingPrice);
     });
@@ -88,13 +74,11 @@ describe("Pricer", function () {
       await Promise.all(
         Array(200)
           .fill(0)
-          .map((_, index) =>
-            generationTracker.connect(minter).registerNewlyMintedEgg(index)
-          )
+          .map((_, index) => generationTracker.registerNewlyMintedEgg(index))
       );
       const price1 = await pricer.mintingPrice();
 
-      await generationTracker.connect(minter).registerNewlyMintedEgg(200);
+      await generationTracker.registerNewlyMintedEgg(200);
 
       const price2 = await pricer.mintingPrice();
 
@@ -113,14 +97,10 @@ describe("Pricer", function () {
       await Promise.all(
         Array(airdropLimit)
           .fill(0)
-          .map((_, index) =>
-            generationTracker.connect(minter).registerNewlyMintedEgg(index)
-          )
+          .map((_, index) => generationTracker.registerNewlyMintedEgg(index))
       );
       expect(await pricer.airdropFinished()).to.equal(true);
-      await generationTracker
-        .connect(minter)
-        .registerNewlyMintedEgg(airdropLimit + 1);
+      await generationTracker.registerNewlyMintedEgg(airdropLimit + 1);
       expect(await pricer.airdropFinished()).to.equal(true);
     });
   });
