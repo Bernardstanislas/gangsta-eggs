@@ -7,4 +7,6 @@ interface IPricer {
   function breedingPrice() external view returns (uint256);
 
   function airdropFinished() external view returns (bool);
+
+  function mintingLimit() external view returns (uint256);
 }

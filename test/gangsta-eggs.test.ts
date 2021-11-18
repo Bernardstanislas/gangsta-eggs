@@ -45,7 +45,7 @@ describe("GangstaEggs", () => {
     );
     const mintingQuota = await upgrades.deployProxy(
       await ethers.getContractFactory("MintingQuota"),
-      [pricer.address]
+      [pricer.address, generationTracker.address]
     );
     gangstaEggs = await upgrades.deployProxy(
       await ethers.getContractFactory("GangstaEggs"),

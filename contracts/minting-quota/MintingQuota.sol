@@ -8,6 +8,7 @@ import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpg
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
 import "../interfaces/IMintingQuota.sol";
 import "../interfaces/IPricer.sol";
+import "../interfaces/IGenerationTracker.sol";
 
 contract MintingQuota is
   IMintingQuota,
@@ -22,18 +23,24 @@ contract MintingQuota is
   uint8 private constant AIRDROP_MINTING_QUOTAS = 1;
 
   IPricer private _pricer;
+  IGenerationTracker private _generationTracker;
   mapping(address => uint256) private _mintingCount;
 
-  function initialize(address _pricerAddress) public initializer {
+  function initialize(address _pricerAddress, address _generationTrackerAddress)
+    public
+    initializer
+  {
     __Ownable_init();
     __ERC165Storage_init();
 
     _registerInterface(type(IMintingQuota).interfaceId);
     _setPricer(_pricerAddress);
+    _setGenerationTracker(_generationTrackerAddress);
   }
 
   function safeRegisterMinting(address _to) external override onlyOwner {
     require(_canMint(_to), "Cannot mint anymore");
+    require(!mintingLimitReached(), "Minting limit reached");
     _mintingCount[_to] = _mintingCount[_to].add(1);
   }
 
@@ -49,6 +56,11 @@ contract MintingQuota is
     } else {
       return uint256(AIRDROP_MINTING_QUOTAS).sub(_mintingCount[_to]);
     }
+  }
+
+  function mintingLimitReached() public view override returns (bool) {
+    return
+      _generationTracker.firstGenerationEggsCount() >= _pricer.mintingLimit();
   }
 
   function _canMint(address _to) internal view returns (bool) {
@@ -72,5 +84,16 @@ contract MintingQuota is
       "Pricer does not support IPricer interface"
     );
     _pricer = IPricer(_pricerAddress);
+  }
+
+  function _setGenerationTracker(address _generationTrackerAddress) internal {
+    require(_generationTrackerAddress != address(0));
+    require(
+      _generationTrackerAddress.supportsInterface(
+        type(IGenerationTracker).interfaceId
+      ),
+      "GenerationTracker does not support IGenerationTracker interface"
+    );
+    _generationTracker = IGenerationTracker(_generationTrackerAddress);
   }
 }

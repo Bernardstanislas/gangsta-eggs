@@ -105,6 +105,10 @@ contract Pricer is
     return eggCount >= _airdroppedEggsLimit;
   }
 
+  function mintingLimit() external view override returns (uint256) {
+    return _firstGenerationSize;
+  }
+
   function _setAirdroppedEggsLimit(uint256 _limit, uint256 firstGenerationSize_)
     private
     notNull(_limit)

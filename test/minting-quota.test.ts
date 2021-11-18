@@ -33,9 +33,8 @@ describe("MintingQuota", function () {
     );
     mintingQuota = await upgrades.deployProxy(
       await ethers.getContractFactory("MintingQuota"),
-      [pricer.address]
+      [pricer.address, generationTracker.address]
     );
-    await generationTracker.deployed();
   });
 
   describe("safeRegisterMinting()", () => {
@@ -70,6 +69,19 @@ describe("MintingQuota", function () {
       await expect(
         mintingQuota.safeRegisterMinting(signers[2].address)
       ).to.be.revertedWith("Cannot mint anymore");
+    });
+
+    it("does not let minting when the limit is reached", async () => {
+      await Promise.all(
+        Array(50)
+          .fill(0)
+          .map(async (_elem, index) => {
+            await generationTracker.registerNewlyMintedEgg(index + 1);
+          })
+      );
+      await expect(
+        mintingQuota.safeRegisterMinting(signers[2].address)
+      ).to.be.revertedWith("Minting limit reached");
     });
   });
 
