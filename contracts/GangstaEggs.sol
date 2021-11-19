@@ -77,13 +77,13 @@ contract GangstaEggs is Initializable, OwnableUpgradeable {
     _mintEgg(to_, ipfsHash_);
   }
 
-  function mintEgg(address to_, string memory ipfsHash_)
+  function mintEgg(string memory ipfsHash_)
     public
     payable
     mintingEnabled
     mintingPricePaid
   {
-    _mintEgg(to_, ipfsHash_);
+    _mintEgg(msg.sender, ipfsHash_);
   }
 
   function _mintEgg(address to_, string memory ipfsHash_) private {

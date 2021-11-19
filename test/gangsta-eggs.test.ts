@@ -70,14 +70,14 @@ describe("GangstaEggs", () => {
   describe("mint()", () => {
     it("does not initially let people mint", async () => {
       await expect(
-        gangstaEggs.mintEgg(someFolk.address, "yolo")
+        gangstaEggs.connect(someFolk).mintEgg("ipfs hash")
       ).to.be.revertedWith("Minting is paused");
     });
 
     it("lets people mint for free during airdrop", async () => {
       await featureFlag.setMintingPaused(false);
 
-      await expect(gangstaEggs.mintEgg(someFolk.address, "ipfs hash"))
+      await expect(gangstaEggs.connect(someFolk).mintEgg("ipfs hash"))
         .to.emit(eggToken, "Transfer")
         .withArgs(ethers.constants.AddressZero, someFolk.address, 0);
     });
@@ -88,17 +88,17 @@ describe("GangstaEggs", () => {
         Array(9)
           .fill(0)
           .map((_, index) =>
-            gangstaEggs.mintEgg(signers[index + 1].address, "ipfs hash")
+            gangstaEggs.connect(signers[index + 1]).mintEgg("ipfs hash")
           )
       );
       await expect(
-        gangstaEggs.mintEgg(someFolk.address, "ipfs hash")
+        gangstaEggs.connect(someFolk).mintEgg("ipfs hash")
       ).to.revertedWith("Minting price not paid");
     });
 
     it("lets the user mint again when they pay the minting price", async () => {
       await expect(
-        gangstaEggs.mintEgg(someFolk.address, "ipfs hash", {
+        gangstaEggs.connect(someFolk).mintEgg("ipfs hash", {
           value: ethers.utils.parseEther("0.01"),
         })
       ).not.to.be.reverted;
@@ -106,7 +106,7 @@ describe("GangstaEggs", () => {
 
     it("needs the user to pay for the price increase", async () => {
       await expect(
-        gangstaEggs.mintEgg(someFolk.address, "ipfs hash", {
+        gangstaEggs.connect(someFolk).mintEgg("ipfs hash", {
           value: ethers.utils.parseEther("0.01"),
         })
       ).to.revertedWith("Minting price not paid");
