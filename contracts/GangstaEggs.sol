@@ -4,6 +4,7 @@ pragma solidity ^0.8.6;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "./interfaces/IBreedingTracker.sol";
 import "./interfaces/IEggToken.sol";
 import "./interfaces/IChickToken.sol";
@@ -12,7 +13,11 @@ import "./interfaces/IGenerationTracker.sol";
 import "./interfaces/IMintingQuota.sol";
 import "./interfaces/IPricer.sol";
 
-contract GangstaEggs is Initializable, OwnableUpgradeable {
+contract GangstaEggs is
+  Initializable,
+  ReentrancyGuardUpgradeable,
+  OwnableUpgradeable
+{
   using ERC165CheckerUpgradeable for address;
 
   IBreedingTracker private _breedingTracker;
@@ -25,6 +30,19 @@ contract GangstaEggs is Initializable, OwnableUpgradeable {
 
   modifier mintingEnabled() {
     require(!_featureFlag.mintingPaused(), "Minting is paused");
+    _;
+  }
+
+  modifier evolutionEnabled() {
+    require(!_featureFlag.evolutionPaused(), "Evolution is paused");
+    _;
+  }
+
+  modifier onlyEggOwner(uint256 _eggId) {
+    require(
+      _eggToken.ownerOf(_eggId) == msg.sender,
+      "Only egg owner can evolve egg"
+    );
     _;
   }
 
@@ -51,6 +69,7 @@ contract GangstaEggs is Initializable, OwnableUpgradeable {
     address pricer_
   ) public initializer {
     __Ownable_init();
+    __ReentrancyGuard_init();
 
     _isInterface(breedingTracker_, type(IBreedingTracker).interfaceId);
     _isInterface(eggToken_, type(IEggToken).interfaceId);
@@ -73,6 +92,7 @@ contract GangstaEggs is Initializable, OwnableUpgradeable {
     public
     onlyOwner
     mintingEnabled
+    nonReentrant
   {
     _mintEgg(to_, ipfsHash_);
   }
@@ -82,8 +102,19 @@ contract GangstaEggs is Initializable, OwnableUpgradeable {
     payable
     mintingEnabled
     mintingPricePaid
+    nonReentrant
   {
     _mintEgg(msg.sender, ipfsHash_);
+  }
+
+  function evolveEgg(uint256 _eggId, string memory _ipfsHash)
+    public
+    evolutionEnabled
+    onlyEggOwner(_eggId)
+    nonReentrant
+  {
+    _eggToken.safeBurn(_eggId);
+    _chickToken.safeMint(msg.sender, _ipfsHash);
   }
 
   function _mintEgg(address to_, string memory ipfsHash_) private {
