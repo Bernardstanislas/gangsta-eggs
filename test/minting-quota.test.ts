@@ -12,7 +12,7 @@ describe("MintingQuota", function () {
   const airdropLimit = 3;
   const startingPrice = ethers.utils.parseEther("0.01");
   const endingPrice = ethers.utils.parseEther("0.08");
-  const totalCount = 50;
+  const totalCount = 30;
 
   beforeEach(async () => {
     signers = await ethers.getSigners();
@@ -45,7 +45,7 @@ describe("MintingQuota", function () {
       ).to.be.revertedWith("Cannot mint anymore");
     });
 
-    it("lets 10 mintings after airdrop", async () => {
+    it("lets 20 mintings after airdrop", async () => {
       await mintingQuota.safeRegisterMinting(signers[2].address);
       await expect(
         mintingQuota.safeRegisterMinting(signers[2].address)
@@ -60,7 +60,7 @@ describe("MintingQuota", function () {
       );
 
       await Promise.all(
-        Array(9)
+        Array(19)
           .fill(0)
           .map(async (_elem, index) => {
             await mintingQuota.safeRegisterMinting(signers[2].address);
@@ -73,7 +73,7 @@ describe("MintingQuota", function () {
 
     it("does not let minting when the limit is reached", async () => {
       await Promise.all(
-        Array(50)
+        Array(30)
           .fill(0)
           .map(async (_elem, index) => {
             await generationTracker.registerNewlyMintedEgg(index + 1);
@@ -110,10 +110,21 @@ describe("MintingQuota", function () {
           })
       );
 
-      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(9);
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(19);
 
       await mintingQuota.safeRegisterMinting(ladAddress);
-      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(8);
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(18);
+    });
+
+    it("takes into account the global minting limit", async () => {
+      await Promise.all(
+        Array(25)
+          .fill(0)
+          .map(async (_elem, index) => {
+            await generationTracker.registerNewlyMintedEgg(index);
+          })
+      );
+      expect(await mintingQuota.remainingMinting(ladAddress)).to.equal(5);
     });
   });
 });

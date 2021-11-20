@@ -38,6 +38,11 @@ contract GangstaEggs is
     _;
   }
 
+  modifier breedingEnabled() {
+    require(!_featureFlag.breedingPaused(), "Breeding is paused");
+    _;
+  }
+
   modifier onlyEggOwner(uint256 _eggId) {
     require(
       _eggToken.ownerOf(_eggId) == msg.sender,
@@ -48,6 +53,11 @@ contract GangstaEggs is
 
   modifier mintingPricePaid() {
     require(msg.value >= _pricer.mintingPrice(), "Minting price not paid");
+    _;
+  }
+
+  modifier breedingPricePaid() {
+    require(msg.value >= _pricer.breedingPrice(), "Breeding price not paid");
     _;
   }
 
@@ -115,6 +125,16 @@ contract GangstaEggs is
   {
     _eggToken.safeBurn(_eggId);
     _chickToken.safeMint(msg.sender, _ipfsHash);
+  }
+
+  function breedChicks(
+    uint256 _chickId1,
+    uint256 _chickId2,
+    string memory _ipfsHash
+  ) public payable breedingEnabled breedingPricePaid nonReentrant {
+    _breedingTracker.safeRegisterBreeding(_chickId1, _chickId2);
+    uint256 eggId = _eggToken.safeMint(msg.sender, _ipfsHash);
+    _generationTracker.registerNewlyLayedEgg(eggId);
   }
 
   function _mintEgg(address to_, string memory ipfsHash_) private {

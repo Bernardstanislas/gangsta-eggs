@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import "../interfaces/IMintingQuota.sol";
 import "../interfaces/IPricer.sol";
 import "../interfaces/IGenerationTracker.sol";
@@ -17,9 +18,10 @@ contract MintingQuota is
   OwnableUpgradeable
 {
   using SafeMathUpgradeable for uint256;
+  using MathUpgradeable for uint256;
   using ERC165CheckerUpgradeable for address;
 
-  uint8 private constant MAX_MINTING_QUOTAS = 10;
+  uint8 private constant MAX_MINTING_QUOTAS = 20;
   uint8 private constant AIRDROP_MINTING_QUOTAS = 1;
 
   IPricer private _pricer;
@@ -39,8 +41,8 @@ contract MintingQuota is
   }
 
   function safeRegisterMinting(address _to) external override onlyOwner {
-    require(_canMint(_to), "Cannot mint anymore");
     require(!mintingLimitReached(), "Minting limit reached");
+    require(_canMint(_to), "Cannot mint anymore");
     _mintingCount[_to] = _mintingCount[_to].add(1);
   }
 
@@ -52,7 +54,12 @@ contract MintingQuota is
   {
     bool airdropFinished = _pricer.airdropFinished();
     if (airdropFinished) {
-      return uint256(MAX_MINTING_QUOTAS).sub(_mintingCount[_to]);
+      return
+        uint256(MAX_MINTING_QUOTAS).sub(_mintingCount[_to]).min(
+          _pricer.mintingLimit().sub(
+            _generationTracker.firstGenerationEggsCount()
+          )
+        );
     } else {
       return uint256(AIRDROP_MINTING_QUOTAS).sub(_mintingCount[_to]);
     }

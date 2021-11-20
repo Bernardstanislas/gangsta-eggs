@@ -72,6 +72,10 @@ describe("GangstaEggs", () => {
       ethers.utils.keccak256(ethers.utils.toUtf8Bytes("MINTER_ROLE")),
       gangstaEggs.address
     );
+    await breedingTracker.grantRole(
+      ethers.utils.keccak256(ethers.utils.toUtf8Bytes("BREEDER_ROLE")),
+      gangstaEggs.address
+    );
   });
 
   describe("mint()", () => {
@@ -148,6 +152,30 @@ describe("GangstaEggs", () => {
       await expect(
         gangstaEggs.connect(someFolk).evolveEgg(10, "ipfs hash")
       ).to.be.revertedWith("ERC721: owner query for nonexistent token");
+    });
+  });
+
+  describe("breedChicks()", () => {
+    it("does not intially let people breed", async () => {
+      await expect(
+        gangstaEggs.breedChicks(0, 1, "ipfs hash")
+      ).to.be.revertedWith("Breeding is paused");
+    });
+
+    it("needs breeder to pay for the breeding price", async () => {
+      await featureFlag.setBreedingPaused(false);
+      await expect(
+        gangstaEggs.connect(someFolk).breedChicks(0, 1, "ipfs hash")
+      ).to.be.revertedWith("Breeding price not paid");
+    });
+
+    it("does not let breeding from different owners", async () => {
+      await gangstaEggs.connect(anotherFolk).evolveEgg(1, "ipfs hash");
+      await expect(
+        gangstaEggs.connect(someFolk).breedChicks(0, 1, "ipfs hash", {
+          value: breedingPrice,
+        })
+      ).to.be.revertedWith("Chick1 and chick2 must be owned by the same owner");
     });
   });
 });
