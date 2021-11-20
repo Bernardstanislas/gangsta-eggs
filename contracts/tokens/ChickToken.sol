@@ -9,6 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
+import "../interfaces/IProxyRegistry.sol";
 import "../interfaces/IChickToken.sol";
 
 contract ChickToken is
@@ -26,7 +27,10 @@ contract ChickToken is
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
   CountersUpgradeable.Counter private _tokenIdCounter;
 
-  function initialize() public initializer {
+  // OpenSea's Proxy Registry
+  IProxyRegistry public proxyRegistry;
+
+  function initialize(address _proxyRegistry) public initializer {
     __ERC721_init("GangstaChick", "GCHK");
     __ERC721URIStorage_init();
     __Pausable_init();
@@ -36,6 +40,7 @@ contract ChickToken is
     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     _setupRole(PAUSER_ROLE, msg.sender);
     _setupRole(MINTER_ROLE, msg.sender);
+    proxyRegistry = IProxyRegistry(_proxyRegistry);
   }
 
   function _baseURI() internal pure override returns (string memory) {
@@ -85,6 +90,22 @@ contract ChickToken is
     returns (string memory)
   {
     return super.tokenURI(tokenId);
+  }
+
+  /**
+   * @notice Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
+   */
+  function isApprovedForAll(address owner, address operator)
+    public
+    view
+    override(IERC721Upgradeable, ERC721Upgradeable)
+    returns (bool)
+  {
+    // Whitelist OpenSea proxy contract for easy trading.
+    if (proxyRegistry.proxies(owner) == operator) {
+      return true;
+    }
+    return super.isApprovedForAll(owner, operator);
   }
 
   function supportsInterface(bytes4 interfaceId)

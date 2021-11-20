@@ -13,7 +13,7 @@ describe("EggToken", function () {
     someFolk = signers[1];
     eggToken = await upgrades.deployProxy(
       await ethers.getContractFactory("EggToken"),
-      []
+      [signers[2].address]
     );
     await eggToken.deployed();
   });

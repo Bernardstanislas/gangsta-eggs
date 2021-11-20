@@ -20,10 +20,12 @@ describe("GangstaEggs", () => {
     someFolk = (await ethers.getSigners())[1];
     anotherFolk = (await ethers.getSigners())[2];
     eggToken = await upgrades.deployProxy(
-      await ethers.getContractFactory("EggToken")
+      await ethers.getContractFactory("EggToken"),
+      [someFolk.address]
     );
     chickToken = await upgrades.deployProxy(
-      await ethers.getContractFactory("ChickToken")
+      await ethers.getContractFactory("ChickToken"),
+      [someFolk.address]
     );
     const breedingTracker = await upgrades.deployProxy(
       await ethers.getContractFactory("BreedingTracker"),

@@ -16,7 +16,7 @@ describe("BreedingTracker", function () {
 
     chickToken = await upgrades.deployProxy(
       await ethers.getContractFactory("ChickToken"),
-      []
+      [someFolk.address]
     );
     await chickToken.deployed();
     breedingTracker = await upgrades.deployProxy(
