@@ -8,6 +8,7 @@ describe("GangstaEggs", () => {
   let eggToken: Contract;
   let chickToken: Contract;
   let featureFlag: Contract;
+  let owner: SignerWithAddress;
   let someFolk: SignerWithAddress;
   let anotherFolk: SignerWithAddress;
   const airdropLimit = 10;
@@ -17,6 +18,7 @@ describe("GangstaEggs", () => {
   const totalCount = 50;
 
   before(async () => {
+    owner = (await ethers.getSigners())[0];
     someFolk = (await ethers.getSigners())[1];
     anotherFolk = (await ethers.getSigners())[2];
     eggToken = await upgrades.deployProxy(
@@ -93,6 +95,8 @@ describe("GangstaEggs", () => {
       await expect(gangstaEggs.connect(someFolk).mintEgg("ipfs hash"))
         .to.emit(eggToken, "Transfer")
         .withArgs(ethers.constants.AddressZero, someFolk.address, 0);
+
+      expect(await gangstaEggs.payments(owner.address)).to.equal(0);
     });
 
     it("blocks the users who try to mint for free after airdrop", async () => {
@@ -117,6 +121,9 @@ describe("GangstaEggs", () => {
           value: ethers.utils.parseEther("0.01"),
         })
       ).not.to.be.reverted;
+      expect(await gangstaEggs.payments(owner.address)).to.equal(
+        ethers.utils.parseEther("0.01")
+      );
     });
 
     it("needs the user to pay for the price increase", async () => {
@@ -125,6 +132,21 @@ describe("GangstaEggs", () => {
           value: ethers.utils.parseEther("0.01"),
         })
       ).to.revertedWith("Minting price not paid");
+    });
+  });
+
+  describe("withdrawPayments()", () => {
+    it("lets the owner withdraw their payments", async () => {
+      const balanceBefore = await ethers.provider.getBalance(owner.address);
+      await gangstaEggs.connect(someFolk).withdrawPayments(owner.address); // Someone is making the transaction so that the owner does not pay for gas
+
+      expect(await owner.getBalance()).to.equal(
+        balanceBefore.add(ethers.utils.parseEther("0.01"))
+      );
+    });
+
+    it("empties the pending payments", async () => {
+      expect(await gangstaEggs.payments(owner.address)).to.equal(0);
     });
   });
 
@@ -178,6 +200,22 @@ describe("GangstaEggs", () => {
           value: breedingPrice,
         })
       ).to.be.revertedWith("Chick1 and chick2 must be owned by the same owner");
+    });
+
+    it("adds the paid price to the owner pending payments", async () => {
+      await gangstaEggs.mintEgg("ipfs hash", {
+        value: ethers.utils.parseEther("0.02"),
+      });
+      const paymentsBefore = await gangstaEggs.payments(owner.address);
+      await gangstaEggs.evolveEgg(9, "ipfs hash");
+      await gangstaEggs.evolveEgg(11, "ipfs hash");
+      await gangstaEggs.breedChicks(2, 3, "ipfs hash", {
+        value: breedingPrice,
+      });
+
+      expect(await gangstaEggs.payments(owner.address)).to.equal(
+        breedingPrice.add(paymentsBefore)
+      );
     });
   });
 });

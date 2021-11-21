@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
 import "./interfaces/IBreedingTracker.sol";
 import "./interfaces/IEggToken.sol";
 import "./interfaces/IChickToken.sol";
@@ -16,7 +17,8 @@ import "./interfaces/IPricer.sol";
 contract GangstaEggs is
   Initializable,
   ReentrancyGuardUpgradeable,
-  OwnableUpgradeable
+  OwnableUpgradeable,
+  PullPaymentUpgradeable
 {
   using ERC165CheckerUpgradeable for address;
 
@@ -80,6 +82,7 @@ contract GangstaEggs is
   ) public initializer {
     __Ownable_init();
     __ReentrancyGuard_init();
+    __PullPayment_init();
 
     _isInterface(breedingTracker_, type(IBreedingTracker).interfaceId);
     _isInterface(eggToken_, type(IEggToken).interfaceId);
@@ -115,6 +118,7 @@ contract GangstaEggs is
     nonReentrant
   {
     _mintEgg(msg.sender, ipfsHash_);
+    _asyncTransfer(owner(), msg.value);
   }
 
   function evolveEgg(uint256 _eggId, string memory _ipfsHash)
@@ -135,6 +139,7 @@ contract GangstaEggs is
     _breedingTracker.safeRegisterBreeding(_chickId1, _chickId2);
     uint256 eggId = _eggToken.safeMint(msg.sender, _ipfsHash);
     _generationTracker.registerNewlyLayedEgg(eggId);
+    _asyncTransfer(owner(), msg.value);
   }
 
   function _mintEgg(address to_, string memory ipfsHash_) private {
