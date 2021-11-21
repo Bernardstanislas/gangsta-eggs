@@ -46,6 +46,10 @@ contract EggToken is
     proxyRegistry = IProxyRegistry(_proxyRegistry);
   }
 
+  function contractURI() public pure returns (string memory) {
+    return "https://api.gangsta-eggs.com/eggs-metadata";
+  }
+
   function _baseURI() internal pure override returns (string memory) {
     return "https://api.gangsta-eggs.com/eggs/";
   }
