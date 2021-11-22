@@ -1,0 +1,12 @@
+{
+    "mumbai": {
+        "EggToken": "0xdf46d2dB25ee3606496C2c90b973443989133659",
+        "ChickToken": "0x5D1295A6Fd5927226e859357b51e0912DFB61233",
+        "BreedingTracker": "0xBd8C290a68CC20E13A1587EfD1F6cc8b15cBDbC6",
+        "FeatureFlag": "0x0E47597c9F45edED79c36DBD4225997caf76c7B9",
+        "GenerationTracker": "0x2b411754Cd1daaf2488047f4F6BE132d50bb5Da4",
+        "Pricer": "0x839a8C84C92a2DDF03EB3a081016C1e419ff9067",
+        "MintingQuota": "0xd6041862357bD9f110815dD5996AC85eCff48F8B",
+        "GangstaEggs": "0x1CB7E76E85FEa1692Abe3D8e0c9d1B172f6C865c"
+    }
+}
