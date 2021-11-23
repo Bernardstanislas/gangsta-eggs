@@ -67,13 +67,14 @@ export const FAQ = () => {
           </p>
         </Accordion>
         <Accordion title="How much does it cost?">
+          <img src="/images/pricing.png" alt="Pricing" />
           <p>
             Egg minting: first 200 eggs will be mintable{" "}
             <strong>for free</strong>, then with a linear price increasing from{" "}
-            <strong>0.015ETH</strong> to <strong>0.05ETH</strong>
+            <strong>40 MATIC</strong> to <strong>130 MATIC</strong>
           </p>
           <p>Chicks are free (burn egg + gas fees only)</p>
-          <p>Breeding cost: 0.02 ETH</p>
+          <p>Breeding cost: 50 MATIC</p>
           <p>
             Secondary sales royalties: 5% to Gangsta Eggs, of which half will be
             reinvested in the project
@@ -93,7 +94,7 @@ export const FAQ = () => {
             and then becomes infertile.
           </p>
           <p>
-            Breeding cost will be <b>0.02 ETH</b>, to avoid uncontrolled
+            Breeding cost will be <b>50 MATIC</b>, to avoid uncontrolled
             inflation.
           </p>
           <p>
