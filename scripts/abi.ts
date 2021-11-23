@@ -1,9 +1,9 @@
-import { writeFile } from "fs/promises";
+import { promises as fs } from "fs";
 import { artifacts } from "hardhat";
 
 async function main(): Promise<void> {
   const { abi } = await artifacts.readArtifact("MintingQuota");
-  await writeFile("abi.json", JSON.stringify(abi, null, 2));
+  await fs.writeFile("abi.json", JSON.stringify(abi, null, 2));
 }
 
 // We recommend this pattern to be able to use async/await everywhere
