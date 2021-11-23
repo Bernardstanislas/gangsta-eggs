@@ -1,7 +1,16 @@
-import React from "react";
+import { Web3Provider } from "@ethersproject/providers";
+import { ethers } from "ethers";
+import React, { useContext, useEffect, useState } from "react";
 import { Section } from "../components/Section";
+import { SymfoniContext } from "../hardhat/SymfoniContext";
+import contracts from "../../../contracts.json";
+import { useMinting } from "../hooks/minting";
+
+// @ts-ignore
+const MINTING_ENABLED = import.meta.env.VITE_MINTING_ENABLED === "true";
 
 export const Minting = () => {
+  const { connect, mintEgg, connected } = useMinting();
   return (
     <Section title="Minting" withBorder={true}>
       <p>Find all the release agenda in the FAQ below!</p>
@@ -14,9 +23,27 @@ export const Minting = () => {
           />
         </div>
         <div className="flex justify-center pt-6 md:flex-1">
-          <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce">
-            <strong>Launch on December the 1st</strong>
-          </button>
+          {MINTING_ENABLED ? (
+            connected ? (
+              <button
+                className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
+                onClick={mintEgg}
+              >
+                <strong>Mint</strong>
+              </button>
+            ) : (
+              <button
+                className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
+                onClick={connect}
+              >
+                <strong>Connect my wallet</strong>
+              </button>
+            )
+          ) : (
+            <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce">
+              <strong>Launch on December the 1st</strong>
+            </button>
+          )}
         </div>
       </div>
     </Section>
