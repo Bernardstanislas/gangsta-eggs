@@ -10,7 +10,7 @@ import { useMinting } from "../hooks/minting";
 const MINTING_ENABLED = import.meta.env.VITE_MINTING_ENABLED === "true";
 
 export const Minting = () => {
-  const { connect, mintEgg, connected } = useMinting();
+  const { connect, mintEgg, readyToMint } = useMinting();
   return (
     <Section title="Minting" withBorder={true}>
       <p>Find all the release agenda in the FAQ below!</p>
@@ -24,7 +24,7 @@ export const Minting = () => {
         </div>
         <div className="flex justify-center pt-6 md:flex-1">
           {MINTING_ENABLED ? (
-            connected ? (
+            readyToMint ? (
               <button
                 className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
                 onClick={mintEgg}
