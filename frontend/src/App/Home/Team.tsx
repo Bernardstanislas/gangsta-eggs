@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Section } from "../components/Section";
-import { TeamMember } from "../components/TeamMember";
+import { Section } from "../../components/Section";
+import { TeamMember } from "../../components/TeamMember";
 
 export const Team = () => {
   return (

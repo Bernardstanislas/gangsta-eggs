@@ -1,10 +1,6 @@
-import { Web3Provider } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import React, { useContext, useEffect, useState } from "react";
-import { Section } from "../components/Section";
-import { SymfoniContext } from "../hardhat/SymfoniContext";
-import contracts from "../../../contracts.json";
-import { useMinting } from "../hooks/minting";
+import React from "react";
+import { Section } from "../../components/Section";
+import { useMinting } from "../../hooks/minting";
 
 // @ts-ignore
 const MINTING_ENABLED = import.meta.env.VITE_MINTING_ENABLED === "true";

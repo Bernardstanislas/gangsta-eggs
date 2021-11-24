@@ -1,6 +1,6 @@
 import React from "react";
-import { Accordion } from "../components/Accordion";
-import { Section } from "../components/Section";
+import { Accordion } from "../../components/Accordion";
+import { Section } from "../../components/Section";
 
 export const FAQ = () => {
   return (

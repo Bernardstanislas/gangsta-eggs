@@ -1,7 +1,7 @@
 import React from "react";
-import { Card } from "../components/Card";
-import { Section } from "../components/Section";
-import { Subtitle } from "../components/Subtitle";
+import { Card } from "../../components/Card";
+import { Section } from "../../components/Section";
+import { Subtitle } from "../../components/Subtitle";
 
 export const Rarity = () => {
   return (

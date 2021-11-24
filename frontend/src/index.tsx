@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -11,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 FullStory.init({ orgId: "169KHR" });
 
 ReactDOM.render(
-  <React.StrictMode>
+  <BrowserRouter>
     <Symfoni autoInit={false} showLoading={false}>
       <App />
     </Symfoni>
@@ -26,7 +27,7 @@ ReactDOM.render(
       draggable
       pauseOnHover
     />
-  </React.StrictMode>,
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

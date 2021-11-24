@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-import { Section } from "../components/Section";
-import { Subtitle } from "../components/Subtitle";
+import { Section } from "../../components/Section";
+import { Subtitle } from "../../components/Subtitle";
 
 export const Roadmap = () => {
   return (
