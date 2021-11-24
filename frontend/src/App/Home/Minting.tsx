@@ -25,9 +25,20 @@ export const Minting = () => {
               </Link>
             </button>
           ) : (
-            <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce">
-              <strong>Launch on December the 1st</strong>
-            </button>
+            <div className="flex flex-col items-center space-y-10">
+              <div>
+                <img
+                  className="bg-gray-300 shadow-bar"
+                  src="/images/pricing.png"
+                  alt="pricing graph"
+                ></img>
+              </div>
+              <div>
+                <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce">
+                  <strong>Launch on December the 1st</strong>
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
