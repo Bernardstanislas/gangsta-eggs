@@ -2,9 +2,11 @@ import React, { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CurrentAddressContext } from "../hardhat/SymfoniContext";
 import { Link } from "react-router-dom";
+import { useMinting } from "../hooks/minting";
 
 export const Menu = () => {
   const [currentAddress] = useContext(CurrentAddressContext);
+  const { network } = useMinting();
   return (
     <>
       <div className="border-b h-16 text-black fixed w-full bg-pourpre z-10 flex items-center">
@@ -12,14 +14,21 @@ export const Menu = () => {
           <Link to="/">
             <img src="/logo.png" alt="logo" className="h-12 drop-shadow"></img>
           </Link>
-          <div className="text-white space-x-4">
-            <a href="https://twitter.com/GangstaEggs">
-              <FontAwesomeIcon icon={["fab", "twitter"]} size="2x" />
-            </a>
-            <a href="https://discord.gg/FZdnWbYseQ">
-              <FontAwesomeIcon icon={["fab", "discord"]} size="2x" />
-            </a>
-          </div>
+          {currentAddress ? (
+            <div className="text-white text-xs space-x-4">
+              <div>{currentAddress.substring(0, 10)}...</div>
+              <div>{network?.name}</div>
+            </div>
+          ) : (
+            <div className="text-white space-x-4">
+              <a href="https://twitter.com/GangstaEggs">
+                <FontAwesomeIcon icon={["fab", "twitter"]} size="2x" />
+              </a>
+              <a href="https://discord.gg/FZdnWbYseQ">
+                <FontAwesomeIcon icon={["fab", "discord"]} size="2x" />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </>

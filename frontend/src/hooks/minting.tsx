@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
   CurrentAddressContext,
+  EggTokenContext,
   GangstaEggsContext,
   PricerContext,
   ProviderContext,
@@ -10,6 +11,8 @@ import {
 import deployments from "../../../contracts.json";
 import { Pricer } from "../hardhat/typechain/Pricer";
 import { GangstaEggs } from "../hardhat/typechain/GangstaEggs";
+import { Network } from "@ethersproject/networks";
+import { EggToken } from "../hardhat/typechain/EggToken";
 
 export const useMinting = () => {
   const [provider] = useContext(ProviderContext);
@@ -20,8 +23,11 @@ export const useMinting = () => {
   const [chainId, setChainId] = useState<number>();
   const { instance: gangstaEggsInstance } = useContext(GangstaEggsContext);
   const { instance: pricerInstance } = useContext(PricerContext);
+  const { instance: eggTokenInstance } = useContext(EggTokenContext);
   const [pricer, setPricer] = useState<Pricer>();
   const [gangstaEggs, setGangstaEggs] = useState<GangstaEggs>();
+  const [eggToken, setEggToken] = useState<EggToken>();
+  const [network, setNetwork] = useState<Network>();
 
   useEffect(() => {
     if (!window.ethereum) {
@@ -41,7 +47,6 @@ export const useMinting = () => {
     };
     initChainId();
   }, [provider]);
-
 
   useEffect(() => {
     const switchChain = async () => {
@@ -92,15 +97,26 @@ export const useMinting = () => {
         chainId !== 0x13881 ||
         !provider ||
         !pricerInstance ||
-        !gangstaEggsInstance
+        !gangstaEggsInstance ||
+        !eggTokenInstance
       ) {
         return;
       }
       setPricer(await pricerInstance.attach(deployments.maticmum.Pricer));
-      setGangstaEggs(await gangstaEggsInstance.attach(deployments.maticmum.GangstaEggs));
+      setGangstaEggs(
+        await gangstaEggsInstance.attach(deployments.maticmum.GangstaEggs)
+      );
+      setEggToken(await eggTokenInstance.attach(deployments.maticmum.EggToken));
     };
     contractsConnector();
-  }, [connected, chainId, gangstaEggsInstance, pricerInstance, provider]);
+  }, [
+    connected,
+    chainId,
+    gangstaEggsInstance,
+    pricerInstance,
+    eggTokenInstance,
+    provider,
+  ]);
 
   useEffect(() => {
     setReadyToMint(!!pricer && !!gangstaEggs && chainId === 0x13881);
@@ -111,6 +127,16 @@ export const useMinting = () => {
       setConnected(true);
     }
   }, [provider, currentAddress]);
+
+  useEffect(() => {
+    const networkFinder = async () => {
+      if (!provider) {
+        return;
+      }
+      setNetwork(await provider.getNetwork());
+    };
+    networkFinder();
+  }, [chainId, provider]);
 
   const connect = async () => {
     if (!window.ethereum) {
@@ -129,5 +155,8 @@ export const useMinting = () => {
     connect,
     readyToMint,
     mintEgg,
+    network,
+    eggToken,
+    gangstaEggs,
   };
 };
