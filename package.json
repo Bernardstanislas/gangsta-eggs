@@ -9,8 +9,9 @@
     "pretest": "npm run compile",
     "posttest": "npm run lint"
   },
-  "engine": {
-    "node": ">=14"
+  "engines": {
+    "node": "16.13.0",
+    "npm": "8.1.0"
   },
   "devDependencies": {
     "@defi-wonderland/smock": "^2.0.7",

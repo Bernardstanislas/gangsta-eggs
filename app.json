@@ -1,0 +1,21 @@
+{
+    "buildpacks": [
+        {
+            "url": "https://github.com/negativetwelve/heroku-buildpack-subdir"
+        }
+    ],
+    "addons": [
+        {
+            "plan": "heroku-postgresql",
+            "options": {
+                "version": "13"
+            }
+        }
+    ],
+    "formation": {
+        "web": {
+            "quantity": 1,
+            "size": "hobby"
+        }
+    }
+}
