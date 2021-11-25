@@ -1,7 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { Accordion } from "./Accordion";
-import { Subtitle } from "./Subtitle";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React from 'react';
+import {Accordion} from './Accordion';
+import {Subtitle} from './Subtitle';
 
 type Props = {
   imageUrl: string;
@@ -25,7 +25,7 @@ export const TeamMember: React.FC<Props> = ({
         {name}
         {linkedinUrl && (
           <a href={linkedinUrl} className="ml-3">
-            <FontAwesomeIcon icon={["fab", "linkedin"]}></FontAwesomeIcon>
+            <FontAwesomeIcon icon={['fab', 'linkedin']}></FontAwesomeIcon>
           </a>
         )}
       </Subtitle>

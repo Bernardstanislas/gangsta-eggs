@@ -16,12 +16,12 @@ import { MintingQuota } from "./typechain/MintingQuota";
 import { MintingQuota__factory } from "./typechain/factories/MintingQuota__factory";
 import { Pricer } from "./typechain/Pricer";
 import { Pricer__factory } from "./typechain/factories/Pricer__factory";
-import { ChickToken } from "./typechain/ChickToken";
-import { ChickToken__factory } from "./typechain/factories/ChickToken__factory";
 import { EggTokenTest } from "./typechain/EggTokenTest";
 import { EggTokenTest__factory } from "./typechain/factories/EggTokenTest__factory";
 import { EggToken } from "./typechain/EggToken";
 import { EggToken__factory } from "./typechain/factories/EggToken__factory";
+import { ChickToken } from "./typechain/ChickToken";
+import { ChickToken__factory } from "./typechain/factories/ChickToken__factory";
 import { PaymentSplitter } from "./typechain/PaymentSplitter";
 import { PaymentSplitter__factory } from "./typechain/factories/PaymentSplitter__factory";
 import { ERC721Upgradeable } from "./typechain/ERC721Upgradeable";
@@ -55,9 +55,9 @@ export const FeatureFlagContext = React.createContext<SymfoniFeatureFlag>(emptyC
 export const GenerationTrackerContext = React.createContext<SymfoniGenerationTracker>(emptyContract);
 export const MintingQuotaContext = React.createContext<SymfoniMintingQuota>(emptyContract);
 export const PricerContext = React.createContext<SymfoniPricer>(emptyContract);
-export const ChickTokenContext = React.createContext<SymfoniChickToken>(emptyContract);
 export const EggTokenTestContext = React.createContext<SymfoniEggTokenTest>(emptyContract);
 export const EggTokenContext = React.createContext<SymfoniEggToken>(emptyContract);
+export const ChickTokenContext = React.createContext<SymfoniChickToken>(emptyContract);
 export const PaymentSplitterContext = React.createContext<SymfoniPaymentSplitter>(emptyContract);
 export const ERC721UpgradeableContext = React.createContext<SymfoniERC721Upgradeable>(emptyContract);
 export const EscrowUpgradeableContext = React.createContext<SymfoniEscrowUpgradeable>(emptyContract);
@@ -107,11 +107,6 @@ export interface SymfoniPricer {
     factory?: Pricer__factory;
 }
 
-export interface SymfoniChickToken {
-    instance?: ChickToken;
-    factory?: ChickToken__factory;
-}
-
 export interface SymfoniEggTokenTest {
     instance?: EggTokenTest;
     factory?: EggTokenTest__factory;
@@ -120,6 +115,11 @@ export interface SymfoniEggTokenTest {
 export interface SymfoniEggToken {
     instance?: EggToken;
     factory?: EggToken__factory;
+}
+
+export interface SymfoniChickToken {
+    instance?: ChickToken;
+    factory?: ChickToken__factory;
 }
 
 export interface SymfoniPaymentSplitter {
@@ -162,9 +162,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [GenerationTracker, setGenerationTracker] = useState<SymfoniGenerationTracker>(emptyContract);
     const [MintingQuota, setMintingQuota] = useState<SymfoniMintingQuota>(emptyContract);
     const [Pricer, setPricer] = useState<SymfoniPricer>(emptyContract);
-    const [ChickToken, setChickToken] = useState<SymfoniChickToken>(emptyContract);
     const [EggTokenTest, setEggTokenTest] = useState<SymfoniEggTokenTest>(emptyContract);
     const [EggToken, setEggToken] = useState<SymfoniEggToken>(emptyContract);
+    const [ChickToken, setChickToken] = useState<SymfoniChickToken>(emptyContract);
     const [PaymentSplitter, setPaymentSplitter] = useState<SymfoniPaymentSplitter>(emptyContract);
     const [ERC721Upgradeable, setERC721Upgradeable] = useState<SymfoniERC721Upgradeable>(emptyContract);
     const [EscrowUpgradeable, setEscrowUpgradeable] = useState<SymfoniEscrowUpgradeable>(emptyContract);
@@ -254,9 +254,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 setGenerationTracker(getGenerationTracker(_provider, _signer))
                 setMintingQuota(getMintingQuota(_provider, _signer))
                 setPricer(getPricer(_provider, _signer))
-                setChickToken(getChickToken(_provider, _signer))
                 setEggTokenTest(getEggTokenTest(_provider, _signer))
                 setEggToken(getEggToken(_provider, _signer))
+                setChickToken(getChickToken(_provider, _signer))
                 setPaymentSplitter(getPaymentSplitter(_provider, _signer))
                 setERC721Upgradeable(getERC721Upgradeable(_provider, _signer))
                 setEscrowUpgradeable(getEscrowUpgradeable(_provider, _signer))
@@ -343,15 +343,6 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getChickToken = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? ChickToken__factory.connect(ethers.constants.AddressZero, _signer) : ChickToken__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniChickToken = {
-            instance: instance,
-            factory: _signer ? new ChickToken__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getEggTokenTest = (_provider: providers.Provider, _signer?: Signer) => {
         let instance = _signer ? EggTokenTest__factory.connect(ethers.constants.AddressZero, _signer) : EggTokenTest__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniEggTokenTest = {
@@ -366,6 +357,15 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         const contract: SymfoniEggToken = {
             instance: instance,
             factory: _signer ? new EggToken__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getChickToken = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? ChickToken__factory.connect(ethers.constants.AddressZero, _signer) : ChickToken__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniChickToken = {
+            instance: instance,
+            factory: _signer ? new ChickToken__factory(_signer) : undefined,
         }
         return contract
     }
@@ -426,9 +426,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                     <GenerationTrackerContext.Provider value={GenerationTracker}>
                                         <MintingQuotaContext.Provider value={MintingQuota}>
                                             <PricerContext.Provider value={Pricer}>
-                                                <ChickTokenContext.Provider value={ChickToken}>
-                                                    <EggTokenTestContext.Provider value={EggTokenTest}>
-                                                        <EggTokenContext.Provider value={EggToken}>
+                                                <EggTokenTestContext.Provider value={EggTokenTest}>
+                                                    <EggTokenContext.Provider value={EggToken}>
+                                                        <ChickTokenContext.Provider value={ChickToken}>
                                                             <PaymentSplitterContext.Provider value={PaymentSplitter}>
                                                                 <ERC721UpgradeableContext.Provider value={ERC721Upgradeable}>
                                                                     <EscrowUpgradeableContext.Provider value={EscrowUpgradeable}>
@@ -447,9 +447,9 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                                                     </EscrowUpgradeableContext.Provider >
                                                                 </ERC721UpgradeableContext.Provider >
                                                             </PaymentSplitterContext.Provider >
-                                                        </EggTokenContext.Provider >
-                                                    </EggTokenTestContext.Provider >
-                                                </ChickTokenContext.Provider >
+                                                        </ChickTokenContext.Provider >
+                                                    </EggTokenContext.Provider >
+                                                </EggTokenTestContext.Provider >
                                             </PricerContext.Provider >
                                         </MintingQuotaContext.Provider >
                                     </GenerationTrackerContext.Provider >

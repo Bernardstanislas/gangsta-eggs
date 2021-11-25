@@ -1,12 +1,12 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React from 'react';
 
 type Props = {
   title: string;
   children: React.ReactNode;
 };
 
-export const Accordion: React.FC<Props> = ({ title, children }) => {
+export const Accordion: React.FC<Props> = ({title, children}) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -19,7 +19,7 @@ export const Accordion: React.FC<Props> = ({ title, children }) => {
         <h4 className="py-2.5 font-bold">{title}</h4>
         <div
           className={`transition duration-500 transform rotate-${
-            isOpen ? "180" : "0"
+            isOpen ? '180' : '0'
           }`}
         >
           <FontAwesomeIcon icon="angle-down" />
@@ -27,7 +27,7 @@ export const Accordion: React.FC<Props> = ({ title, children }) => {
       </div>
       <div
         className={`transition-max-height duration-400 overflow-hidden max-h-${
-          isOpen ? "screen" : "0"
+          isOpen ? 'screen' : '0'
         }`}
       >
         <div className="p-4 space-y-3">{children}</div>
