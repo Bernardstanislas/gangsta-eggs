@@ -101,50 +101,49 @@ contract GangstaEggs is
     _pricer = IPricer(pricer_);
   }
 
-  function airdropEgg(address to_, string memory ipfsHash_)
+  function airdropEgg(address to_)
     public
     onlyOwner
     mintingEnabled
     nonReentrant
   {
-    _mintEgg(to_, ipfsHash_);
+    _mintEgg(to_);
   }
 
-  function mintEgg(string memory ipfsHash_)
+  function mintEgg()
     public
     payable
     mintingEnabled
     mintingPricePaid
     nonReentrant
   {
-    _mintEgg(msg.sender, ipfsHash_);
+    _mintEgg(msg.sender);
     _asyncTransfer(owner(), msg.value);
   }
 
-  function evolveEgg(uint256 _eggId, string memory _ipfsHash)
+  function evolveEgg(uint256 _eggId)
     public
     evolutionEnabled
     onlyEggOwner(_eggId)
     nonReentrant
   {
     _eggToken.safeBurn(_eggId);
-    _chickToken.safeMint(msg.sender, _ipfsHash);
+    _chickToken.safeMint(msg.sender);
   }
 
   function breedChicks(
     uint256 _chickId1,
-    uint256 _chickId2,
-    string memory _ipfsHash
+    uint256 _chickId2
   ) public payable breedingEnabled breedingPricePaid nonReentrant {
     _breedingTracker.safeRegisterBreeding(_chickId1, _chickId2);
-    uint256 eggId = _eggToken.safeMint(msg.sender, _ipfsHash);
+    uint256 eggId = _eggToken.safeMint(msg.sender);
     _generationTracker.registerNewlyLayedEgg(eggId);
     _asyncTransfer(owner(), msg.value);
   }
 
-  function _mintEgg(address to_, string memory ipfsHash_) private {
+  function _mintEgg(address to_) private {
     _mintingQuota.safeRegisterMinting(to_);
-    uint256 eggId = _eggToken.safeMint(to_, ipfsHash_);
+    uint256 eggId = _eggToken.safeMint(to_);
     _generationTracker.registerNewlyMintedEgg(eggId);
   }
 

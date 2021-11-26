@@ -2,9 +2,9 @@
 pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165StorageUpgradeable.sol";
@@ -16,7 +16,6 @@ contract ChickToken is
   Initializable,
   ERC165StorageUpgradeable,
   ERC721Upgradeable,
-  ERC721URIStorageUpgradeable,
   IChickToken,
   PausableUpgradeable,
   AccessControlUpgradeable
@@ -32,7 +31,6 @@ contract ChickToken is
 
   function initialize(address _proxyRegistry) public initializer {
     __ERC721_init("GangstaChick", "GCHK");
-    __ERC721URIStorage_init();
     __Pausable_init();
     __AccessControl_init();
 
@@ -59,15 +57,16 @@ contract ChickToken is
     _unpause();
   }
 
-  function safeMint(address to, string memory uri)
+  function safeMint(address to)
     external
     override
     onlyRole(MINTER_ROLE)
+    returns (uint256)
   {
     uint256 tokenId = _tokenIdCounter.current();
     _tokenIdCounter.increment();
     _safeMint(to, tokenId);
-    _setTokenURI(tokenId, uri);
+    return tokenId;
   }
 
   function _beforeTokenTransfer(
@@ -76,24 +75,6 @@ contract ChickToken is
     uint256 tokenId
   ) internal override whenNotPaused {
     super._beforeTokenTransfer(from, to, tokenId);
-  }
-
-  // The following functions are overrides required by Solidity.
-
-  function _burn(uint256 tokenId)
-    internal
-    override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
-  {
-    super._burn(tokenId);
-  }
-
-  function tokenURI(uint256 tokenId)
-    public
-    view
-    override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
-    returns (string memory)
-  {
-    return super.tokenURI(tokenId);
   }
 
   /**
