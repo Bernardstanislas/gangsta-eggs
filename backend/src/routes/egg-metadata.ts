@@ -1,10 +1,10 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import {startCase, map} from 'lodash';
 import {eggRepository} from '../repositories/egg.repository';
 
 export const eggMetadataRouter = express.Router();
 
-eggMetadataRouter.get('/eggs/:hash', async (req, res) => {
+eggMetadataRouter.get('/eggs/:hash', async (req: Request, res: Response) => {
   const {hash} = req.params;
   try {
     const egg = await eggRepository.findByIpfsHash(hash);
