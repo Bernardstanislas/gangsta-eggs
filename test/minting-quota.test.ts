@@ -62,7 +62,7 @@ describe('MintingQuota', function () {
       await Promise.all(
         Array(19)
           .fill(0)
-          .map(async (_elem, index) => {
+          .map(async () => {
             await mintingQuota.safeRegisterMinting(signers[2].address);
           })
       );

@@ -131,10 +131,13 @@ contract GangstaEggs is
     _chickToken.safeMint(msg.sender);
   }
 
-  function breedChicks(
-    uint256 _chickId1,
-    uint256 _chickId2
-  ) public payable breedingEnabled breedingPricePaid nonReentrant {
+  function breedChicks(uint256 _chickId1, uint256 _chickId2)
+    public
+    payable
+    breedingEnabled
+    breedingPricePaid
+    nonReentrant
+  {
     _breedingTracker.safeRegisterBreeding(_chickId1, _chickId2);
     uint256 eggId = _eggToken.safeLay(msg.sender);
     _generationTracker.registerNewlyLayedEgg(eggId);

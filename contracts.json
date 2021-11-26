@@ -8,5 +8,15 @@
         "Pricer": "0x839a8C84C92a2DDF03EB3a081016C1e419ff9067",
         "MintingQuota": "0xd6041862357bD9f110815dD5996AC85eCff48F8B",
         "GangstaEggs": "0x1CB7E76E85FEa1692Abe3D8e0c9d1B172f6C865c"
+    },
+    "rinkeby": {
+        "EggToken": "0x917085950Ac4A5e8d57c483090B362f4d5212f2e",
+        "ChickToken": "0xE315694045B6beaFc728A2f4C2A3b99d918E1e9e",
+        "BreedingTracker": "0x08f090BD3462b7ca43227F1Ab1d1F731e70931E5",
+        "FeatureFlag": "0x325991eB533AA9E7cdf1332309B37c3CC7C2e0C8",
+        "GenerationTracker": "0x30105e42BDB2D0Ca566fb62046FE10b953f80bfE",
+        "Pricer": "0x823fA0e7E67d1F91c92DFFf7ee20A52e9086edc1",
+        "MintingQuota": "0x6eed42BfFE8311e023A1C3904591FC851Fc00109",
+        "GangstaEggs": "0x766E22bF86435f2e711dfC809fB052F33F87E29e"
     }
 }
