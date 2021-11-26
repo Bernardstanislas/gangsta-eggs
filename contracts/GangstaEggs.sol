@@ -136,7 +136,7 @@ contract GangstaEggs is
     uint256 _chickId2
   ) public payable breedingEnabled breedingPricePaid nonReentrant {
     _breedingTracker.safeRegisterBreeding(_chickId1, _chickId2);
-    uint256 eggId = _eggToken.safeMint(msg.sender);
+    uint256 eggId = _eggToken.safeLay(msg.sender);
     _generationTracker.registerNewlyLayedEgg(eggId);
     _asyncTransfer(owner(), msg.value);
   }

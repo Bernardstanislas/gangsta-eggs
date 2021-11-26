@@ -51,7 +51,6 @@ const config: HardhatUserConfig = {
       url: process.env.RINKEBY_URL || '',
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-      minGasPrice: 2000000023,
     },
     mumbai: {
       url: 'https://rpc-mumbai.maticvigil.com',

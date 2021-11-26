@@ -40,4 +40,12 @@ describe('EggToken', () => {
       expect(await eggToken.callStatic.safeMint(someFolk.address)).to.equal(0);
     });
   });
+
+  describe('safeLay()', () => {
+    it('returns a second generation egg id', async () => {
+      expect(await eggToken.callStatic.safeLay(someFolk.address)).to.equal(
+        4444
+      );
+    });
+  });
 });

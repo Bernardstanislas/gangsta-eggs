@@ -26,6 +26,7 @@ contract EggToken is
   bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
   CountersUpgradeable.Counter private _tokenIdCounter;
+  CountersUpgradeable.Counter private _secondGenerationTokenIdCounter;
 
   // OpenSea's Proxy Registry
   IProxyRegistry public proxyRegistry;
@@ -41,6 +42,10 @@ contract EggToken is
     _setupRole(PAUSER_ROLE, msg.sender);
     _setupRole(MINTER_ROLE, msg.sender);
     proxyRegistry = IProxyRegistry(_proxyRegistry);
+
+    for (uint256 i = 0; i < 4444; i++) {
+      _secondGenerationTokenIdCounter.increment();
+    }
   }
 
   function contractURI() public pure returns (string memory) {
@@ -67,6 +72,18 @@ contract EggToken is
   {
     uint256 tokenId = _tokenIdCounter.current();
     _tokenIdCounter.increment();
+    _safeMint(to, tokenId);
+    return tokenId;
+  }
+
+  function safeLay(address to)
+    external
+    override
+    onlyRole(MINTER_ROLE)
+    returns (uint256)
+  {
+    uint256 tokenId = _secondGenerationTokenIdCounter.current();
+    _secondGenerationTokenIdCounter.increment();
     _safeMint(to, tokenId);
     return tokenId;
   }
