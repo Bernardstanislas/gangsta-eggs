@@ -19,15 +19,17 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
       type: 'jsonb',
       notNull: true,
     },
-    owner: {
-      type: 'varchar(100)',
+    owned: {
+      type: 'boolean',
+      notNull: true,
+      default: false,
     },
   });
 
-  pgm.createIndex('eggs', 'ipfsHash');
+  pgm.createIndex('eggs', 'ipfs_hash');
 }
 
 export async function down(pgm: MigrationBuilder): Promise<void> {
-  pgm.dropIndex('eggs', 'ipfsHash');
+  pgm.dropIndex('eggs', 'ipfs_hash');
   pgm.dropTable('eggs');
 }

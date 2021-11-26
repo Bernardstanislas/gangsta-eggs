@@ -1,5 +1,10 @@
 import {postgresPool} from '../config';
-import {Egg} from '../entities/egg';
+import {Egg, Traits} from '../entities/egg';
+
+type CreatePayload = {
+  ipfsHash: string;
+  traits: Traits;
+};
 
 export const eggRepository = {
   async findByIpfsHash(ipfsHash: string): Promise<Egg> {
@@ -15,13 +20,18 @@ export const eggRepository = {
       rows.rows[0].id,
       rows.rows[0].ipfs_hash,
       JSON.parse(rows.rows[0].traits),
-      rows.rows[0].owner
+      rows.rows[0].owned
     );
   },
-  async save(egg: Egg): Promise<void> {
+  async create({ipfsHash, traits}: CreatePayload): Promise<void> {
     await postgresPool.query(
-      'INSERT INTO eggs (id, ipfs_hash, traits, owner) VALUES ($1, $2, $3, $4)',
-      [egg.id, egg.ipfsHash, JSON.stringify(egg.traits), egg.owner]
+      'INSERT INTO eggs (ipfs_hash, traits) VALUES ($1, $2)',
+      [ipfsHash, JSON.stringify(traits)]
     );
+  },
+  async markAsOwned(egg: Egg): Promise<void> {
+    await postgresPool.query('UPDATE eggs SET(owned) = (true) WHERE id = $1', [
+      egg.id,
+    ]);
   },
 };

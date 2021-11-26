@@ -17,7 +17,8 @@
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run lint",
-    "migrate": "ts-node -r dotenv/config node_modules/.bin/node-pg-migrate -j ts"
+    "migrate": "ts-node -r dotenv/config node_modules/.bin/node-pg-migrate -j ts",
+    "db:seed": "ts-node -r dotenv/config src/seed.ts"
   },
   "dependencies": {
     "debug": "~2.6.9",

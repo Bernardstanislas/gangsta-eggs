@@ -1,4 +1,4 @@
-type Traits = {
+export type Traits = {
   background: string;
   skin: string;
   mouth: string;
@@ -14,10 +14,6 @@ export class Egg {
     readonly id: string,
     readonly ipfsHash: string,
     readonly traits: Traits,
-    readonly owner?: string
+    readonly owned: boolean
   ) {}
-
-  get minted() {
-    return this.owner !== undefined;
-  }
 }
