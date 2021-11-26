@@ -14,7 +14,7 @@ eggMetadataRouter.get("/eggs/:tokenId", async (req: Request, res: Response) => {
       attributes: [
         ...map(egg.traits, (value, key) => {
           return {
-            trait_type: key,
+            trait_type: startCase(key),
             value: startCase(value),
           };
         }),
