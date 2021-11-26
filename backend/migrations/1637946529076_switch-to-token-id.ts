@@ -4,14 +4,18 @@ import { MigrationBuilder, ColumnDefinitions } from "node-pg-migrate";
 export const shorthands: ColumnDefinitions | undefined = undefined;
 
 export async function up(pgm: MigrationBuilder): Promise<void> {
+  pgm.dropIndex("eggs", "ipfs_hash");
   pgm.addColumn("eggs", {
-    name: {
-      type: "varchar(100)",
+    token_id: {
+      type: "smallint",
       notNull: true,
     },
   });
+  pgm.addIndex("eggs", "token_id");
 }
 
 export async function down(pgm: MigrationBuilder): Promise<void> {
-  pgm.dropColumn("eggs", "name");
+  pgm.createIndex("eggs", "ipfs_hash");
+  pgm.dropIndex("eggs", "token_id");
+  pgm.dropColumn("eggs", "token_id");
 }

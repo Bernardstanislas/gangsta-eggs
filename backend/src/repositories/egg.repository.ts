@@ -1,39 +1,40 @@
-import {postgresPool} from '../config';
-import {Egg, Traits} from '../entities/egg';
+import { postgresPool } from "../config";
+import { Egg, Traits } from "../entities/egg";
 
 type CreatePayload = {
+  tokenId: number;
   ipfsHash: string;
   traits: Traits;
   name: string;
 };
 
 export const eggRepository = {
-  async findByIpfsHash(ipfsHash: string): Promise<Egg> {
+  async findByTokenId(tokenId: number): Promise<Egg> {
     const rows = await postgresPool.query(
-      'SELECT * FROM eggs WHERE ipfs_hash = $1',
-      [ipfsHash]
+      "SELECT * FROM eggs WHERE token_id = $1",
+      [tokenId]
     );
 
     if (rows.rowCount === 0) {
-      throw new Error(`No egg found with ipfsHash: ${ipfsHash}`);
+      throw new Error(`No egg found with token id: ${tokenId}`);
     }
     return new Egg(
       rows.rows[0].id,
+      rows.rows[0].token_id,
       rows.rows[0].ipfs_hash,
       rows.rows[0].traits,
-      rows.rows[0].owned,
       rows.rows[0].name
     );
   },
-  async create({ipfsHash, traits, name}: CreatePayload): Promise<void> {
+  async create({
+    tokenId,
+    ipfsHash,
+    traits,
+    name,
+  }: CreatePayload): Promise<void> {
     await postgresPool.query(
-      'INSERT INTO eggs (ipfs_hash, traits, name) VALUES ($1, $2, $3)',
-      [ipfsHash, JSON.stringify(traits), name]
+      "INSERT INTO eggs (token_id, ipfs_hash, traits, name) VALUES ($1, $2, $3, $4)",
+      [tokenId, ipfsHash, JSON.stringify(traits), name]
     );
-  },
-  async markAsOwned(egg: Egg): Promise<void> {
-    await postgresPool.query('UPDATE eggs SET(owned) = (true) WHERE id = $1', [
-      egg.id,
-    ]);
   },
 };

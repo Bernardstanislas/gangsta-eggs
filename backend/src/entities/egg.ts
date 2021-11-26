@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-constructor */
 export type Traits = {
   background: string;
   skin: string;
@@ -12,9 +13,9 @@ export type Traits = {
 export class Egg {
   constructor(
     readonly id: string,
+    readonly tokenId: number,
     readonly ipfsHash: string,
     readonly traits: Traits,
-    readonly owned: boolean,
     readonly name: string
   ) {}
 }
