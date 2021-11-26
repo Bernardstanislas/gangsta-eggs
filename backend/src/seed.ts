@@ -1,3 +1,4 @@
+import faker from 'faker';
 import eggs from './eggs.json';
 import {Traits} from './entities/egg';
 import {eggRepository} from './repositories/egg.repository';
@@ -33,6 +34,7 @@ const formatTraits = (egg: RawEgg): Traits => {
       await eggRepository.create({
         ipfsHash: egg.hash,
         traits: formatTraits(egg),
+        name: faker.name.findName(),
       });
     })
   );

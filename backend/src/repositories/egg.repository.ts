@@ -4,6 +4,7 @@ import {Egg, Traits} from '../entities/egg';
 type CreatePayload = {
   ipfsHash: string;
   traits: Traits;
+  name: string;
 };
 
 export const eggRepository = {
@@ -19,14 +20,15 @@ export const eggRepository = {
     return new Egg(
       rows.rows[0].id,
       rows.rows[0].ipfs_hash,
-      JSON.parse(rows.rows[0].traits),
-      rows.rows[0].owned
+      rows.rows[0].traits,
+      rows.rows[0].owned,
+      rows.rows[0].name
     );
   },
-  async create({ipfsHash, traits}: CreatePayload): Promise<void> {
+  async create({ipfsHash, traits, name}: CreatePayload): Promise<void> {
     await postgresPool.query(
-      'INSERT INTO eggs (ipfs_hash, traits) VALUES ($1, $2)',
-      [ipfsHash, JSON.stringify(traits)]
+      'INSERT INTO eggs (ipfs_hash, traits, name) VALUES ($1, $2, $3)',
+      [ipfsHash, JSON.stringify(traits), name]
     );
   },
   async markAsOwned(egg: Egg): Promise<void> {

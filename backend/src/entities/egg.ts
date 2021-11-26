@@ -14,6 +14,7 @@ export class Egg {
     readonly id: string,
     readonly ipfsHash: string,
     readonly traits: Traits,
-    readonly owned: boolean
+    readonly owned: boolean,
+    readonly name: string
   ) {}
 }
