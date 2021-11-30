@@ -49,7 +49,7 @@ export const FAQ = () => {
           </p>
         </Accordion>
         <Accordion title="Where can I buy my eggs?">
-          <p>You’ll be able to mint Eggs on the website on 12/01/2021.</p>
+          <p>You’ll be able to mint Eggs on the website on 12/15/2021.</p>
           <p>Secondary sales will be available on OpenSea.</p>
         </Accordion>
         <Accordion title="Where are the smart contracts deployed?">

@@ -35,7 +35,7 @@ export const Minting = () => {
               </div>
               <div>
                 <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce">
-                  <strong>Launch on December the 1st</strong>
+                  <strong>Launch on December the 15th</strong>
                 </button>
               </div>
             </div>

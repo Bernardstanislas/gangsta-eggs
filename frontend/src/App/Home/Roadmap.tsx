@@ -10,7 +10,7 @@ export const Roadmap = () => {
       <FontAwesomeIcon icon="drumstick-bite" size="3x" className="my-2" />
       <Subtitle>Next</Subtitle>
       <p className="my-2 leading-tight">
-        <b>12/01/21:</b> launch 🚀. Open the chicken coop!
+        <b>12/15/21:</b> launch 🚀. Open the chicken coop!
       </p>
       <p className="my-2 leading-tight">
         <b>50% sold:</b> rarity scores released
