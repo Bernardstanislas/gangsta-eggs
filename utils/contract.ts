@@ -1,5 +1,4 @@
 /* eslint-disable node/no-unpublished-import */
-import { HardhatEthersHelpers } from "hardhat/types";
 import deployments from "../contracts.json";
 
 type Deployments = {
@@ -8,10 +7,7 @@ type Deployments = {
   };
 };
 
-export const getContract = async (
-  contract: string,
-  ethers: HardhatEthersHelpers
-) => {
+export const getContract = async (contract: string, ethers: any) => {
   const network = await ethers.provider.getNetwork();
 
   const factory = await ethers.getContractFactory(contract);
