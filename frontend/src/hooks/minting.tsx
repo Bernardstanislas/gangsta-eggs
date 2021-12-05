@@ -1,29 +1,28 @@
-import {useContext, useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
-  CurrentAddressContext,
   EggTokenContext,
   GangstaEggsContext,
   PricerContext,
   ProviderContext,
   SymfoniContext,
-} from '../hardhat/SymfoniContext';
-import deployments from '../../../contracts.json';
-import {Pricer} from '../hardhat/typechain/Pricer';
-import {GangstaEggs} from '../hardhat/typechain/GangstaEggs';
-import {Network} from '@ethersproject/networks';
-import {EggToken} from '../hardhat/typechain/EggToken';
+} from "../hardhat/SymfoniContext";
+import deployments from "../../../contracts.json";
+import { Pricer } from "../hardhat/typechain/Pricer";
+import { GangstaEggs } from "../hardhat/typechain/GangstaEggs";
+import { Network } from "@ethersproject/networks";
+import { EggToken } from "../hardhat/typechain/EggToken";
 
 export const useMinting = () => {
   const [provider] = useContext(ProviderContext);
-  const [currentAddress] = useContext(CurrentAddressContext);
-  const {init} = useContext(SymfoniContext);
+  const [currentAddress, setCurrentAddress] = useState<string>();
+  const { init } = useContext(SymfoniContext);
   const [connected, setConnected] = useState(false);
   const [readyToMint, setReadyToMint] = useState(false);
   const [chainId, setChainId] = useState<number>();
-  const {instance: gangstaEggsInstance} = useContext(GangstaEggsContext);
-  const {instance: pricerInstance} = useContext(PricerContext);
-  const {instance: eggTokenInstance} = useContext(EggTokenContext);
+  const { instance: gangstaEggsInstance } = useContext(GangstaEggsContext);
+  const { instance: pricerInstance } = useContext(PricerContext);
+  const { instance: eggTokenInstance } = useContext(EggTokenContext);
   const [pricer, setPricer] = useState<Pricer>();
   const [gangstaEggs, setGangstaEggs] = useState<GangstaEggs>();
   const [eggToken, setEggToken] = useState<EggToken>();
@@ -33,8 +32,14 @@ export const useMinting = () => {
     if (!window.ethereum) {
       return;
     }
-    window.ethereum.on('chainChanged', setChainId);
-    return () => window.ethereum.removeListener('chainChanged', setChainId);
+    window.ethereum.on("accountsChanged", (accounts: string[]) => {
+      if (accounts.length === 0) {
+        toast.error("Please connect to MetaMask");
+      }
+      setCurrentAddress(accounts[0]);
+    });
+    window.ethereum.on("chainChanged", setChainId);
+    return () => window.ethereum.removeListener("chainChanged", setChainId);
   }, []);
 
   useEffect(() => {
@@ -45,7 +50,14 @@ export const useMinting = () => {
       const network = await provider.getNetwork();
       setChainId(network.chainId);
     };
+    const initCurrentAddress = async () => {
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+      setCurrentAddress(accounts[0]);
+    };
     initChainId();
+    initCurrentAddress();
   }, [provider]);
 
   useEffect(() => {
@@ -54,8 +66,8 @@ export const useMinting = () => {
         try {
           // check if the chain to connect to is installed
           await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{chainId: '0x13881'}], // chainId must be in hexadecimal numbers
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
           });
         } catch (error: any) {
           // This error code indicates that the chain has not been added to MetaMask
@@ -63,18 +75,18 @@ export const useMinting = () => {
           if (error.code === 4902) {
             try {
               await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
+                method: "wallet_addEthereumChain",
                 params: [
                   {
-                    chainId: '0x13881',
-                    rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
-                    chainName: 'Polygon Testnet Mumbai',
+                    chainId: "0x13881",
+                    rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
+                    chainName: "Polygon Testnet Mumbai",
                     nativeCurrency: {
-                      name: 'MATIC',
-                      symbol: 'MATIC',
+                      name: "MATIC",
+                      symbol: "MATIC",
                       decimals: 18,
                     },
-                    blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+                    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
                   },
                 ],
               });
@@ -123,7 +135,7 @@ export const useMinting = () => {
   }, [pricer, gangstaEggs, chainId]);
 
   useEffect(() => {
-    if (provider && currentAddress !== '') {
+    if (provider && currentAddress !== "") {
       setConnected(true);
     }
   }, [provider, currentAddress]);
@@ -140,15 +152,15 @@ export const useMinting = () => {
 
   const connect = async () => {
     if (!window.ethereum) {
-      toast.error('No web3 provider found');
+      toast.error("No web3 provider found");
       return;
     }
-    init('web3modal');
+    init("web3modal");
   };
 
   const mintEgg = async () => {
     const price = await pricer!.mintingPrice();
-    await gangstaEggs!.mintEgg('yolo', {value: price});
+    await gangstaEggs!.mintEgg({ value: price });
   };
 
   return {

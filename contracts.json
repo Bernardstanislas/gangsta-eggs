@@ -1,13 +1,13 @@
 {
     "maticmum": {
-        "EggToken": "0xdf46d2dB25ee3606496C2c90b973443989133659",
-        "ChickToken": "0x5D1295A6Fd5927226e859357b51e0912DFB61233",
-        "BreedingTracker": "0xBd8C290a68CC20E13A1587EfD1F6cc8b15cBDbC6",
-        "FeatureFlag": "0x0E47597c9F45edED79c36DBD4225997caf76c7B9",
-        "GenerationTracker": "0x2b411754Cd1daaf2488047f4F6BE132d50bb5Da4",
-        "Pricer": "0x839a8C84C92a2DDF03EB3a081016C1e419ff9067",
-        "MintingQuota": "0xd6041862357bD9f110815dD5996AC85eCff48F8B",
-        "GangstaEggs": "0x1CB7E76E85FEa1692Abe3D8e0c9d1B172f6C865c"
+        "EggToken": "0xD607c404C9d6b7cc683AB4Cd7e3A74397F1028B2",
+        "ChickToken": "0x3d9684a3dF97eD30D3321BE63acD240b0abF63fe",
+        "BreedingTracker": "0xE315694045B6beaFc728A2f4C2A3b99d918E1e9e",
+        "FeatureFlag": "0x325991eB533AA9E7cdf1332309B37c3CC7C2e0C8",
+        "GenerationTracker": "0x823fA0e7E67d1F91c92DFFf7ee20A52e9086edc1",
+        "Pricer": "0x6eed42BfFE8311e023A1C3904591FC851Fc00109",
+        "MintingQuota": "0x766E22bF86435f2e711dfC809fB052F33F87E29e",
+        "GangstaEggs": "0xdb461F02a51DC26CdF0CdcBeac2afaDcA90AACCb"
     },
     "rinkeby": {
         "EggToken": "0x917085950Ac4A5e8d57c483090B362f4d5212f2e",
