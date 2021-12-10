@@ -111,7 +111,7 @@ export const useMinting = () => {
               params: [
                 {
                   chainId: "0x13881",
-                  rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
+                  rpcUrls: ["https://rpc-endpoints.superfluid.dev/mumbai"],
                   chainName: "Polygon Testnet Mumbai",
                   nativeCurrency: {
                     name: "MATIC",

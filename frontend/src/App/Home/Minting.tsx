@@ -8,7 +8,16 @@ const MINTING_ENABLED = import.meta.env.VITE_MINTING_ENABLED === "true";
 export const Minting = () => {
   return (
     <Section title="Minting" withBorder={true}>
-      <p>Find all the release agenda in the FAQ below!</p>
+      <p>
+        Get ready for the <strong>release day</strong> and follow our{" "}
+        <a
+          className="underline"
+          href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6"
+        >
+          getting started guide
+        </a>
+        !
+      </p>
       <div className="flex flex-col md:flex-row-reverse items-center">
         <div className="md:flex-1 shadow-m flex justify-center items:center my-4">
           <img
@@ -34,9 +43,12 @@ export const Minting = () => {
                 ></img>
               </div>
               <div>
-                <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce">
-                  <strong>Launch on December the 15th</strong>
-                </button>
+                <a
+                  href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6"
+                  className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce"
+                >
+                  <strong>Be ready for December the 15th</strong>
+                </a>
               </div>
             </div>
           )}

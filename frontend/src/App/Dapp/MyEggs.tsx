@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { Egg } from "../../components/Egg";
 import { CurrentAddressContext } from "../../hardhat/SymfoniContext";
 import { MintingContext } from "../../hooks/minting";
 
@@ -24,14 +25,17 @@ export const MyEggs = () => {
   }, [eggToken, gangstaEggs, currentAddress]);
   return eggs.length ? (
     <div>
-      {eggs.map((egg) => (
-        <div key={egg}>
-          <img
-            src={`https://api.gangsta-egss.com/eggs/${egg}/image`}
-            alt={`egg ${egg}`}
-          ></img>
-        </div>
-      ))}
+      <div className="mb-4">
+        <i>
+          Please note that images may take few seconds to load since they are
+          (for the moment) directly read from IPFS.
+        </i>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {eggs.map((egg) => (
+          <Egg id={egg} key={egg} />
+        ))}
+      </div>
     </div>
   ) : (
     <p>You don't have eggs yet, mint some with the button above!</p>
