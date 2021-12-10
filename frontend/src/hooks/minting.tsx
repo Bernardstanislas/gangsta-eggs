@@ -12,6 +12,9 @@ import { Pricer } from "../hardhat/typechain/Pricer";
 import { GangstaEggs } from "../hardhat/typechain/GangstaEggs";
 import { Network } from "@ethersproject/networks";
 import { EggToken } from "../hardhat/typechain/EggToken";
+import React from "react";
+
+export const MintingContext = React.createContext<any>({});
 
 export const useMinting = () => {
   const [provider] = useContext(ProviderContext);
@@ -27,6 +30,23 @@ export const useMinting = () => {
   const [gangstaEggs, setGangstaEggs] = useState<GangstaEggs>();
   const [eggToken, setEggToken] = useState<EggToken>();
   const [network, setNetwork] = useState<Network>();
+  const [balanceIsPositive, setBalanceIsPositive] = useState(false);
+
+  useEffect(() => {
+    const checkBalance = async () => {
+      const balance = await provider.getBalance(currentAddress);
+      const isPositive = balance.gt(0);
+      if (!isPositive) {
+        toast.warning(
+          "You don't have any MATIC in your current wallet, either buy some or use a different account"
+        );
+      }
+      setBalanceIsPositive(isPositive);
+    };
+    if (provider && currentAddress) {
+      checkBalance();
+    }
+  }, [provider, currentAddress]);
 
   useEffect(() => {
     if (!window.ethereum) {
@@ -54,6 +74,9 @@ export const useMinting = () => {
       const accounts = await window.ethereum.request({
         method: "eth_accounts",
       });
+      if (accounts.length === 0) {
+        toast.error("Please connect to MetaMask");
+      }
       setCurrentAddress(accounts[0]);
     };
     initChainId();
@@ -131,8 +154,10 @@ export const useMinting = () => {
   ]);
 
   useEffect(() => {
-    setReadyToMint(!!pricer && !!gangstaEggs && chainId === 0x13881);
-  }, [pricer, gangstaEggs, chainId]);
+    setReadyToMint(
+      !!pricer && !!gangstaEggs && chainId === 0x13881 && balanceIsPositive
+    );
+  }, [pricer, gangstaEggs, chainId, balanceIsPositive]);
 
   useEffect(() => {
     if (provider && currentAddress !== "") {
@@ -170,5 +195,6 @@ export const useMinting = () => {
     network,
     eggToken,
     gangstaEggs,
+    currentAddress,
   };
 };

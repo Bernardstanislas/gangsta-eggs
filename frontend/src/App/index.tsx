@@ -8,24 +8,29 @@ import { Copyrights } from "./Copyrights";
 import { Menu } from "./Menu";
 import { Route, Routes } from "react-router";
 import { Dapp } from "./Dapp";
+import { MintingContext, useMinting } from "../hooks/minting";
 
 library.add(fab);
 library.add(fas);
-function App() {
+
+const App = () => {
+  const minting = useMinting();
   return (
-    <div className="min-h-screen bg-egg-mobile md:bg-egg-desktop bg-contain bg-fixed bg-center font-body text-white">
-      <Menu />
-      <div className="sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg mx-auto">
-        <div className="px-4 pt-16">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="app" element={<Dapp />} />
-          </Routes>
-          <Copyrights />
+    <MintingContext.Provider value={minting}>
+      <div className="min-h-screen bg-egg-mobile md:bg-egg-desktop bg-contain bg-fixed bg-center font-body text-white">
+        <Menu />
+        <div className="sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg mx-auto">
+          <div className="px-4 pt-16">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="app" element={<Dapp />} />
+            </Routes>
+            <Copyrights />
+          </div>
         </div>
       </div>
-    </div>
+    </MintingContext.Provider>
   );
-}
+};
 
 export default App;

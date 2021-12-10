@@ -1,11 +1,11 @@
-import React, {useContext, useEffect} from 'react';
-import {CurrentAddressContext} from '../../hardhat/SymfoniContext';
-import {useMinting} from '../../hooks/minting';
+import React, { useContext, useEffect } from "react";
+import { CurrentAddressContext } from "../../hardhat/SymfoniContext";
+import { MintingContext } from "../../hooks/minting";
 
 const CONTRACT_CREATION_BLOCK = 21747505;
 
 export const MyEggs = () => {
-  const {eggToken, gangstaEggs} = useMinting();
+  const { eggToken, gangstaEggs } = useContext(MintingContext);
   const [eggs, setEggs] = React.useState<number[]>([]);
   const [currentAddress] = useContext(CurrentAddressContext);
 
@@ -18,13 +18,13 @@ export const MyEggs = () => {
         eggToken.filters.Transfer(null, currentAddress, null),
         CONTRACT_CREATION_BLOCK
       );
-      setEggs(events.map(event => parseInt(event.topics[3])));
+      setEggs(events.map((event) => parseInt(event.topics[3])));
     };
     fetchEggs();
   }, [eggToken, gangstaEggs, currentAddress]);
   return eggs.length ? (
     <div>
-      {eggs.map(egg => (
+      {eggs.map((egg) => (
         <div key={egg}>
           <img
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${egg}.png`}

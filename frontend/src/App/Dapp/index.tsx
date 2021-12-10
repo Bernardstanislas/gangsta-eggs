@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Section } from "../../components/Section";
-import { useMinting } from "../../hooks/minting";
+import { MintingContext } from "../../hooks/minting";
 import { MyEggs } from "./MyEggs";
 
 export const Dapp = () => {
-  const { connect, readyToMint, mintEgg } = useMinting();
+  const { connect, readyToMint, mintEgg } = useContext(MintingContext);
   useEffect(() => {
     connect();
   }, []);

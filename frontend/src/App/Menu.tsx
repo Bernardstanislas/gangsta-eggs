@@ -1,12 +1,10 @@
 import React, { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CurrentAddressContext } from "../hardhat/SymfoniContext";
 import { Link } from "react-router-dom";
-import { useMinting } from "../hooks/minting";
+import { MintingContext } from "../hooks/minting";
 
 export const Menu = () => {
-  const [currentAddress] = useContext(CurrentAddressContext);
-  const { network } = useMinting();
+  const { network, currentAddress } = useContext(MintingContext);
   return (
     <>
       <div className="border-b h-16 text-black fixed w-full bg-pourpre z-10 flex items-center">
