@@ -1,10 +1,12 @@
-import express from 'express';
-import dotenv from 'dotenv';
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import { eggMetadataRouter } from "./routes/egg-metadata";
 dotenv.config();
-import {eggMetadataRouter} from './routes/egg-metadata';
 
 const app = express();
 
+app.use(cors());
 app.use(eggMetadataRouter);
 
 app.listen(process.env.PORT || 3000, () => {
