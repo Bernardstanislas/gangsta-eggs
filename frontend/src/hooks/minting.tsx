@@ -19,6 +19,8 @@ const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
 // @ts-ignore
 const CHAIN_NAME = import.meta.env.VITE_CHAIN_NAME;
 // @ts-ignore
+const NETWORK_SLUG = import.meta.env.VITE_NETWORK_SLUG;
+// @ts-ignore
 const RPC_URL = import.meta.env.VITE_RPC_URL;
 // @ts-ignore
 const EXPLORER_URL = import.meta.env.VITE_EXPLORER_URL;
@@ -153,11 +155,13 @@ export const useMinting = () => {
       ) {
         return;
       }
-      setPricer(await pricerInstance.attach(deployments.maticmum.Pricer));
+      setPricer(await pricerInstance.attach(deployments[NETWORK_SLUG].Pricer));
       setGangstaEggs(
-        await gangstaEggsInstance.attach(deployments.maticmum.GangstaEggs)
+        await gangstaEggsInstance.attach(deployments[NETWORK_SLUG].GangstaEggs)
       );
-      setEggToken(await eggTokenInstance.attach(deployments.maticmum.EggToken));
+      setEggToken(
+        await eggTokenInstance.attach(deployments[NETWORK_SLUG].EggToken)
+      );
     };
     contractsConnector();
   }, [
