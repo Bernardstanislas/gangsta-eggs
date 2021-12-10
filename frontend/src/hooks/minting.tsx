@@ -20,8 +20,6 @@ export const useMinting = () => {
   const [provider] = useContext(ProviderContext);
   const [currentAddress, setCurrentAddress] = useState<string>();
   const { init } = useContext(SymfoniContext);
-  const [connected, setConnected] = useState(false);
-  const [readyToMint, setReadyToMint] = useState(false);
   const [chainId, setChainId] = useState<number>();
   const { instance: gangstaEggsInstance } = useContext(GangstaEggsContext);
   const { instance: pricerInstance } = useContext(PricerContext);
@@ -30,17 +28,29 @@ export const useMinting = () => {
   const [gangstaEggs, setGangstaEggs] = useState<GangstaEggs>();
   const [eggToken, setEggToken] = useState<EggToken>();
   const [network, setNetwork] = useState<Network>();
+
+  const [connected, setConnected] = useState(false);
   const [balanceIsPositive, setBalanceIsPositive] = useState(false);
+  const networkIsGood = chainId === 0x13881;
+  const contractAttached = !!gangstaEggs;
+  const readyToMint =
+    connected && balanceIsPositive && networkIsGood && contractAttached;
+
+  useEffect(() => {
+    const networkSwitcher = async () => {
+      if (network) {
+        if (chainId && chainId !== network.chainId) {
+          window.location.reload();
+        }
+      }
+    };
+    networkSwitcher();
+  }, [network, chainId]);
 
   useEffect(() => {
     const checkBalance = async () => {
       const balance = await provider.getBalance(currentAddress);
       const isPositive = balance.gt(0);
-      if (!isPositive) {
-        toast.warning(
-          "You don't have any MATIC in your current wallet, either buy some or use a different account"
-        );
-      }
       setBalanceIsPositive(isPositive);
     };
     if (provider && currentAddress) {
@@ -83,47 +93,44 @@ export const useMinting = () => {
     initCurrentAddress();
   }, [provider]);
 
-  useEffect(() => {
-    const switchChain = async () => {
-      if (connected && chainId !== 0x13881) {
-        try {
-          // check if the chain to connect to is installed
-          await window.ethereum.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
-          });
-        } catch (error: any) {
-          // This error code indicates that the chain has not been added to MetaMask
-          // if it is not, then install it into the user MetaMask
-          if (error.code === 4902) {
-            try {
-              await window.ethereum.request({
-                method: "wallet_addEthereumChain",
-                params: [
-                  {
-                    chainId: "0x13881",
-                    rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
-                    chainName: "Polygon Testnet Mumbai",
-                    nativeCurrency: {
-                      name: "MATIC",
-                      symbol: "MATIC",
-                      decimals: 18,
-                    },
-                    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+  const switchChain = async () => {
+    if (connected && chainId !== 0x13881) {
+      try {
+        // check if the chain to connect to is installed
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
+        });
+      } catch (error: any) {
+        // This error code indicates that the chain has not been added to MetaMask
+        // if it is not, then install it into the user MetaMask
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: "0x13881",
+                  rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
+                  chainName: "Polygon Testnet Mumbai",
+                  nativeCurrency: {
+                    name: "MATIC",
+                    symbol: "MATIC",
+                    decimals: 18,
                   },
-                ],
-              });
-            } catch (addError) {
-              console.error(addError);
-            }
+                  blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+                },
+              ],
+            });
+          } catch (addError) {
+            console.error(addError);
           }
-          console.error(error);
         }
-        return;
+        console.error(error);
       }
-    };
-    switchChain();
-  }, [connected, chainId]);
+      return;
+    }
+  };
 
   useEffect(() => {
     const contractsConnector = async () => {
@@ -154,12 +161,6 @@ export const useMinting = () => {
   ]);
 
   useEffect(() => {
-    setReadyToMint(
-      !!pricer && !!gangstaEggs && chainId === 0x13881 && balanceIsPositive
-    );
-  }, [pricer, gangstaEggs, chainId, balanceIsPositive]);
-
-  useEffect(() => {
     if (provider && currentAddress !== "") {
       setConnected(true);
     }
@@ -177,10 +178,10 @@ export const useMinting = () => {
 
   const connect = async () => {
     if (!window.ethereum) {
-      toast.error("No web3 provider found");
+      toast.error("Please install MetaMask browser extension");
       return;
     }
-    init("web3modal");
+    init("any");
   };
 
   const mintEgg = async () => {
@@ -190,6 +191,11 @@ export const useMinting = () => {
 
   return {
     connect,
+    connected,
+    balanceIsPositive,
+    networkIsGood,
+    contractAttached,
+    switchChain,
     readyToMint,
     mintEgg,
     network,

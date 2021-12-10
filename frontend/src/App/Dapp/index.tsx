@@ -4,43 +4,88 @@ import { MintingContext } from "../../hooks/minting";
 import { MyEggs } from "./MyEggs";
 
 export const Dapp = () => {
-  const { connect, readyToMint, mintEgg } = useContext(MintingContext);
+  const {
+    connected,
+    connect,
+    switchChain,
+    balanceIsPositive,
+    networkIsGood,
+    readyToMint,
+    mintEgg,
+  } = useContext(MintingContext);
+
   useEffect(() => {
     connect();
   }, []);
+
   return (
-    <div>
+    <div className="min-h-screen">
       <Section title="Minting" withBorder>
-        <div className="flex flex-col md:flex-row-reverse items-center">
-          <div className="md:flex-1 shadow-m flex justify-center items:center my-4">
-            TO REPLACE WITH THE MATIC TUTORIAL
-          </div>
-          <div className="flex justify-center pt-6 md:flex-1">
-            {readyToMint ? (
-              <button
-                className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
-                onClick={mintEgg}
-              >
-                <strong>Mint an egg!</strong>
-              </button>
+        {connected ? (
+          networkIsGood ? (
+            balanceIsPositive ? (
+              <div className="flex justify-center py-10">
+                <button
+                  className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
+                  onClick={mintEgg}
+                >
+                  <strong>Mint an egg!</strong>
+                </button>
+              </div>
             ) : (
               <div>
                 <p>
-                  It looks like you don't have a wallet connected to the Mumbai
-                  network.
+                  Your wallet is currently empty, you don't have MATICs to pay
+                  for the minting gas.
                 </p>
                 <p>
-                  Please check your MetaMask extension and connect your wallet
-                  to the Mumbai network.
+                  You won't be able to mint any egg if you can't afford the gas.
                 </p>
+                <p>Please follow our guide to get MATICs.</p>
+                <div className="flex justify-center py-10">
+                  <a
+                    className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
+                    href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-60b6e43e942644909558786b20dc4807"
+                  >
+                    <strong>Show me how to get MATICs!</strong>
+                  </a>
+                </div>
               </div>
-            )}
+            )
+          ) : (
+            <div>
+              <p>
+                Your wallet is not currently connected to the Polygon network.
+              </p>
+              <p>
+                You won't be able to mint any egg if not on the good network.
+              </p>
+              <div className="flex justify-center py-10">
+                <button
+                  className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
+                  onClick={switchChain}
+                >
+                  <strong>Switch to Polygon</strong>
+                </button>
+              </div>
+            </div>
+          )
+        ) : (
+          <div className="flex justify-center py-10">
+            <button
+              className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
+              onClick={connect}
+            >
+              <strong>Connect my wallet!</strong>
+            </button>
           </div>
-        </div>
+        )}
       </Section>
-      <Section title="My GangstaEggs">
-        <MyEggs />
-      </Section>
+      {connected && networkIsGood && (
+        <Section title="My GangstaEggs">
+          <MyEggs />
+        </Section>
+      )}
     </div>
   );
 };
