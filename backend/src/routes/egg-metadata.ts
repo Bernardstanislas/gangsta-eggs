@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import axios from "axios";
 import { startCase, map } from "lodash";
 import { eggRepository } from "../repositories/egg.repository";
 
@@ -30,3 +31,23 @@ eggMetadataRouter.get("/eggs/:tokenId", async (req: Request, res: Response) => {
     res.status(404).send("Egg not found");
   }
 });
+
+eggMetadataRouter.get(
+  "/eggs/:tokenId/image",
+  async (req: Request, res: Response) => {
+    const { tokenId } = req.params;
+    try {
+      const egg = await eggRepository.findByTokenId(parseInt(tokenId));
+      const imageStream = await axios.get(
+        `https://ipfs.io/ipfs/${egg.ipfsHash}`,
+        {
+          responseType: "stream",
+        }
+      );
+      imageStream.data.pipe(res);
+    } catch (error) {
+      console.log(error);
+      res.status(404).send("Egg not found");
+    }
+  }
+);
