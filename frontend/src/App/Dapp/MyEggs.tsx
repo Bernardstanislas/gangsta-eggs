@@ -27,7 +27,7 @@ export const MyEggs = () => {
       {eggs.map((egg) => (
         <div key={egg}>
           <img
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${egg}.png`}
+            src={`https://api.gangsta-egss.com/eggs/${egg}/image`}
             alt={`egg ${egg}`}
           ></img>
         </div>

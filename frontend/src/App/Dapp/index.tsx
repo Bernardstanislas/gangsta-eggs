@@ -10,7 +10,6 @@ export const Dapp = () => {
     switchChain,
     balanceIsPositive,
     networkIsGood,
-    readyToMint,
     mintEgg,
   } = useContext(MintingContext);
 

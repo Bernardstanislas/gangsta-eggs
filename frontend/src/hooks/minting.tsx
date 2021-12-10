@@ -185,8 +185,13 @@ export const useMinting = () => {
   };
 
   const mintEgg = async () => {
-    const price = await pricer!.mintingPrice();
-    await gangstaEggs!.mintEgg({ value: price });
+    try {
+      const price = await pricer!.mintingPrice();
+      await gangstaEggs!.mintEgg({ value: price });
+    } catch (error) {
+      toast.error(error.data.message);
+      console.log(error);
+    }
   };
 
   return {

@@ -55,7 +55,7 @@ const config: HardhatUserConfig = {
       gasMultiplier: 4,
     },
     mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
+      url: "https://matic-mumbai.chainstacklabs.com",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
