@@ -3,7 +3,10 @@ import { Egg } from "../../components/Egg";
 import { CurrentAddressContext } from "../../hardhat/SymfoniContext";
 import { MintingContext } from "../../hooks/minting";
 
-const CONTRACT_CREATION_BLOCK = 21747505;
+const CONTRACT_CREATION_BLOCK = parseInt(
+  // @ts-ignore
+  import.meta.env.VITE_CONTRACT_CREATION_BLOCK
+);
 
 export const MyEggs = () => {
   const { eggToken, gangstaEggs } = useContext(MintingContext);

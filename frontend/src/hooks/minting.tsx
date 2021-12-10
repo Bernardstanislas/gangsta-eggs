@@ -14,6 +14,15 @@ import { Network } from "@ethersproject/networks";
 import { EggToken } from "../hardhat/typechain/EggToken";
 import React from "react";
 
+// @ts-ignore
+const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
+// @ts-ignore
+const CHAIN_NAME = import.meta.env.VITE_CHAIN_NAME;
+// @ts-ignore
+const RPC_URL = import.meta.env.VITE_RPC_URL;
+// @ts-ignore
+const EXPLORER_URL = import.meta.env.VITE_EXPLORER_URL;
+
 export const MintingContext = React.createContext<any>({});
 
 export const useMinting = () => {
@@ -31,7 +40,7 @@ export const useMinting = () => {
 
   const [connected, setConnected] = useState(false);
   const [balanceIsPositive, setBalanceIsPositive] = useState(false);
-  const networkIsGood = chainId === 0x13881;
+  const networkIsGood = chainId === parseInt(CHAIN_ID);
   const contractAttached = !!gangstaEggs;
   const readyToMint =
     connected && balanceIsPositive && networkIsGood && contractAttached;
@@ -99,7 +108,7 @@ export const useMinting = () => {
         // check if the chain to connect to is installed
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x13881" }], // chainId must be in hexadecimal numbers
+          params: [{ chainId: CHAIN_ID }], // chainId must be in hexadecimal numbers
         });
       } catch (error: any) {
         // This error code indicates that the chain has not been added to MetaMask
@@ -110,15 +119,15 @@ export const useMinting = () => {
               method: "wallet_addEthereumChain",
               params: [
                 {
-                  chainId: "0x13881",
-                  rpcUrls: ["https://rpc-endpoints.superfluid.dev/mumbai"],
-                  chainName: "Polygon Testnet Mumbai",
+                  chainId: CHAIN_ID,
+                  rpcUrls: [RPC_URL],
+                  chainName: CHAIN_NAME,
                   nativeCurrency: {
                     name: "MATIC",
                     symbol: "MATIC",
                     decimals: 18,
                   },
-                  blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+                  blockExplorerUrls: [EXPLORER_URL],
                 },
               ],
             });
@@ -181,7 +190,7 @@ export const useMinting = () => {
       toast.error("Please install MetaMask browser extension");
       return;
     }
-    init("any");
+    init("web3modal");
   };
 
   const mintEgg = async () => {
