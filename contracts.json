@@ -1,4 +1,14 @@
 {
+    "matic": {
+        "EggToken": "0xf8bB4707eB9959bEe6fF699df7a077A1e7A49180",
+        "ChickToken": "0x835F28574f257ec907Af37f699c4dfB1581a8aC6",
+        "BreedingTracker": "0xC79eede64E2811cF4222B914E75F72d0eFEa36BC",
+        "FeatureFlag": "0x6D3c178849D2570d9756F113eF72Df681a6578c8",
+        "GenerationTracker": "0xA4B309fA0cc6901e6285C547E59170C4ed91CF24",
+        "Pricer": "0x75A8EC82E37D12bFA97926e373aB97a746366644",
+        "MintingQuota": "0xFC2CAdD671c2a6e5C8c5441042ce69b9Cf074f8f",
+        "GangstaEggs": "0xeD69c7Bad5D0d89b408129F68ea75e04de05Bf37"
+    },
     "maticmum": {
         "EggToken": "0xD607c404C9d6b7cc683AB4Cd7e3A74397F1028B2",
         "ChickToken": "0x3d9684a3dF97eD30D3321BE63acD240b0abF63fe",
