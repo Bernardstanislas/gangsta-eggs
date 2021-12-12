@@ -105,7 +105,7 @@ export const useMinting = () => {
   }, [provider]);
 
   const switchChain = async () => {
-    if (connected && chainId !== 0x13881) {
+    if (connected && chainId !== parseInt(CHAIN_ID)) {
       try {
         // check if the chain to connect to is installed
         await window.ethereum.request({
@@ -147,7 +147,7 @@ export const useMinting = () => {
     const contractsConnector = async () => {
       if (
         !connected ||
-        chainId !== 0x13881 ||
+        chainId !== parseInt(CHAIN_ID) ||
         !provider ||
         !pricerInstance ||
         !gangstaEggsInstance ||
