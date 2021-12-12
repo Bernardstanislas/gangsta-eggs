@@ -3,12 +3,11 @@ import { task } from "hardhat/config";
 import { getContract } from "../utils/contract";
 import deployments from "../contracts.json";
 import { HardhatUpgrades } from "@openzeppelin/hardhat-upgrades";
-import { HardhatEthersHelpers } from "hardhat/types";
 
 const upgradeContract = async (
   contractName: string,
   upgrades: HardhatUpgrades,
-  ethers: HardhatEthersHelpers
+  ethers: any
 ) => {
   const contract = await getContract(contractName, ethers);
   console.log(`Upgrading ${contractName}...`);
@@ -20,7 +19,7 @@ const upgradeContract = async (
 };
 
 task("upgrade-proxy", "Upgrade the contracts").setAction(
-  async ({ force }, { ethers, upgrades, run }) => {
+  async (_, { ethers, upgrades, run }) => {
     const network = await ethers.provider.getNetwork();
     await run("react");
 
