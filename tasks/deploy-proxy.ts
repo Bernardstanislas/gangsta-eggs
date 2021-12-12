@@ -13,9 +13,10 @@ task("deploy-proxy", "Deploy the initial proxy to the upgradeable contracts")
     false,
     types.boolean
   )
-  .setAction(async ({ force }, { ethers, upgrades }) => {
-    const network = await ethers.provider.getNetwork();
+  .setAction(async ({ force }, { ethers, upgrades, run }) => {
+    const network = await ethers.provider.ready;
 
+    await run("react");
     console.log(`Deploying proxy to ${network.name}...`);
 
     if (network.name in deployments) {
@@ -39,13 +40,13 @@ task("deploy-proxy", "Deploy the initial proxy to the upgradeable contracts")
         startingPrice: {
           type: "number",
           description: "Starting price (MATIC):",
-          default: 30,
+          default: 40,
           required: true,
         },
         endingPrice: {
           type: "number",
           description: "Ending price (MATIC):",
-          default: 120,
+          default: 130,
           required: true,
         },
         breedingPrice: {

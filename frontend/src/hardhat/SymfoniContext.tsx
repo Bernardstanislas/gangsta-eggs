@@ -8,28 +8,24 @@ import { GangstaEggs } from "./typechain/GangstaEggs";
 import { GangstaEggs__factory } from "./typechain/factories/GangstaEggs__factory";
 import { BreedingTracker } from "./typechain/BreedingTracker";
 import { BreedingTracker__factory } from "./typechain/factories/BreedingTracker__factory";
-import { GenerationTracker } from "./typechain/GenerationTracker";
-import { GenerationTracker__factory } from "./typechain/factories/GenerationTracker__factory";
 import { FeatureFlag } from "./typechain/FeatureFlag";
 import { FeatureFlag__factory } from "./typechain/factories/FeatureFlag__factory";
+import { GenerationTracker } from "./typechain/GenerationTracker";
+import { GenerationTracker__factory } from "./typechain/factories/GenerationTracker__factory";
 import { MintingQuota } from "./typechain/MintingQuota";
 import { MintingQuota__factory } from "./typechain/factories/MintingQuota__factory";
-import { EggTokenTest } from "./typechain/EggTokenTest";
-import { EggTokenTest__factory } from "./typechain/factories/EggTokenTest__factory";
 import { Pricer } from "./typechain/Pricer";
 import { Pricer__factory } from "./typechain/factories/Pricer__factory";
-import { ChickToken } from "./typechain/ChickToken";
-import { ChickToken__factory } from "./typechain/factories/ChickToken__factory";
+import { EggTokenTest } from "./typechain/EggTokenTest";
+import { EggTokenTest__factory } from "./typechain/factories/EggTokenTest__factory";
 import { EggToken } from "./typechain/EggToken";
 import { EggToken__factory } from "./typechain/factories/EggToken__factory";
-import { PaymentSplitter } from "./typechain/PaymentSplitter";
-import { PaymentSplitter__factory } from "./typechain/factories/PaymentSplitter__factory";
+import { ChickToken } from "./typechain/ChickToken";
+import { ChickToken__factory } from "./typechain/factories/ChickToken__factory";
 import { ERC721Upgradeable } from "./typechain/ERC721Upgradeable";
 import { ERC721Upgradeable__factory } from "./typechain/factories/ERC721Upgradeable__factory";
 import { EscrowUpgradeable } from "./typechain/EscrowUpgradeable";
 import { EscrowUpgradeable__factory } from "./typechain/factories/EscrowUpgradeable__factory";
-import { ERC721 } from "./typechain/ERC721";
-import { ERC721__factory } from "./typechain/factories/ERC721__factory";
 
 const emptyContract = {
     instance: undefined,
@@ -51,17 +47,15 @@ const defaultSymfoniContext: SymfoniContextInterface = {
 export const SymfoniContext = React.createContext<SymfoniContextInterface>(defaultSymfoniContext);
 export const GangstaEggsContext = React.createContext<SymfoniGangstaEggs>(emptyContract);
 export const BreedingTrackerContext = React.createContext<SymfoniBreedingTracker>(emptyContract);
-export const GenerationTrackerContext = React.createContext<SymfoniGenerationTracker>(emptyContract);
 export const FeatureFlagContext = React.createContext<SymfoniFeatureFlag>(emptyContract);
+export const GenerationTrackerContext = React.createContext<SymfoniGenerationTracker>(emptyContract);
 export const MintingQuotaContext = React.createContext<SymfoniMintingQuota>(emptyContract);
-export const EggTokenTestContext = React.createContext<SymfoniEggTokenTest>(emptyContract);
 export const PricerContext = React.createContext<SymfoniPricer>(emptyContract);
-export const ChickTokenContext = React.createContext<SymfoniChickToken>(emptyContract);
+export const EggTokenTestContext = React.createContext<SymfoniEggTokenTest>(emptyContract);
 export const EggTokenContext = React.createContext<SymfoniEggToken>(emptyContract);
-export const PaymentSplitterContext = React.createContext<SymfoniPaymentSplitter>(emptyContract);
+export const ChickTokenContext = React.createContext<SymfoniChickToken>(emptyContract);
 export const ERC721UpgradeableContext = React.createContext<SymfoniERC721Upgradeable>(emptyContract);
 export const EscrowUpgradeableContext = React.createContext<SymfoniEscrowUpgradeable>(emptyContract);
-export const ERC721Context = React.createContext<SymfoniERC721>(emptyContract);
 
 export interface SymfoniContextInterface {
     init: (provider?: string) => void;
@@ -87,14 +81,14 @@ export interface SymfoniBreedingTracker {
     factory?: BreedingTracker__factory;
 }
 
-export interface SymfoniGenerationTracker {
-    instance?: GenerationTracker;
-    factory?: GenerationTracker__factory;
-}
-
 export interface SymfoniFeatureFlag {
     instance?: FeatureFlag;
     factory?: FeatureFlag__factory;
+}
+
+export interface SymfoniGenerationTracker {
+    instance?: GenerationTracker;
+    factory?: GenerationTracker__factory;
 }
 
 export interface SymfoniMintingQuota {
@@ -102,19 +96,14 @@ export interface SymfoniMintingQuota {
     factory?: MintingQuota__factory;
 }
 
-export interface SymfoniEggTokenTest {
-    instance?: EggTokenTest;
-    factory?: EggTokenTest__factory;
-}
-
 export interface SymfoniPricer {
     instance?: Pricer;
     factory?: Pricer__factory;
 }
 
-export interface SymfoniChickToken {
-    instance?: ChickToken;
-    factory?: ChickToken__factory;
+export interface SymfoniEggTokenTest {
+    instance?: EggTokenTest;
+    factory?: EggTokenTest__factory;
 }
 
 export interface SymfoniEggToken {
@@ -122,9 +111,9 @@ export interface SymfoniEggToken {
     factory?: EggToken__factory;
 }
 
-export interface SymfoniPaymentSplitter {
-    instance?: PaymentSplitter;
-    factory?: PaymentSplitter__factory;
+export interface SymfoniChickToken {
+    instance?: ChickToken;
+    factory?: ChickToken__factory;
 }
 
 export interface SymfoniERC721Upgradeable {
@@ -135,11 +124,6 @@ export interface SymfoniERC721Upgradeable {
 export interface SymfoniEscrowUpgradeable {
     instance?: EscrowUpgradeable;
     factory?: EscrowUpgradeable__factory;
-}
-
-export interface SymfoniERC721 {
-    instance?: ERC721;
-    factory?: ERC721__factory;
 }
 
 export const Symfoni: React.FC<SymfoniProps> = ({
@@ -158,17 +142,15 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [providerPriority, setProviderPriority] = useState<string[]>(["web3modal", "hardhat"]);
     const [GangstaEggs, setGangstaEggs] = useState<SymfoniGangstaEggs>(emptyContract);
     const [BreedingTracker, setBreedingTracker] = useState<SymfoniBreedingTracker>(emptyContract);
-    const [GenerationTracker, setGenerationTracker] = useState<SymfoniGenerationTracker>(emptyContract);
     const [FeatureFlag, setFeatureFlag] = useState<SymfoniFeatureFlag>(emptyContract);
+    const [GenerationTracker, setGenerationTracker] = useState<SymfoniGenerationTracker>(emptyContract);
     const [MintingQuota, setMintingQuota] = useState<SymfoniMintingQuota>(emptyContract);
-    const [EggTokenTest, setEggTokenTest] = useState<SymfoniEggTokenTest>(emptyContract);
     const [Pricer, setPricer] = useState<SymfoniPricer>(emptyContract);
-    const [ChickToken, setChickToken] = useState<SymfoniChickToken>(emptyContract);
+    const [EggTokenTest, setEggTokenTest] = useState<SymfoniEggTokenTest>(emptyContract);
     const [EggToken, setEggToken] = useState<SymfoniEggToken>(emptyContract);
-    const [PaymentSplitter, setPaymentSplitter] = useState<SymfoniPaymentSplitter>(emptyContract);
+    const [ChickToken, setChickToken] = useState<SymfoniChickToken>(emptyContract);
     const [ERC721Upgradeable, setERC721Upgradeable] = useState<SymfoniERC721Upgradeable>(emptyContract);
     const [EscrowUpgradeable, setEscrowUpgradeable] = useState<SymfoniEscrowUpgradeable>(emptyContract);
-    const [ERC721, setERC721] = useState<SymfoniERC721>(emptyContract);
     useEffect(() => {
         if (messages.length > 0)
             console.debug(messages.pop())
@@ -250,17 +232,15 @@ export const Symfoni: React.FC<SymfoniProps> = ({
             const finishWithContracts = (text: string) => {
                 setGangstaEggs(getGangstaEggs(_provider, _signer))
                 setBreedingTracker(getBreedingTracker(_provider, _signer))
-                setGenerationTracker(getGenerationTracker(_provider, _signer))
                 setFeatureFlag(getFeatureFlag(_provider, _signer))
+                setGenerationTracker(getGenerationTracker(_provider, _signer))
                 setMintingQuota(getMintingQuota(_provider, _signer))
-                setEggTokenTest(getEggTokenTest(_provider, _signer))
                 setPricer(getPricer(_provider, _signer))
-                setChickToken(getChickToken(_provider, _signer))
+                setEggTokenTest(getEggTokenTest(_provider, _signer))
                 setEggToken(getEggToken(_provider, _signer))
-                setPaymentSplitter(getPaymentSplitter(_provider, _signer))
+                setChickToken(getChickToken(_provider, _signer))
                 setERC721Upgradeable(getERC721Upgradeable(_provider, _signer))
                 setEscrowUpgradeable(getEscrowUpgradeable(_provider, _signer))
-                setERC721(getERC721(_provider, _signer))
                 finish(text)
             }
             if (!autoInit && initializeCounter === 0) return finish("Auto init turned off.")
@@ -307,20 +287,20 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getGenerationTracker = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? GenerationTracker__factory.connect(ethers.constants.AddressZero, _signer) : GenerationTracker__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniGenerationTracker = {
-            instance: instance,
-            factory: _signer ? new GenerationTracker__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getFeatureFlag = (_provider: providers.Provider, _signer?: Signer) => {
         let instance = _signer ? FeatureFlag__factory.connect(ethers.constants.AddressZero, _signer) : FeatureFlag__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniFeatureFlag = {
             instance: instance,
             factory: _signer ? new FeatureFlag__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getGenerationTracker = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? GenerationTracker__factory.connect(ethers.constants.AddressZero, _signer) : GenerationTracker__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniGenerationTracker = {
+            instance: instance,
+            factory: _signer ? new GenerationTracker__factory(_signer) : undefined,
         }
         return contract
     }
@@ -334,15 +314,6 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getEggTokenTest = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? EggTokenTest__factory.connect(ethers.constants.AddressZero, _signer) : EggTokenTest__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniEggTokenTest = {
-            instance: instance,
-            factory: _signer ? new EggTokenTest__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getPricer = (_provider: providers.Provider, _signer?: Signer) => {
         let instance = _signer ? Pricer__factory.connect(ethers.constants.AddressZero, _signer) : Pricer__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniPricer = {
@@ -352,11 +323,11 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getChickToken = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? ChickToken__factory.connect(ethers.constants.AddressZero, _signer) : ChickToken__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniChickToken = {
+    const getEggTokenTest = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? EggTokenTest__factory.connect(ethers.constants.AddressZero, _signer) : EggTokenTest__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniEggTokenTest = {
             instance: instance,
-            factory: _signer ? new ChickToken__factory(_signer) : undefined,
+            factory: _signer ? new EggTokenTest__factory(_signer) : undefined,
         }
         return contract
     }
@@ -370,11 +341,11 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getPaymentSplitter = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? PaymentSplitter__factory.connect(ethers.constants.AddressZero, _signer) : PaymentSplitter__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniPaymentSplitter = {
+    const getChickToken = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? ChickToken__factory.connect(ethers.constants.AddressZero, _signer) : ChickToken__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniChickToken = {
             instance: instance,
-            factory: _signer ? new PaymentSplitter__factory(_signer) : undefined,
+            factory: _signer ? new ChickToken__factory(_signer) : undefined,
         }
         return contract
     }
@@ -397,15 +368,6 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getERC721 = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? ERC721__factory.connect(ethers.constants.AddressZero, _signer) : ERC721__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniERC721 = {
-            instance: instance,
-            factory: _signer ? new ERC721__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
 
     const handleInitProvider = (provider?: string) => {
         if (provider) {
@@ -422,38 +384,34 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                     <CurrentAddressContext.Provider value={[currentAddress, setCurrentAddress]}>
                         <GangstaEggsContext.Provider value={GangstaEggs}>
                             <BreedingTrackerContext.Provider value={BreedingTracker}>
-                                <GenerationTrackerContext.Provider value={GenerationTracker}>
-                                    <FeatureFlagContext.Provider value={FeatureFlag}>
+                                <FeatureFlagContext.Provider value={FeatureFlag}>
+                                    <GenerationTrackerContext.Provider value={GenerationTracker}>
                                         <MintingQuotaContext.Provider value={MintingQuota}>
-                                            <EggTokenTestContext.Provider value={EggTokenTest}>
-                                                <PricerContext.Provider value={Pricer}>
-                                                    <ChickTokenContext.Provider value={ChickToken}>
-                                                        <EggTokenContext.Provider value={EggToken}>
-                                                            <PaymentSplitterContext.Provider value={PaymentSplitter}>
-                                                                <ERC721UpgradeableContext.Provider value={ERC721Upgradeable}>
-                                                                    <EscrowUpgradeableContext.Provider value={EscrowUpgradeable}>
-                                                                        <ERC721Context.Provider value={ERC721}>
-                                                                            {showLoading && loading ?
-                                                                                props.loadingComponent
-                                                                                    ? props.loadingComponent
-                                                                                    : <div>
-                                                                                        {messages.map((msg, i) => (
-                                                                                            <p key={i}>{msg}</p>
-                                                                                        ))}
-                                                                                    </div>
-                                                                                : props.children
-                                                                            }
-                                                                        </ERC721Context.Provider >
-                                                                    </EscrowUpgradeableContext.Provider >
-                                                                </ERC721UpgradeableContext.Provider >
-                                                            </PaymentSplitterContext.Provider >
-                                                        </EggTokenContext.Provider >
-                                                    </ChickTokenContext.Provider >
-                                                </PricerContext.Provider >
-                                            </EggTokenTestContext.Provider >
+                                            <PricerContext.Provider value={Pricer}>
+                                                <EggTokenTestContext.Provider value={EggTokenTest}>
+                                                    <EggTokenContext.Provider value={EggToken}>
+                                                        <ChickTokenContext.Provider value={ChickToken}>
+                                                            <ERC721UpgradeableContext.Provider value={ERC721Upgradeable}>
+                                                                <EscrowUpgradeableContext.Provider value={EscrowUpgradeable}>
+                                                                    {showLoading && loading ?
+                                                                        props.loadingComponent
+                                                                            ? props.loadingComponent
+                                                                            : <div>
+                                                                                {messages.map((msg, i) => (
+                                                                                    <p key={i}>{msg}</p>
+                                                                                ))}
+                                                                            </div>
+                                                                        : props.children
+                                                                    }
+                                                                </EscrowUpgradeableContext.Provider >
+                                                            </ERC721UpgradeableContext.Provider >
+                                                        </ChickTokenContext.Provider >
+                                                    </EggTokenContext.Provider >
+                                                </EggTokenTestContext.Provider >
+                                            </PricerContext.Provider >
                                         </MintingQuotaContext.Provider >
-                                    </FeatureFlagContext.Provider >
-                                </GenerationTrackerContext.Provider >
+                                    </GenerationTrackerContext.Provider >
+                                </FeatureFlagContext.Provider >
                             </BreedingTrackerContext.Provider >
                         </GangstaEggsContext.Provider >
                     </CurrentAddressContext.Provider>
