@@ -31,6 +31,7 @@ task("upgrade-proxy", "Upgrade the contracts").setAction(
 
     console.log(`Upgrading proxies on ${network.name}...`);
 
+    await upgradeContract("GangstaEggs", upgrades, ethers);
     await upgradeContract("EggToken", upgrades, ethers);
     await upgradeContract("ChickToken", upgrades, ethers);
     await upgradeContract("BreedingTracker", upgrades, ethers);
@@ -38,7 +39,6 @@ task("upgrade-proxy", "Upgrade the contracts").setAction(
     await upgradeContract("GenerationTracker", upgrades, ethers);
     await upgradeContract("Pricer", upgrades, ethers);
     await upgradeContract("MintingQuota", upgrades, ethers);
-    await upgradeContract("GangstaEggs", upgrades, ethers);
 
     console.log("All done ✅");
   }

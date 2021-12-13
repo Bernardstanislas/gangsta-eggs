@@ -17,7 +17,8 @@
         "GenerationTracker": "0x4285D6b8aeDb12ff98E9ffD289414cbFE78197e4",
         "Pricer": "0xE1F91BF4e6E6F95e69f21AC0A8bC33022EC56219",
         "MintingQuota": "0x92DAe434d238A9FCE67713f42202bAd360Ce9798",
-        "GangstaEggs": "0x637118768bba7d61527Fd2B4eED06fa2aAbf4E00"
+        "GangstaEggs": "0x637118768bba7d61527Fd2B4eED06fa2aAbf4E00",
+        "MinimalForwarder": "0x1AfDd97acC6273E4101CfC654b448131EE83cBd8"
     },
     "rinkeby": {
         "EggToken": "0x917085950Ac4A5e8d57c483090B362f4d5212f2e",

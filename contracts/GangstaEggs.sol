@@ -7,7 +7,6 @@ import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpg
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
 import "@openzeppelin/contracts/metatx/MinimalForwarder.sol";
-import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import "./interfaces/IBreedingTracker.sol";
 import "./interfaces/IEggToken.sol";
@@ -21,8 +20,7 @@ contract GangstaEggs is
   Initializable,
   ReentrancyGuardUpgradeable,
   OwnableUpgradeable,
-  PullPaymentUpgradeable,
-  ERC2771ContextUpgradeable
+  PullPaymentUpgradeable
 {
   using ERC165CheckerUpgradeable for address;
 
@@ -33,6 +31,9 @@ contract GangstaEggs is
   IGenerationTracker private _generationTracker;
   IMintingQuota private _mintingQuota;
   IPricer private _pricer;
+
+  // First upgrade: metatransactions
+  address private _trustedForwarder;
 
   modifier mintingEnabled() {
     require(!_featureFlag.mintingPaused(), "Minting is paused");
@@ -88,7 +89,6 @@ contract GangstaEggs is
     __Ownable_init();
     __ReentrancyGuard_init();
     __PullPayment_init();
-    __ERC2771Context_init(trustedForwarder_);
 
     _isInterface(breedingTracker_, type(IBreedingTracker).interfaceId);
     _isInterface(eggToken_, type(IEggToken).interfaceId);
@@ -105,6 +105,7 @@ contract GangstaEggs is
     _generationTracker = IGenerationTracker(generationTracker_);
     _mintingQuota = IMintingQuota(mintingQuota_);
     _pricer = IPricer(pricer_);
+    _trustedForwarder = trustedForwarder_;
   }
 
   function airdropEgg(address to_)
@@ -152,6 +153,14 @@ contract GangstaEggs is
     _asyncTransfer(owner(), msg.value);
   }
 
+  function setTrustedForwarder(address trustedForwarder_)
+    public
+    onlyOwner
+    nonReentrant
+  {
+    _trustedForwarder = trustedForwarder_;
+  }
+
   function _mintEgg(address to_) private {
     _mintingQuota.safeRegisterMinting(to_);
     uint256 eggId = _eggToken.safeMint(to_);
@@ -169,23 +178,37 @@ contract GangstaEggs is
     );
   }
 
+  function isTrustedForwarder(address forwarder)
+    public
+    view
+    virtual
+    returns (bool)
+  {
+    return forwarder == _trustedForwarder;
+  }
+
   function _msgSender()
     internal
     view
     virtual
-    override(ContextUpgradeable, ERC2771ContextUpgradeable)
-    returns (address)
+    override
+    returns (address sender)
   {
-    return ERC2771ContextUpgradeable._msgSender();
+    if (isTrustedForwarder(msg.sender)) {
+      // The assembly code is more direct than the Solidity version using `abi.decode`.
+      assembly {
+        sender := shr(96, calldataload(sub(calldatasize(), 20)))
+      }
+    } else {
+      return super._msgSender();
+    }
   }
 
-  function _msgData()
-    internal
-    view
-    virtual
-    override(ContextUpgradeable, ERC2771ContextUpgradeable)
-    returns (bytes calldata)
-  {
-    return ERC2771ContextUpgradeable._msgData();
+  function _msgData() internal view virtual override returns (bytes calldata) {
+    if (isTrustedForwarder(msg.sender)) {
+      return msg.data[:msg.data.length - 20];
+    } else {
+      return super._msgData();
+    }
   }
 }
