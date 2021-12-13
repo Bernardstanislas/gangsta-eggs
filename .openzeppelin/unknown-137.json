@@ -1175,6 +1175,157 @@
           }
         }
       }
+    },
+    "ad739186c54019254c1323df25a249f3c76d7b27b350d3947401aa150e5b2ab3": {
+      "address": "0xA45C480029Fd3851E23cE30afC3394BD3E8529F4",
+      "txHash": "0x4748bc9c2c64f271dcd808356c0f81489d80344716f03a74e4d790847dd5ad16",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:37"
+          },
+          {
+            "contract": "ReentrancyGuardUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:67"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:30"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:21"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:77"
+          },
+          {
+            "contract": "PullPaymentUpgradeable",
+            "label": "_escrow",
+            "type": "t_contract(EscrowUpgradeable)852",
+            "src": "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol:27"
+          },
+          {
+            "contract": "PullPaymentUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol:75"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_breedingTracker",
+            "type": "t_contract(IBreedingTracker)2275",
+            "src": "contracts/GangstaEggs.sol:27"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_eggToken",
+            "type": "t_contract(IEggToken)2313",
+            "src": "contracts/GangstaEggs.sol:28"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_chickToken",
+            "type": "t_contract(IChickToken)2288",
+            "src": "contracts/GangstaEggs.sol:29"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_featureFlag",
+            "type": "t_contract(IFeatureFlag)2358",
+            "src": "contracts/GangstaEggs.sol:30"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_generationTracker",
+            "type": "t_contract(IGenerationTracker)2396",
+            "src": "contracts/GangstaEggs.sol:31"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_mintingQuota",
+            "type": "t_contract(IMintingQuota)2416",
+            "src": "contracts/GangstaEggs.sol:32"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_pricer",
+            "type": "t_contract(IPricer)2439",
+            "src": "contracts/GangstaEggs.sol:33"
+          },
+          {
+            "contract": "GangstaEggs",
+            "label": "_trustedForwarder",
+            "type": "t_address",
+            "src": "contracts/GangstaEggs.sol:36"
+          }
+        ],
+        "types": {
+          "t_contract(IBreedingTracker)2275": {
+            "label": "contract IBreedingTracker"
+          },
+          "t_contract(IEggToken)2313": {
+            "label": "contract IEggToken"
+          },
+          "t_contract(IChickToken)2288": {
+            "label": "contract IChickToken"
+          },
+          "t_contract(IFeatureFlag)2358": {
+            "label": "contract IFeatureFlag"
+          },
+          "t_contract(IGenerationTracker)2396": {
+            "label": "contract IGenerationTracker"
+          },
+          "t_contract(IMintingQuota)2416": {
+            "label": "contract IMintingQuota"
+          },
+          "t_contract(IPricer)2439": {
+            "label": "contract IPricer"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_contract(EscrowUpgradeable)852": {
+            "label": "contract EscrowUpgradeable"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
     }
   }
 }

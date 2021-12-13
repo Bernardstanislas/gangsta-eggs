@@ -7,7 +7,8 @@
         "GenerationTracker": "0xA4B309fA0cc6901e6285C547E59170C4ed91CF24",
         "Pricer": "0x75A8EC82E37D12bFA97926e373aB97a746366644",
         "MintingQuota": "0xFC2CAdD671c2a6e5C8c5441042ce69b9Cf074f8f",
-        "GangstaEggs": "0xeD69c7Bad5D0d89b408129F68ea75e04de05Bf37"
+        "GangstaEggs": "0xeD69c7Bad5D0d89b408129F68ea75e04de05Bf37",
+        "MinimalForwarder": "0x0355C76DdC086890B8950FE36eA414AEd10519Ec"
     },
     "maticmum": {
         "EggToken": "0xAdcc893e85dB4FdEAcaAfD3B017491755414A0c3",
