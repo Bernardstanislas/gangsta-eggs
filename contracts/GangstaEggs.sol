@@ -111,6 +111,7 @@ contract GangstaEggs is
     public
     onlyOwner
     mintingEnabled
+    mintingQuotaRemaining(to_)
     nonReentrant
   {
     _mintEgg(to_);
@@ -121,6 +122,7 @@ contract GangstaEggs is
     payable
     mintingEnabled
     mintingPricePaid
+    mintingQuotaRemaining(_msgSender())
     nonReentrant
   {
     _mintEgg(_msgSender());
