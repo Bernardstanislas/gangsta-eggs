@@ -6,6 +6,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
+import "@openzeppelin/contracts/metatx/MinimalForwarder.sol";
 import "./interfaces/IBreedingTracker.sol";
 import "./interfaces/IEggToken.sol";
 import "./interfaces/IChickToken.sol";

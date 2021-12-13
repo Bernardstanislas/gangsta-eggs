@@ -12,16 +12,18 @@ import { FeatureFlag } from "./typechain/FeatureFlag";
 import { FeatureFlag__factory } from "./typechain/factories/FeatureFlag__factory";
 import { GenerationTracker } from "./typechain/GenerationTracker";
 import { GenerationTracker__factory } from "./typechain/factories/GenerationTracker__factory";
-import { MintingQuota } from "./typechain/MintingQuota";
-import { MintingQuota__factory } from "./typechain/factories/MintingQuota__factory";
 import { Pricer } from "./typechain/Pricer";
 import { Pricer__factory } from "./typechain/factories/Pricer__factory";
+import { MintingQuota } from "./typechain/MintingQuota";
+import { MintingQuota__factory } from "./typechain/factories/MintingQuota__factory";
 import { EggTokenTest } from "./typechain/EggTokenTest";
 import { EggTokenTest__factory } from "./typechain/factories/EggTokenTest__factory";
 import { ChickToken } from "./typechain/ChickToken";
 import { ChickToken__factory } from "./typechain/factories/ChickToken__factory";
 import { EggToken } from "./typechain/EggToken";
 import { EggToken__factory } from "./typechain/factories/EggToken__factory";
+import { MinimalForwarder } from "./typechain/MinimalForwarder";
+import { MinimalForwarder__factory } from "./typechain/factories/MinimalForwarder__factory";
 import { ERC721Upgradeable } from "./typechain/ERC721Upgradeable";
 import { ERC721Upgradeable__factory } from "./typechain/factories/ERC721Upgradeable__factory";
 import { EscrowUpgradeable } from "./typechain/EscrowUpgradeable";
@@ -49,11 +51,12 @@ export const GangstaEggsContext = React.createContext<SymfoniGangstaEggs>(emptyC
 export const BreedingTrackerContext = React.createContext<SymfoniBreedingTracker>(emptyContract);
 export const FeatureFlagContext = React.createContext<SymfoniFeatureFlag>(emptyContract);
 export const GenerationTrackerContext = React.createContext<SymfoniGenerationTracker>(emptyContract);
-export const MintingQuotaContext = React.createContext<SymfoniMintingQuota>(emptyContract);
 export const PricerContext = React.createContext<SymfoniPricer>(emptyContract);
+export const MintingQuotaContext = React.createContext<SymfoniMintingQuota>(emptyContract);
 export const EggTokenTestContext = React.createContext<SymfoniEggTokenTest>(emptyContract);
 export const ChickTokenContext = React.createContext<SymfoniChickToken>(emptyContract);
 export const EggTokenContext = React.createContext<SymfoniEggToken>(emptyContract);
+export const MinimalForwarderContext = React.createContext<SymfoniMinimalForwarder>(emptyContract);
 export const ERC721UpgradeableContext = React.createContext<SymfoniERC721Upgradeable>(emptyContract);
 export const EscrowUpgradeableContext = React.createContext<SymfoniEscrowUpgradeable>(emptyContract);
 
@@ -91,14 +94,14 @@ export interface SymfoniGenerationTracker {
     factory?: GenerationTracker__factory;
 }
 
-export interface SymfoniMintingQuota {
-    instance?: MintingQuota;
-    factory?: MintingQuota__factory;
-}
-
 export interface SymfoniPricer {
     instance?: Pricer;
     factory?: Pricer__factory;
+}
+
+export interface SymfoniMintingQuota {
+    instance?: MintingQuota;
+    factory?: MintingQuota__factory;
 }
 
 export interface SymfoniEggTokenTest {
@@ -114,6 +117,11 @@ export interface SymfoniChickToken {
 export interface SymfoniEggToken {
     instance?: EggToken;
     factory?: EggToken__factory;
+}
+
+export interface SymfoniMinimalForwarder {
+    instance?: MinimalForwarder;
+    factory?: MinimalForwarder__factory;
 }
 
 export interface SymfoniERC721Upgradeable {
@@ -144,11 +152,12 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [BreedingTracker, setBreedingTracker] = useState<SymfoniBreedingTracker>(emptyContract);
     const [FeatureFlag, setFeatureFlag] = useState<SymfoniFeatureFlag>(emptyContract);
     const [GenerationTracker, setGenerationTracker] = useState<SymfoniGenerationTracker>(emptyContract);
-    const [MintingQuota, setMintingQuota] = useState<SymfoniMintingQuota>(emptyContract);
     const [Pricer, setPricer] = useState<SymfoniPricer>(emptyContract);
+    const [MintingQuota, setMintingQuota] = useState<SymfoniMintingQuota>(emptyContract);
     const [EggTokenTest, setEggTokenTest] = useState<SymfoniEggTokenTest>(emptyContract);
     const [ChickToken, setChickToken] = useState<SymfoniChickToken>(emptyContract);
     const [EggToken, setEggToken] = useState<SymfoniEggToken>(emptyContract);
+    const [MinimalForwarder, setMinimalForwarder] = useState<SymfoniMinimalForwarder>(emptyContract);
     const [ERC721Upgradeable, setERC721Upgradeable] = useState<SymfoniERC721Upgradeable>(emptyContract);
     const [EscrowUpgradeable, setEscrowUpgradeable] = useState<SymfoniEscrowUpgradeable>(emptyContract);
     useEffect(() => {
@@ -234,11 +243,12 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 setBreedingTracker(getBreedingTracker(_provider, _signer))
                 setFeatureFlag(getFeatureFlag(_provider, _signer))
                 setGenerationTracker(getGenerationTracker(_provider, _signer))
-                setMintingQuota(getMintingQuota(_provider, _signer))
                 setPricer(getPricer(_provider, _signer))
+                setMintingQuota(getMintingQuota(_provider, _signer))
                 setEggTokenTest(getEggTokenTest(_provider, _signer))
                 setChickToken(getChickToken(_provider, _signer))
                 setEggToken(getEggToken(_provider, _signer))
+                setMinimalForwarder(getMinimalForwarder(_provider, _signer))
                 setERC721Upgradeable(getERC721Upgradeable(_provider, _signer))
                 setEscrowUpgradeable(getEscrowUpgradeable(_provider, _signer))
                 finish(text)
@@ -305,20 +315,20 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getMintingQuota = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? MintingQuota__factory.connect(ethers.constants.AddressZero, _signer) : MintingQuota__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniMintingQuota = {
-            instance: instance,
-            factory: _signer ? new MintingQuota__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getPricer = (_provider: providers.Provider, _signer?: Signer) => {
         let instance = _signer ? Pricer__factory.connect(ethers.constants.AddressZero, _signer) : Pricer__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniPricer = {
             instance: instance,
             factory: _signer ? new Pricer__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getMintingQuota = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? MintingQuota__factory.connect(ethers.constants.AddressZero, _signer) : MintingQuota__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniMintingQuota = {
+            instance: instance,
+            factory: _signer ? new MintingQuota__factory(_signer) : undefined,
         }
         return contract
     }
@@ -346,6 +356,15 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         const contract: SymfoniEggToken = {
             instance: instance,
             factory: _signer ? new EggToken__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getMinimalForwarder = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? MinimalForwarder__factory.connect(ethers.constants.AddressZero, _signer) : MinimalForwarder__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniMinimalForwarder = {
+            instance: instance,
+            factory: _signer ? new MinimalForwarder__factory(_signer) : undefined,
         }
         return contract
     }
@@ -386,30 +405,32 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                             <BreedingTrackerContext.Provider value={BreedingTracker}>
                                 <FeatureFlagContext.Provider value={FeatureFlag}>
                                     <GenerationTrackerContext.Provider value={GenerationTracker}>
-                                        <MintingQuotaContext.Provider value={MintingQuota}>
-                                            <PricerContext.Provider value={Pricer}>
+                                        <PricerContext.Provider value={Pricer}>
+                                            <MintingQuotaContext.Provider value={MintingQuota}>
                                                 <EggTokenTestContext.Provider value={EggTokenTest}>
                                                     <ChickTokenContext.Provider value={ChickToken}>
                                                         <EggTokenContext.Provider value={EggToken}>
-                                                            <ERC721UpgradeableContext.Provider value={ERC721Upgradeable}>
-                                                                <EscrowUpgradeableContext.Provider value={EscrowUpgradeable}>
-                                                                    {showLoading && loading ?
-                                                                        props.loadingComponent
-                                                                            ? props.loadingComponent
-                                                                            : <div>
-                                                                                {messages.map((msg, i) => (
-                                                                                    <p key={i}>{msg}</p>
-                                                                                ))}
-                                                                            </div>
-                                                                        : props.children
-                                                                    }
-                                                                </EscrowUpgradeableContext.Provider >
-                                                            </ERC721UpgradeableContext.Provider >
+                                                            <MinimalForwarderContext.Provider value={MinimalForwarder}>
+                                                                <ERC721UpgradeableContext.Provider value={ERC721Upgradeable}>
+                                                                    <EscrowUpgradeableContext.Provider value={EscrowUpgradeable}>
+                                                                        {showLoading && loading ?
+                                                                            props.loadingComponent
+                                                                                ? props.loadingComponent
+                                                                                : <div>
+                                                                                    {messages.map((msg, i) => (
+                                                                                        <p key={i}>{msg}</p>
+                                                                                    ))}
+                                                                                </div>
+                                                                            : props.children
+                                                                        }
+                                                                    </EscrowUpgradeableContext.Provider >
+                                                                </ERC721UpgradeableContext.Provider >
+                                                            </MinimalForwarderContext.Provider >
                                                         </EggTokenContext.Provider >
                                                     </ChickTokenContext.Provider >
                                                 </EggTokenTestContext.Provider >
-                                            </PricerContext.Provider >
-                                        </MintingQuotaContext.Provider >
+                                            </MintingQuotaContext.Provider >
+                                        </PricerContext.Provider >
                                     </GenerationTrackerContext.Provider >
                                 </FeatureFlagContext.Provider >
                             </BreedingTrackerContext.Provider >
