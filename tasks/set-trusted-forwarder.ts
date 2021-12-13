@@ -10,7 +10,7 @@ task(
 
   const forwarder = await getContract("MinimalForwarder", ethers);
   const gangstaEggs = await getContract("GangstaEggs", ethers);
-  console.log("Setting trusted forwarder...");
+  console.log(`Setting trusted forwarder to ${forwarder.address}`);
 
   await gangstaEggs.setTrustedForwarder(forwarder.address);
 

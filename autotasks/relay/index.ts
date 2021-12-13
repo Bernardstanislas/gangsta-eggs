@@ -1,24 +1,21 @@
-/* eslint-disable node/no-unpublished-import */
-import baseEthers from "ethers";
-
 import {
   DefenderRelaySigner,
   DefenderRelayProvider,
 } from "defender-relay-client/lib/ethers";
-import { getContract } from "../../utils/contract";
-import { ForwarderAbi } from "../../utils/forwarder-abi";
+import deployments from "../../contracts.json";
+// eslint-disable-next-line camelcase
+import { Pricer__factory } from "../../frontend/src/hardhat/typechain/factories/Pricer__factory";
+// eslint-disable-next-line camelcase
+import { MinimalForwarder__factory } from "../../frontend/src/hardhat/typechain/factories/MinimalForwarder__factory";
 
 export async function relay(
   forwarder: any,
   request: any,
   signature: string,
-  ethers: any,
-  pricer?: any
+  pricer: any
 ) {
-  if (!pricer) {
-    pricer = await getContract("Pricer", ethers);
-  }
-  const accepts = !(await pricer.airdropFinished());
+  const accepts =
+    !(await pricer.airdropFinished()) && request.data === "0x307c02a9"; // 0x307c02a9 is the signature of "mintEgg" with no argument
   if (!accepts) throw new Error(`Rejected request to ${request.to}`);
 
   // Validate request on the forwarder contract
@@ -30,7 +27,7 @@ export async function relay(
   return await forwarder.execute(request, signature, { gasLimit });
 }
 
-export async function handler(event: any, ethers = baseEthers) {
+export async function handler(event: any) {
   // Parse webhook payload
   if (!event.request || !event.request.body) throw new Error(`Missing payload`);
   const { request, signature } = event.request.body;
@@ -42,12 +39,17 @@ export async function handler(event: any, ethers = baseEthers) {
   const signer = new DefenderRelaySigner(credentials, provider, {
     speed: "fast",
   });
-  const forwarderAddress = (await getContract("MinimalForwarder", ethers))
-    .address;
-  const forwarder = new ethers.Contract(forwarderAddress, ForwarderAbi, signer);
+  const forwarderAddress = deployments.maticmum.MinimalForwarder;
+  const forwarder = await MinimalForwarder__factory.connect(
+    forwarderAddress,
+    signer as any
+  );
+
+  const pricerAddress = deployments.maticmum.Pricer;
+  const pricer = await Pricer__factory.connect(pricerAddress, signer as any);
 
   // Relay transaction!
-  const tx = await relay(forwarder, request, signature, ethers);
+  const tx = await relay(forwarder, request, signature, pricer);
   console.log(`Sent meta-tx: ${tx.hash}`);
   return { txHash: tx.hash };
 }

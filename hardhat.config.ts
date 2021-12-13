@@ -59,6 +59,7 @@ const config: HardhatUserConfig = {
         process.env.MUMBAI_URL || "https://rpc-endpoints.superfluid.dev/mumbai",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      gas: 2100000,
     },
     polygon: {
       url: process.env.POLYGON_URL || "https://polygon-rpc.com",

@@ -100,9 +100,9 @@ describe("autotasks/relay", () => {
       }
     );
 
-    expect(
-      relay(forwarder, request, signature, ethers, pricer)
-    ).to.be.rejectedWith("Invalid request");
+    expect(relay(forwarder, request, signature, pricer)).to.be.rejectedWith(
+      "Invalid request"
+    );
   });
 
   it("accepts correct signature", async () => {
@@ -119,7 +119,7 @@ describe("autotasks/relay", () => {
       }
     );
 
-    await relay(forwarder, request, signature, ethers, pricer);
+    await relay(forwarder, request, signature, pricer);
     expect(await eggToken.ownerOf(0)).to.eq(someFolk.address);
     expect(await await generationTracker.firstGenerationEggsCount()).to.equal(
       1
