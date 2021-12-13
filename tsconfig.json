@@ -16,6 +16,7 @@
     "./deploy",
     "./test",
     "./utils",
-    "typechain/**/*"
+    "typechain/**/*",
+    "frontend/src/hardhat/**/*"
   ]
 }
