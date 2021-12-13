@@ -10,3 +10,6 @@ artifacts
 
 # OpenZeppelin stuff
 .openzeppelin/unknown-*.json
+
+# Rollup result
+build
