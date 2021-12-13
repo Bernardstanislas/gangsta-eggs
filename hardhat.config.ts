@@ -55,7 +55,8 @@ const config: HardhatUserConfig = {
       gasMultiplier: 4,
     },
     mumbai: {
-      url: "https://rpc-endpoints.superfluid.dev/mumbai",
+      url:
+        process.env.MUMBAI_URL || "https://rpc-endpoints.superfluid.dev/mumbai",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
