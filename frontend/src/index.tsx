@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
-import './index.css';
-import App from './App';
-import * as FullStory from '@fullstory/browser';
-import {Symfoni} from './hardhat/SymfoniContext';
-import {ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import * as FullStory from "@fullstory/browser";
+import { Symfoni } from "./hardhat/SymfoniContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-FullStory.init({orgId: '169KHR'});
+FullStory.init({ orgId: "169KHR" });
 
 ReactDOM.render(
   <BrowserRouter>
@@ -27,5 +27,5 @@ ReactDOM.render(
       pauseOnHover
     />
   </BrowserRouter>,
-  document.getElementById('root')
+  document.getElementById("root")
 );

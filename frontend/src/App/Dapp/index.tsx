@@ -4,14 +4,8 @@ import { MintingContext } from "../../hooks/minting";
 import { MyEggs } from "./MyEggs";
 
 export const Dapp = () => {
-  const {
-    connected,
-    connect,
-    switchChain,
-    balanceIsPositive,
-    networkIsGood,
-    mintEgg,
-  } = useContext(MintingContext);
+  const { connected, connect, switchChain, networkIsGood, minting, mintEgg } =
+    useContext(MintingContext);
 
   useEffect(() => {
     connect();
@@ -22,7 +16,15 @@ export const Dapp = () => {
       <Section title="Minting" withBorder>
         {connected ? (
           networkIsGood ? (
-            balanceIsPositive ? (
+            minting ? (
+              <div className="flex justify-center py-10">
+                <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600">
+                  <strong>
+                    Minting, validate Metamask requests and wait...
+                  </strong>
+                </button>
+              </div>
+            ) : (
               <div className="flex justify-center py-10">
                 <button
                   className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
@@ -30,25 +32,6 @@ export const Dapp = () => {
                 >
                   <strong>Mint an egg!</strong>
                 </button>
-              </div>
-            ) : (
-              <div>
-                <p>
-                  Your wallet is currently empty, you don't have MATICs to pay
-                  for the minting gas.
-                </p>
-                <p>
-                  You won't be able to mint any egg if you can't afford the gas.
-                </p>
-                <p>Please follow our guide to get MATICs.</p>
-                <div className="flex justify-center py-10">
-                  <a
-                    className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600"
-                    href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-60b6e43e942644909558786b20dc4807"
-                  >
-                    <strong>Show me how to get MATICs!</strong>
-                  </a>
-                </div>
               </div>
             )
           ) : (
