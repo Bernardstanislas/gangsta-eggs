@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import {
   EggTokenContext,
   GangstaEggsContext,
+  MinimalForwarderContext,
   PricerContext,
   ProviderContext,
   SymfoniContext,
@@ -13,6 +14,9 @@ import { GangstaEggs } from "../hardhat/typechain/GangstaEggs";
 import { Network } from "@ethersproject/networks";
 import { EggToken } from "../hardhat/typechain/EggToken";
 import React from "react";
+import { signMetaTxRequest } from "../../../utils/signer";
+import { MinimalForwarder } from "../hardhat/typechain/MinimalForwarder";
+import axios from "axios";
 
 // @ts-ignore
 const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
@@ -24,6 +28,8 @@ const NETWORK_SLUG = import.meta.env.VITE_NETWORK_SLUG;
 const RPC_URL = import.meta.env.VITE_RPC_URL;
 // @ts-ignore
 const EXPLORER_URL = import.meta.env.VITE_EXPLORER_URL;
+// @ts-ignore
+const WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_URL;
 
 export const MintingContext = React.createContext<any>({});
 
@@ -35,17 +41,19 @@ export const useMinting = () => {
   const { instance: gangstaEggsInstance } = useContext(GangstaEggsContext);
   const { instance: pricerInstance } = useContext(PricerContext);
   const { instance: eggTokenInstance } = useContext(EggTokenContext);
+  const { instance: forwarderInstance } = useContext(MinimalForwarderContext);
   const [pricer, setPricer] = useState<Pricer>();
   const [gangstaEggs, setGangstaEggs] = useState<GangstaEggs>();
   const [eggToken, setEggToken] = useState<EggToken>();
+  const [forwarder, setForwarder] = useState<MinimalForwarder>();
   const [network, setNetwork] = useState<Network>();
 
   const [connected, setConnected] = useState(false);
-  const [balanceIsPositive, setBalanceIsPositive] = useState(false);
+  const [canSendTx, setCanSendTx] = useState(false);
+  const [minting, setMinting] = useState(false);
   const networkIsGood = chainId === parseInt(CHAIN_ID);
   const contractAttached = !!gangstaEggs;
-  const readyToMint =
-    connected && balanceIsPositive && networkIsGood && contractAttached;
+  const readyToMint = connected && networkIsGood && contractAttached;
 
   useEffect(() => {
     const networkSwitcher = async () => {
@@ -61,13 +69,13 @@ export const useMinting = () => {
   useEffect(() => {
     const checkBalance = async () => {
       const balance = await provider.getBalance(currentAddress);
-      const isPositive = balance.gt(0);
-      setBalanceIsPositive(isPositive);
+      const airdropFinished = await pricer.airdropFinished();
+      setCanSendTx(balance.gt(1e15) || airdropFinished);
     };
-    if (provider && currentAddress) {
+    if (provider && currentAddress && pricer) {
       checkBalance();
     }
-  }, [provider, currentAddress]);
+  }, [provider, currentAddress, pricer]);
 
   useEffect(() => {
     if (!window.ethereum) {
@@ -162,6 +170,11 @@ export const useMinting = () => {
       setEggToken(
         await eggTokenInstance.attach(deployments[NETWORK_SLUG].EggToken)
       );
+      setForwarder(
+        await forwarderInstance.attach(
+          deployments[NETWORK_SLUG].MinimalForwarder
+        )
+      );
     };
     contractsConnector();
   }, [
@@ -170,6 +183,7 @@ export const useMinting = () => {
     gangstaEggsInstance,
     pricerInstance,
     eggTokenInstance,
+    forwarderInstance,
     provider,
   ]);
 
@@ -197,20 +211,53 @@ export const useMinting = () => {
     init("web3modal");
   };
 
+  const metaMintEgg = async () => {
+    const from = currentAddress;
+    const data = gangstaEggs.interface.encodeFunctionData("mintEgg");
+    const to = gangstaEggs.address;
+    const request = await signMetaTxRequest(provider, forwarder, {
+      from,
+      data,
+      to,
+    });
+    const response = await axios.post(WEBHOOK_URL, request);
+    const result = JSON.parse(response.data.result);
+    toast.success(
+      <div>
+        Egg minting started,{" "}
+        <a className="underline" href={`${EXPLORER_URL}tx/${result.txHash}`}>
+          follow the transaction
+        </a>
+      </div>
+    );
+  };
+
   const mintEgg = async () => {
     try {
-      const price = await pricer!.mintingPrice();
-      await gangstaEggs!.mintEgg({ value: price });
+      setMinting(true);
+      if (canSendTx) {
+        const price = await pricer.mintingPrice();
+        await gangstaEggs.mintEgg({ value: price });
+      } else {
+        await metaMintEgg();
+      }
     } catch (error) {
-      toast.error(error.data.message);
+      if (error.data?.message) {
+        toast.error(error.data.message);
+      } else {
+        toast.error(error);
+      }
       console.log(error);
+    } finally {
+      setMinting(false);
     }
   };
 
   return {
     connect,
     connected,
-    balanceIsPositive,
+    canSendTx,
+    minting,
     networkIsGood,
     contractAttached,
     switchChain,

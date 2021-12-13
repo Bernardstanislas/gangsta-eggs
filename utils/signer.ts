@@ -1,5 +1,3 @@
-import * as ethSigUtil from "eth-sig-util";
-
 const EIP712Domain = [
   { name: "name", type: "string" },
   { name: "version", type: "string" },
@@ -35,6 +33,7 @@ function getMetaTxTypeData(chainId: any, verifyingContract: any) {
 async function signTypedData(signer: any, from: string, data: any) {
   // If signer is a private key, use it to sign
   if (typeof signer === "string") {
+    const ethSigUtil = require("eth-sig-util");
     const privateKey = Buffer.from(signer.replace(/^0x/, ""), "hex");
     return ethSigUtil.signTypedMessage(privateKey, { data });
   }
