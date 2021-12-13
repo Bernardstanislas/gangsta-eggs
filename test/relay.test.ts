@@ -12,6 +12,8 @@ describe("autotasks/relay", () => {
   let forwarder: Contract;
   let gangstaEggs: Contract;
   let pricer: Contract;
+  let eggToken: Contract;
+  let generationTracker: Contract;
   let someFolk: SignerWithAddress;
   const airdropLimit = 10;
   const startingPrice = ethers.utils.parseEther("0.01");
@@ -21,7 +23,7 @@ describe("autotasks/relay", () => {
 
   before(async () => {
     someFolk = (await ethers.getSigners())[2];
-    const eggToken = await upgrades.deployProxy(
+    eggToken = await upgrades.deployProxy(
       await ethers.getContractFactory("EggToken"),
       [someFolk.address]
     );
@@ -36,7 +38,7 @@ describe("autotasks/relay", () => {
     const featureFlag = await upgrades.deployProxy(
       await ethers.getContractFactory("FeatureFlag")
     );
-    const generationTracker = await upgrades.deployProxy(
+    generationTracker = await upgrades.deployProxy(
       await ethers.getContractFactory("GenerationTracker")
     );
     pricer = await upgrades.deployProxy(
@@ -101,5 +103,26 @@ describe("autotasks/relay", () => {
     expect(
       relay(forwarder, request, signature, ethers, pricer)
     ).to.be.rejectedWith("Invalid request");
+  });
+
+  it("accepts correct signature", async () => {
+    expect(await await generationTracker.firstGenerationEggsCount()).to.equal(
+      0
+    );
+    const { request, signature } = await signMetaTxRequest(
+      someFolk.provider,
+      forwarder,
+      {
+        from: someFolk.address,
+        to: gangstaEggs.address,
+        data: gangstaEggs.interface.encodeFunctionData("mintEgg", []),
+      }
+    );
+
+    await relay(forwarder, request, signature, ethers, pricer);
+    expect(await eggToken.ownerOf(0)).to.eq(someFolk.address);
+    expect(await await generationTracker.firstGenerationEggsCount()).to.equal(
+      1
+    );
   });
 });
