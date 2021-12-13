@@ -224,10 +224,18 @@ export const useMinting = () => {
     const result = JSON.parse(response.data.result);
     toast.success(
       <div>
-        Egg minting started,{" "}
-        <a className="underline" href={`${EXPLORER_URL}tx/${result.txHash}`}>
-          follow the transaction
-        </a>
+        <p>
+          Egg minting started,{" "}
+          <a
+            className="underline"
+            target="_blank"
+            href={`${EXPLORER_URL}tx/${result.txHash}`}
+            rel="noreferrer"
+          >
+            follow the transaction
+          </a>
+        </p>
+        <p>Refresh this page once the transaction is confirmed</p>
       </div>
     );
   };

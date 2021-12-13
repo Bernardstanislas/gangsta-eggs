@@ -12,10 +12,10 @@ import { FeatureFlag } from "./typechain/FeatureFlag";
 import { FeatureFlag__factory } from "./typechain/factories/FeatureFlag__factory";
 import { GenerationTracker } from "./typechain/GenerationTracker";
 import { GenerationTracker__factory } from "./typechain/factories/GenerationTracker__factory";
-import { Pricer } from "./typechain/Pricer";
-import { Pricer__factory } from "./typechain/factories/Pricer__factory";
 import { MintingQuota } from "./typechain/MintingQuota";
 import { MintingQuota__factory } from "./typechain/factories/MintingQuota__factory";
+import { Pricer } from "./typechain/Pricer";
+import { Pricer__factory } from "./typechain/factories/Pricer__factory";
 import { EggTokenTest } from "./typechain/EggTokenTest";
 import { EggTokenTest__factory } from "./typechain/factories/EggTokenTest__factory";
 import { ChickToken } from "./typechain/ChickToken";
@@ -51,8 +51,8 @@ export const GangstaEggsContext = React.createContext<SymfoniGangstaEggs>(emptyC
 export const BreedingTrackerContext = React.createContext<SymfoniBreedingTracker>(emptyContract);
 export const FeatureFlagContext = React.createContext<SymfoniFeatureFlag>(emptyContract);
 export const GenerationTrackerContext = React.createContext<SymfoniGenerationTracker>(emptyContract);
-export const PricerContext = React.createContext<SymfoniPricer>(emptyContract);
 export const MintingQuotaContext = React.createContext<SymfoniMintingQuota>(emptyContract);
+export const PricerContext = React.createContext<SymfoniPricer>(emptyContract);
 export const EggTokenTestContext = React.createContext<SymfoniEggTokenTest>(emptyContract);
 export const ChickTokenContext = React.createContext<SymfoniChickToken>(emptyContract);
 export const EggTokenContext = React.createContext<SymfoniEggToken>(emptyContract);
@@ -94,14 +94,14 @@ export interface SymfoniGenerationTracker {
     factory?: GenerationTracker__factory;
 }
 
-export interface SymfoniPricer {
-    instance?: Pricer;
-    factory?: Pricer__factory;
-}
-
 export interface SymfoniMintingQuota {
     instance?: MintingQuota;
     factory?: MintingQuota__factory;
+}
+
+export interface SymfoniPricer {
+    instance?: Pricer;
+    factory?: Pricer__factory;
 }
 
 export interface SymfoniEggTokenTest {
@@ -152,8 +152,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
     const [BreedingTracker, setBreedingTracker] = useState<SymfoniBreedingTracker>(emptyContract);
     const [FeatureFlag, setFeatureFlag] = useState<SymfoniFeatureFlag>(emptyContract);
     const [GenerationTracker, setGenerationTracker] = useState<SymfoniGenerationTracker>(emptyContract);
-    const [Pricer, setPricer] = useState<SymfoniPricer>(emptyContract);
     const [MintingQuota, setMintingQuota] = useState<SymfoniMintingQuota>(emptyContract);
+    const [Pricer, setPricer] = useState<SymfoniPricer>(emptyContract);
     const [EggTokenTest, setEggTokenTest] = useState<SymfoniEggTokenTest>(emptyContract);
     const [ChickToken, setChickToken] = useState<SymfoniChickToken>(emptyContract);
     const [EggToken, setEggToken] = useState<SymfoniEggToken>(emptyContract);
@@ -243,8 +243,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                 setBreedingTracker(getBreedingTracker(_provider, _signer))
                 setFeatureFlag(getFeatureFlag(_provider, _signer))
                 setGenerationTracker(getGenerationTracker(_provider, _signer))
-                setPricer(getPricer(_provider, _signer))
                 setMintingQuota(getMintingQuota(_provider, _signer))
+                setPricer(getPricer(_provider, _signer))
                 setEggTokenTest(getEggTokenTest(_provider, _signer))
                 setChickToken(getChickToken(_provider, _signer))
                 setEggToken(getEggToken(_provider, _signer))
@@ -315,20 +315,20 @@ export const Symfoni: React.FC<SymfoniProps> = ({
         return contract
     }
         ;
-    const getPricer = (_provider: providers.Provider, _signer?: Signer) => {
-        let instance = _signer ? Pricer__factory.connect(ethers.constants.AddressZero, _signer) : Pricer__factory.connect(ethers.constants.AddressZero, _provider)
-        const contract: SymfoniPricer = {
-            instance: instance,
-            factory: _signer ? new Pricer__factory(_signer) : undefined,
-        }
-        return contract
-    }
-        ;
     const getMintingQuota = (_provider: providers.Provider, _signer?: Signer) => {
         let instance = _signer ? MintingQuota__factory.connect(ethers.constants.AddressZero, _signer) : MintingQuota__factory.connect(ethers.constants.AddressZero, _provider)
         const contract: SymfoniMintingQuota = {
             instance: instance,
             factory: _signer ? new MintingQuota__factory(_signer) : undefined,
+        }
+        return contract
+    }
+        ;
+    const getPricer = (_provider: providers.Provider, _signer?: Signer) => {
+        let instance = _signer ? Pricer__factory.connect(ethers.constants.AddressZero, _signer) : Pricer__factory.connect(ethers.constants.AddressZero, _provider)
+        const contract: SymfoniPricer = {
+            instance: instance,
+            factory: _signer ? new Pricer__factory(_signer) : undefined,
         }
         return contract
     }
@@ -405,8 +405,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                             <BreedingTrackerContext.Provider value={BreedingTracker}>
                                 <FeatureFlagContext.Provider value={FeatureFlag}>
                                     <GenerationTrackerContext.Provider value={GenerationTracker}>
-                                        <PricerContext.Provider value={Pricer}>
-                                            <MintingQuotaContext.Provider value={MintingQuota}>
+                                        <MintingQuotaContext.Provider value={MintingQuota}>
+                                            <PricerContext.Provider value={Pricer}>
                                                 <EggTokenTestContext.Provider value={EggTokenTest}>
                                                     <ChickTokenContext.Provider value={ChickToken}>
                                                         <EggTokenContext.Provider value={EggToken}>
@@ -429,8 +429,8 @@ export const Symfoni: React.FC<SymfoniProps> = ({
                                                         </EggTokenContext.Provider >
                                                     </ChickTokenContext.Provider >
                                                 </EggTokenTestContext.Provider >
-                                            </MintingQuotaContext.Provider >
-                                        </PricerContext.Provider >
+                                            </PricerContext.Provider >
+                                        </MintingQuotaContext.Provider >
                                     </GenerationTrackerContext.Provider >
                                 </FeatureFlagContext.Provider >
                             </BreedingTrackerContext.Provider >
