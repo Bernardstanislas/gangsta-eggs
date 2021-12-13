@@ -4,6 +4,7 @@
     "rootDir": ".",
     "outDir": "build",
     "resolveJsonModule": true,
+    "moduleResolution": "node",
     "skipLibCheck": true,
     "esModuleInterop": true
   },
