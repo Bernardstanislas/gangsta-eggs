@@ -10,15 +10,11 @@ task("relay-meta-tx", "Relay a meta-transaction").setAction(
 
     console.log("🛰 Relaying a meta transaction");
     const payload = await readFile("tmp/request.json", "utf8");
-    await handler(
-      {
-        apiKey,
-        apiSecret,
-        request: { body: JSON.parse(payload) },
-      },
-      // @ts-ignore
-      ethers
-    );
+    await handler({
+      apiKey,
+      apiSecret,
+      request: { body: JSON.parse(payload) },
+    });
     console.log(`✅ Meta transaction relayed`);
   }
 );
