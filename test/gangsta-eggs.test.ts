@@ -54,6 +54,8 @@ describe("GangstaEggs", () => {
       await ethers.getContractFactory("MintingQuota"),
       [pricer.address, generationTracker.address]
     );
+    const Forwarder = await ethers.getContractFactory("MinimalForwarder");
+    const forwarder = await Forwarder.deploy();
     gangstaEggs = await upgrades.deployProxy(
       await ethers.getContractFactory("GangstaEggs"),
       [
@@ -64,6 +66,7 @@ describe("GangstaEggs", () => {
         generationTracker.address,
         mintingQuota.address,
         pricer.address,
+        forwarder.address,
       ]
     );
     await mintingQuota.transferOwnership(gangstaEggs.address);

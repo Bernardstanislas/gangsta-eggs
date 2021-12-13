@@ -7,6 +7,8 @@ import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpg
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PullPaymentUpgradeable.sol";
 import "@openzeppelin/contracts/metatx/MinimalForwarder.sol";
+import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 import "./interfaces/IBreedingTracker.sol";
 import "./interfaces/IEggToken.sol";
 import "./interfaces/IChickToken.sol";
@@ -19,7 +21,8 @@ contract GangstaEggs is
   Initializable,
   ReentrancyGuardUpgradeable,
   OwnableUpgradeable,
-  PullPaymentUpgradeable
+  PullPaymentUpgradeable,
+  ERC2771ContextUpgradeable
 {
   using ERC165CheckerUpgradeable for address;
 
@@ -48,7 +51,7 @@ contract GangstaEggs is
 
   modifier onlyEggOwner(uint256 _eggId) {
     require(
-      _eggToken.ownerOf(_eggId) == msg.sender,
+      _eggToken.ownerOf(_eggId) == _msgSender(),
       "Only egg owner can evolve egg"
     );
     _;
@@ -79,11 +82,13 @@ contract GangstaEggs is
     address featureFlag_,
     address generationTracker_,
     address mintingQuota_,
-    address pricer_
+    address pricer_,
+    address trustedForwarder_
   ) public initializer {
     __Ownable_init();
     __ReentrancyGuard_init();
     __PullPayment_init();
+    __ERC2771Context_init(trustedForwarder_);
 
     _isInterface(breedingTracker_, type(IBreedingTracker).interfaceId);
     _isInterface(eggToken_, type(IEggToken).interfaceId);
@@ -118,7 +123,7 @@ contract GangstaEggs is
     mintingPricePaid
     nonReentrant
   {
-    _mintEgg(msg.sender);
+    _mintEgg(_msgSender());
     _asyncTransfer(owner(), msg.value);
   }
 
@@ -129,7 +134,7 @@ contract GangstaEggs is
     nonReentrant
   {
     _eggToken.safeBurn(_eggId);
-    _chickToken.safeMint(msg.sender);
+    _chickToken.safeMint(_msgSender());
   }
 
   function breedChicks(uint256 _chickId1, uint256 _chickId2)
@@ -140,7 +145,7 @@ contract GangstaEggs is
     nonReentrant
   {
     _breedingTracker.safeRegisterBreeding(_chickId1, _chickId2);
-    uint256 eggId = _eggToken.safeLay(msg.sender);
+    uint256 eggId = _eggToken.safeLay(_msgSender());
     _generationTracker.registerNewlyLayedEgg(eggId);
     _asyncTransfer(owner(), msg.value);
   }
@@ -160,5 +165,25 @@ contract GangstaEggs is
       interfaceAddress.supportsInterface(interfaceId),
       "Provided contract does not implement expected interface"
     );
+  }
+
+  function _msgSender()
+    internal
+    view
+    virtual
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
+    returns (address)
+  {
+    return ERC2771ContextUpgradeable._msgSender();
+  }
+
+  function _msgData()
+    internal
+    view
+    virtual
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
+    returns (bytes calldata)
+  {
+    return ERC2771ContextUpgradeable._msgData();
   }
 }
