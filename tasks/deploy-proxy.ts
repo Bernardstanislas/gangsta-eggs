@@ -67,6 +67,11 @@ task("deploy-proxy", "Deploy the initial proxy to the upgradeable contracts")
           default: "0xf57b2c51ded3a29e6891aba85459d600256cf317",
           required: true,
         },
+        forwarderAddress: {
+          type: "string",
+          description: "Forwarder address:",
+          required: true,
+        },
       },
     });
     const {
@@ -76,6 +81,7 @@ task("deploy-proxy", "Deploy the initial proxy to the upgradeable contracts")
       endingPrice,
       breedingPrice,
       totalCount,
+      forwarderAddress,
     } = result;
     const eggToken = await upgrades.deployProxy(
       await ethers.getContractFactory("EggToken"),
@@ -134,6 +140,7 @@ task("deploy-proxy", "Deploy the initial proxy to the upgradeable contracts")
         generationTracker.address,
         mintingQuota.address,
         pricer.address,
+        forwarderAddress,
       ]
     );
     await gangstaEggs.deployed();

@@ -9,6 +9,7 @@
   },
   "include": [
     "hardhat.config.ts",
+    "./autotasks",
     "./scripts",
     "./tasks",
     "./deploy",
