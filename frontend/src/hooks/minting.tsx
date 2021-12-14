@@ -55,8 +55,9 @@ export const useMinting = () => {
   const [connected, setConnected] = useState(false);
   const [canSendTx, setCanSendTx] = useState(false);
   const [minting, setMinting] = useState(false);
+  const [remainingMinting, setRemainingMinting] = useState<number>();
   const networkIsGood = chainId === parseInt(CHAIN_ID);
-  const contractAttached = !!gangstaEggs;
+  const contractAttached = !!gangstaEggs && !!mintingQuota;
   const readyToMint = connected && networkIsGood && contractAttached;
 
   useEffect(() => {
@@ -215,6 +216,18 @@ export const useMinting = () => {
     networkFinder();
   }, [chainId, provider]);
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (readyToMint) {
+        const remainingMinting = await mintingQuota.remainingMinting(
+          currentAddress
+        );
+        setRemainingMinting(remainingMinting.toNumber());
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [readyToMint, currentAddress, mintingQuota]);
+
   const connect = async () => {
     if (!window.ethereum) {
       toast.error("Please install MetaMask browser extension");
@@ -287,6 +300,7 @@ export const useMinting = () => {
     canSendTx,
     minting,
     networkIsGood,
+    remainingMinting,
     contractAttached,
     switchChain,
     readyToMint,
