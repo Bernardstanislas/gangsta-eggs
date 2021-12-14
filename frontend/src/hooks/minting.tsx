@@ -4,6 +4,7 @@ import {
   EggTokenContext,
   GangstaEggsContext,
   MinimalForwarderContext,
+  MintingQuotaContext,
   PricerContext,
   ProviderContext,
   SymfoniContext,
@@ -16,7 +17,8 @@ import { EggToken } from "../hardhat/typechain/EggToken";
 import React from "react";
 import { signMetaTxRequest } from "../../../utils/signer";
 import { MinimalForwarder } from "../hardhat/typechain/MinimalForwarder";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { MintingQuota } from "../hardhat/typechain/MintingQuota";
 
 // @ts-ignore
 const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
@@ -42,10 +44,12 @@ export const useMinting = () => {
   const { instance: pricerInstance } = useContext(PricerContext);
   const { instance: eggTokenInstance } = useContext(EggTokenContext);
   const { instance: forwarderInstance } = useContext(MinimalForwarderContext);
+  const { instance: mintingQuotaInstance } = useContext(MintingQuotaContext);
   const [pricer, setPricer] = useState<Pricer>();
   const [gangstaEggs, setGangstaEggs] = useState<GangstaEggs>();
   const [eggToken, setEggToken] = useState<EggToken>();
   const [forwarder, setForwarder] = useState<MinimalForwarder>();
+  const [mintingQuota, setMintingQuota] = useState<MintingQuota>();
   const [network, setNetwork] = useState<Network>();
 
   const [connected, setConnected] = useState(false);
@@ -159,7 +163,9 @@ export const useMinting = () => {
         !provider ||
         !pricerInstance ||
         !gangstaEggsInstance ||
-        !eggTokenInstance
+        !eggTokenInstance ||
+        !forwarderInstance ||
+        !mintingQuotaInstance
       ) {
         return;
       }
@@ -175,6 +181,11 @@ export const useMinting = () => {
           deployments[NETWORK_SLUG].MinimalForwarder
         )
       );
+      setMintingQuota(
+        await mintingQuotaInstance.attach(
+          deployments[NETWORK_SLUG].MintingQuota
+        )
+      );
     };
     contractsConnector();
   }, [
@@ -184,6 +195,7 @@ export const useMinting = () => {
     pricerInstance,
     eggTokenInstance,
     forwarderInstance,
+    mintingQuotaInstance,
     provider,
   ]);
 
@@ -243,6 +255,14 @@ export const useMinting = () => {
   const mintEgg = async () => {
     try {
       setMinting(true);
+      const remainingMinting = await mintingQuota.remainingMinting(
+        currentAddress
+      );
+      if (remainingMinting.lt(1)) {
+        toast.error("You have reached your egg minting quota");
+        setMinting(false);
+        return;
+      }
       if (canSendTx) {
         const price = await pricer.mintingPrice();
         await gangstaEggs.mintEgg({ value: price });
