@@ -18,7 +18,7 @@ import { EggToken } from "../hardhat/typechain/EggToken";
 import React from "react";
 import { signMetaTxRequest } from "../../../utils/signer";
 import { MinimalForwarder } from "../hardhat/typechain/MinimalForwarder";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { MintingQuota } from "../hardhat/typechain/MintingQuota";
 import { GenerationTracker } from "../hardhat/typechain/GenerationTracker";
 
@@ -60,7 +60,6 @@ export const useMinting = () => {
   const [network, setNetwork] = useState<Network>();
 
   const [connected, setConnected] = useState(false);
-  const [canSendTx, setCanSendTx] = useState(false);
   const [minting, setMinting] = useState(false);
   const [remainingMinting, setRemainingMinting] = useState<number>();
   const [firstGenerationCount, setFirstGenerationCount] = useState<number>();
@@ -78,17 +77,6 @@ export const useMinting = () => {
     };
     networkSwitcher();
   }, [network, chainId]);
-
-  useEffect(() => {
-    const checkBalance = async () => {
-      const balance = await provider.getBalance(currentAddress);
-      const airdropFinished = await pricer.airdropFinished();
-      setCanSendTx(balance.gt(1e15) || airdropFinished);
-    };
-    if (provider && currentAddress && pricer) {
-      checkBalance();
-    }
-  }, [provider, currentAddress, pricer]);
 
   useEffect(() => {
     if (!window.ethereum) {
@@ -294,9 +282,15 @@ export const useMinting = () => {
         setMinting(false);
         return;
       }
+      const balance = await provider.getBalance(currentAddress);
+      const airdropFinished = await pricer.airdropFinished();
+      const canSendTx = balance.gt(1e15) || airdropFinished;
       if (canSendTx) {
         const price = await pricer.mintingPrice();
         await gangstaEggs.mintEgg({ value: price });
+        toast.success(
+          "Transaction sent, wait a moment until your newly minted egg appears below!"
+        );
       } else {
         await metaMintEgg();
       }
@@ -304,7 +298,7 @@ export const useMinting = () => {
       if (error.data?.message) {
         toast.error(error.data.message);
       } else {
-        toast.error(error);
+        toast.error(error.message);
       }
       console.log(error);
     } finally {
@@ -315,7 +309,6 @@ export const useMinting = () => {
   return {
     connect,
     connected,
-    canSendTx,
     minting,
     networkIsGood,
     remainingMinting,
