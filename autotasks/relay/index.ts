@@ -39,13 +39,13 @@ export async function handler(event: any) {
   const signer = new DefenderRelaySigner(credentials, provider, {
     speed: "fast",
   });
-  const forwarderAddress = deployments.maticmum.MinimalForwarder;
+  const forwarderAddress = deployments.matic.MinimalForwarder;
   const forwarder = await MinimalForwarder__factory.connect(
     forwarderAddress,
     signer as any
   );
 
-  const pricerAddress = deployments.maticmum.Pricer;
+  const pricerAddress = deployments.matic.Pricer;
   const pricer = await Pricer__factory.connect(pricerAddress, signer as any);
 
   // Relay transaction!
