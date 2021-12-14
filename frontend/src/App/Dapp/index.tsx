@@ -4,8 +4,15 @@ import { MintingContext } from "../../hooks/minting";
 import { MyEggs } from "./MyEggs";
 
 export const Dapp = () => {
-  const { connected, connect, switchChain, networkIsGood, minting, mintEgg } =
-    useContext(MintingContext);
+  const {
+    connected,
+    connect,
+    switchChain,
+    networkIsGood,
+    minting,
+    mintEgg,
+    remainingMinting,
+  } = useContext(MintingContext);
 
   useEffect(() => {
     connect();
@@ -16,7 +23,17 @@ export const Dapp = () => {
       <Section title="Minting" withBorder>
         {connected ? (
           networkIsGood ? (
-            minting ? (
+            remainingMinting === 0 ? (
+              <div>
+                <i>
+                  You have reached your minting limit, read{" "}
+                  <a className="underline" href="/">
+                    the FAQ
+                  </a>{" "}
+                  to learn about the minting limits if this is unclear to you.
+                </i>
+              </div>
+            ) : minting ? (
               <div className="flex justify-center py-10">
                 <button className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600">
                   <strong>

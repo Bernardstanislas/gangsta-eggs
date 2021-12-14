@@ -9,7 +9,8 @@ const CONTRACT_CREATION_BLOCK = parseInt(
 );
 
 export const MyEggs = () => {
-  const { eggToken, gangstaEggs } = useContext(MintingContext);
+  const { eggToken, gangstaEggs, remainingMinting } =
+    useContext(MintingContext);
   const [eggs, setEggs] = React.useState<number[]>([]);
   const [currentAddress] = useContext(CurrentAddressContext);
 
@@ -25,7 +26,7 @@ export const MyEggs = () => {
       setEggs(events.map((event) => parseInt(event.topics[3])));
     };
     fetchEggs();
-  }, [eggToken, gangstaEggs, currentAddress]);
+  }, [eggToken, gangstaEggs, currentAddress, remainingMinting]);
   return eggs.length ? (
     <div>
       <div className="mb-4">
