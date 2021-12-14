@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import {
   EggTokenContext,
   GangstaEggsContext,
+  GenerationTrackerContext,
   MinimalForwarderContext,
   MintingQuotaContext,
   PricerContext,
@@ -19,6 +20,7 @@ import { signMetaTxRequest } from "../../../utils/signer";
 import { MinimalForwarder } from "../hardhat/typechain/MinimalForwarder";
 import axios, { AxiosResponse } from "axios";
 import { MintingQuota } from "../hardhat/typechain/MintingQuota";
+import { GenerationTracker } from "../hardhat/typechain/GenerationTracker";
 
 // @ts-ignore
 const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
@@ -45,17 +47,23 @@ export const useMinting = () => {
   const { instance: eggTokenInstance } = useContext(EggTokenContext);
   const { instance: forwarderInstance } = useContext(MinimalForwarderContext);
   const { instance: mintingQuotaInstance } = useContext(MintingQuotaContext);
+  const { instance: generationTrackerInstance } = useContext(
+    GenerationTrackerContext
+  );
   const [pricer, setPricer] = useState<Pricer>();
   const [gangstaEggs, setGangstaEggs] = useState<GangstaEggs>();
   const [eggToken, setEggToken] = useState<EggToken>();
   const [forwarder, setForwarder] = useState<MinimalForwarder>();
   const [mintingQuota, setMintingQuota] = useState<MintingQuota>();
+  const [generationTracker, setGenerationTracker] =
+    useState<GenerationTracker>();
   const [network, setNetwork] = useState<Network>();
 
   const [connected, setConnected] = useState(false);
   const [canSendTx, setCanSendTx] = useState(false);
   const [minting, setMinting] = useState(false);
   const [remainingMinting, setRemainingMinting] = useState<number>();
+  const [firstGenerationCount, setFirstGenerationCount] = useState<number>();
   const networkIsGood = chainId === parseInt(CHAIN_ID);
   const contractAttached = !!gangstaEggs && !!mintingQuota;
   const readyToMint = connected && networkIsGood && contractAttached;
@@ -166,7 +174,8 @@ export const useMinting = () => {
         !gangstaEggsInstance ||
         !eggTokenInstance ||
         !forwarderInstance ||
-        !mintingQuotaInstance
+        !mintingQuotaInstance ||
+        !generationTrackerInstance
       ) {
         return;
       }
@@ -187,6 +196,11 @@ export const useMinting = () => {
           deployments[NETWORK_SLUG].MintingQuota
         )
       );
+      setGenerationTracker(
+        await generationTrackerInstance.attach(
+          deployments[NETWORK_SLUG].GenerationTracker
+        )
+      );
     };
     contractsConnector();
   }, [
@@ -197,6 +211,7 @@ export const useMinting = () => {
     eggTokenInstance,
     forwarderInstance,
     mintingQuotaInstance,
+    generationTrackerInstance,
     provider,
   ]);
 
@@ -223,10 +238,13 @@ export const useMinting = () => {
           currentAddress
         );
         setRemainingMinting(remainingMinting.toNumber());
+        const firstGenerationCount =
+          await generationTracker.firstGenerationEggsCount();
+        setFirstGenerationCount(firstGenerationCount.toNumber());
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [readyToMint, currentAddress, mintingQuota]);
+  }, [readyToMint, currentAddress, mintingQuota, generationTracker]);
 
   const connect = async () => {
     if (!window.ethereum) {
@@ -301,6 +319,7 @@ export const useMinting = () => {
     minting,
     networkIsGood,
     remainingMinting,
+    firstGenerationCount,
     contractAttached,
     switchChain,
     readyToMint,
