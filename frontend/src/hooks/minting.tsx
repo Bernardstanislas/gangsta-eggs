@@ -284,7 +284,7 @@ export const useMinting = () => {
       }
       const balance = await provider.getBalance(currentAddress);
       const airdropFinished = await pricer.airdropFinished();
-      const canSendTx = balance.gt(1e15) || airdropFinished;
+      const canSendTx = balance.gt(1e16) || airdropFinished;
       const needsFunds = balance.isZero() && airdropFinished;
       if (needsFunds) {
         toast.info(
