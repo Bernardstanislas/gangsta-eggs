@@ -285,14 +285,27 @@ export const useMinting = () => {
       const balance = await provider.getBalance(currentAddress);
       const airdropFinished = await pricer.airdropFinished();
       const canSendTx = balance.gt(1e15) || airdropFinished;
-      if (canSendTx) {
-        const price = await pricer.mintingPrice();
-        await gangstaEggs.mintEgg({ value: price });
-        toast.success(
-          "Transaction sent, wait a moment until your newly minted egg appears below!"
+      const needsFunds = balance.isZero() && airdropFinished;
+      if (needsFunds) {
+        toast.info(
+          <span>
+            You need some MATIC to mint an egg, please refer to{" "}
+            <a href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6">
+              our guide
+            </a>{" "}
+            to learn how to buy some
+          </span>
         );
       } else {
-        await metaMintEgg();
+        if (canSendTx) {
+          const price = await pricer.mintingPrice();
+          await gangstaEggs.mintEgg({ value: price });
+          toast.success(
+            "Transaction sent, wait a moment until your newly minted egg appears below!"
+          );
+        } else {
+          await metaMintEgg();
+        }
       }
     } catch (error) {
       if (error.data?.message) {
