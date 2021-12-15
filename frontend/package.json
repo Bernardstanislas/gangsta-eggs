@@ -12,6 +12,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
     "@fullstory/browser": "^1.4.9",
+    "@sentry/react": "^6.16.1",
+    "@sentry/tracing": "^6.16.1",
     "@types/axios": "^0.14.0",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
