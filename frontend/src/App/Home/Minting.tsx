@@ -19,16 +19,22 @@ export const Minting = () => {
   }, []);
   return (
     <Section title="Minting" withBorder={true}>
-      <p>
-        Get ready for the <strong>release day</strong> and follow our{" "}
-        <a
-          className="underline"
-          href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6"
-        >
-          getting started guide
-        </a>
-        !
-      </p>
+      {MINTING_ENABLED ? (
+        <p>
+          <strong>MINTING IS OPEN</strong>
+        </p>
+      ) : (
+        <p>
+          Get ready for the <strong>release day</strong> and follow our{" "}
+          <a
+            className="underline"
+            href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6"
+          >
+            getting started guide
+          </a>
+          !
+        </p>
+      )}
       <div className="flex flex-col md:flex-row-reverse items-center">
         <div className="md:flex-1 shadow-m flex justify-center items:center my-4">
           <img
