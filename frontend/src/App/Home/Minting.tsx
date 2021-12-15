@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Section } from "../../components/Section";
 
@@ -6,6 +6,22 @@ import { Section } from "../../components/Section";
 const MINTING_ENABLED = import.meta.env.VITE_MINTING_ENABLED === "true";
 
 export const Minting = () => {
+  const [remainingSeconds, setRemainingSeconds] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const noon = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        12
+      );
+      const seconds = Math.floor((noon.getTime() - now.getTime()) / 1000);
+      setRemainingSeconds(seconds);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <Section title="Minting" withBorder={true}>
       <p>
@@ -47,7 +63,7 @@ export const Minting = () => {
                   href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6"
                   className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce"
                 >
-                  <strong>Be ready for December the 15th</strong>
+                  <strong>{remainingSeconds}s remaining</strong>
                 </a>
               </div>
             </div>
