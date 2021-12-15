@@ -14,6 +14,7 @@ export const Dapp = () => {
     mintEgg,
     remainingMinting,
     firstGenerationCount,
+    currentPrice,
   } = useContext(MintingContext);
 
   useEffect(() => {
@@ -28,6 +29,9 @@ export const Dapp = () => {
             <ProgressBar percentage={(firstGenerationCount / 4444.0) * 100} />
             <div className="text-center">
               <strong>{firstGenerationCount ?? "?"}/4,444</strong>
+            </div>
+            <div className="text-center">
+              <strong>Current price: {currentPrice}MATIC</strong>
             </div>
           </div>
           <div className="flex justify-center py-10">

@@ -21,6 +21,7 @@ import { MinimalForwarder } from "../hardhat/typechain/MinimalForwarder";
 import axios from "axios";
 import { MintingQuota } from "../hardhat/typechain/MintingQuota";
 import { GenerationTracker } from "../hardhat/typechain/GenerationTracker";
+import { ethers } from "ethers";
 
 // @ts-ignore
 const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
@@ -66,6 +67,7 @@ export const useMinting = () => {
   const networkIsGood = chainId === parseInt(CHAIN_ID);
   const contractAttached = !!gangstaEggs && !!mintingQuota;
   const readyToMint = connected && networkIsGood && contractAttached;
+  const [currentPrice, setCurrentPrice] = useState<string>();
 
   useEffect(() => {
     const networkSwitcher = async () => {
@@ -225,6 +227,8 @@ export const useMinting = () => {
         const remainingMinting = await mintingQuota.remainingMinting(
           currentAddress
         );
+        const price = await pricer.mintingPrice();
+        setCurrentPrice(ethers.utils.formatEther(price).substring(0, 5));
         setRemainingMinting(remainingMinting.toNumber());
         const firstGenerationCount =
           await generationTracker.firstGenerationEggsCount();
@@ -232,7 +236,7 @@ export const useMinting = () => {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [readyToMint, currentAddress, mintingQuota, generationTracker]);
+  }, [readyToMint, currentAddress, mintingQuota, generationTracker, pricer]);
 
   const connect = async () => {
     if (!window.ethereum) {
@@ -337,5 +341,6 @@ export const useMinting = () => {
     eggToken,
     gangstaEggs,
     currentAddress,
+    currentPrice,
   };
 };
