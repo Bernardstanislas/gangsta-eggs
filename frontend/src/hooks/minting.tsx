@@ -294,7 +294,7 @@ export const useMinting = () => {
         toast.info(
           <span>
             You need some MATIC to mint an egg, please refer to{" "}
-            <a href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6">
+            <a className="underline" href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6">
               our guide
             </a>{" "}
             to learn how to buy some
