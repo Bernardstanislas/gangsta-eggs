@@ -10,13 +10,8 @@ export const Minting = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      const noon = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        12
-      );
-      const seconds = Math.floor((noon.getTime() - now.getTime()) / 1000);
+      const noon = 1639566000000;
+      const seconds = Math.floor((noon - now.getTime()) / 1000);
       setRemainingSeconds(seconds);
     }, 1000);
 
@@ -63,7 +58,7 @@ export const Minting = () => {
                   href="https://bustling-vicuna-1dd.notion.site/Tutorial-how-to-buy-Gangsta-eggs-light-version-4b593fdbb12748549344f08d2d2f23f6"
                   className="shadow-pixel bg-gray-300 inline-block p-3 text-xl text-gray-600 animate-bounce"
                 >
-                  <strong>{remainingSeconds}s remaining</strong>
+                  <strong>{remainingSeconds}s to launch 🚀</strong>
                 </a>
               </div>
             </div>
