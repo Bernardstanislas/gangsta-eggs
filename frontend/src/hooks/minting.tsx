@@ -297,22 +297,25 @@ export const useMinting = () => {
           </span>
         );
       } else {
-        if (canSendTx) {
-          const price = await pricer.mintingPrice();
-          await gangstaEggs.mintEgg({ value: price });
-          toast.success(
-            "Transaction sent, wait a moment until your newly minted egg appears below!"
-          );
-        } else {
-          await metaMintEgg();
-        }
+        // if (canSendTx) {
+        const price = await pricer.mintingPrice();
+        await gangstaEggs.mintEgg({ value: price });
+        toast.success(
+          "Transaction sent, wait a moment until your newly minted egg appears below!"
+        );
+        // } else {
+        //   await metaMintEgg();
+        // }
       }
     } catch (error) {
-      if (error.data?.message) {
-        toast.error(error.data.message);
-      } else {
-        toast.error(error.message);
-      }
+      toast.error(
+        "Free minting limit reached, either buy some MATIC or come back in an hour"
+      );
+      // if (error.data?.message) {
+      //   toast.error(error.data.message);
+      // } else {
+      //   toast.error(error.message);
+      // }
       console.log(error);
     } finally {
       setMinting(false);
