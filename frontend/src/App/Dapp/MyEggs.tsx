@@ -42,6 +42,6 @@ export const MyEggs = () => {
       </div>
     </div>
   ) : (
-    <p>You don't have eggs yet, mint some with the button above!</p>
+    <p>We are currently working on a fancy display for your eggs, in the meantime you can find them directly on <a className="underline" href="https://opensea.io/collection/gangstaeggs">OpenSea</a>!</p>
   );
 };
