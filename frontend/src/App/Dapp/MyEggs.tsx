@@ -4,6 +4,9 @@ import { Egg } from "../../components/Egg";
 import { CurrentAddressContext } from "../../hardhat/SymfoniContext";
 import { MintingContext } from "../../hooks/minting";
 
+// @ts-ignore
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const MyEggs = () => {
   const { eggToken, gangstaEggs, remainingMinting } =
     useContext(MintingContext);
@@ -16,7 +19,7 @@ export const MyEggs = () => {
     }
     const fetchEggs = async () => {
       const response = await axios.get(
-        `${process.env.VITE_API_URL}/owners/${currentAddress}/eggs`
+        `${API_URL}/owners/${currentAddress}/eggs`
       );
       setEggs(response.data);
     };
