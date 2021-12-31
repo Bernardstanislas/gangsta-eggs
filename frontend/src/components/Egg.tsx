@@ -13,7 +13,7 @@ export const Egg: React.FC<Props> = ({ id }) => {
   useEffect(() => {
     const fetchData = async () => {
       const metadata = await axios.get(
-        `https://api.gangsta-eggs.com/eggs/${id}`
+        `${process.env.VITE_API_URL}/eggs/${id}`
       );
       setName(metadata.data.name);
       setImage(`https://ipfs.io/${metadata.data.image.replace("://", "/")}`);
