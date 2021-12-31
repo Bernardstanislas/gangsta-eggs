@@ -4,7 +4,8 @@
     "lint": "gts lint",
     "clean": "gts clean",
     "fix": "gts fix",
-    "autotask:build": "rollup -c"
+    "autotask:build": "rollup -c",
+    "build": "hardhat compile"
   },
   "engines": {
     "node": "16.13.0",
