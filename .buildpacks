@@ -1,1 +1,2 @@
+https://github.com/heroku/heroku-buildpack-nodejs.git#v189
 backend=https://github.com/heroku/heroku-buildpack-nodejs.git#v189
