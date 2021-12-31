@@ -1,12 +1,8 @@
+import axios from "axios";
 import React, { useContext, useEffect } from "react";
 import { Egg } from "../../components/Egg";
 import { CurrentAddressContext } from "../../hardhat/SymfoniContext";
 import { MintingContext } from "../../hooks/minting";
-
-const CONTRACT_CREATION_BLOCK = parseInt(
-  // @ts-ignore
-  import.meta.env.VITE_CONTRACT_CREATION_BLOCK
-);
 
 export const MyEggs = () => {
   const { eggToken, gangstaEggs, remainingMinting } =
@@ -19,11 +15,10 @@ export const MyEggs = () => {
       return;
     }
     const fetchEggs = async () => {
-      const events = await eggToken.queryFilter(
-        eggToken.filters.Transfer(null, currentAddress, null),
-        CONTRACT_CREATION_BLOCK
+      const response = await axios.get(
+        `${process.env.VITE_API_URL}/owners/${currentAddress}/eggs`
       );
-      setEggs(events.map((event) => parseInt(event.topics[3])));
+      setEggs(response.data);
     };
     fetchEggs();
   }, [eggToken, gangstaEggs, currentAddress, remainingMinting]);
@@ -42,6 +37,13 @@ export const MyEggs = () => {
       </div>
     </div>
   ) : (
-    <p>We are currently working on a fancy display for your eggs, in the meantime you can find them directly on <a className="underline" href="https://opensea.io/collection/gangstaeggs">OpenSea</a>!</p>
+    <p>
+      We are currently working on a fancy display for your eggs, in the meantime
+      you can find them directly on{" "}
+      <a className="underline" href="https://opensea.io/collection/gangstaeggs">
+        OpenSea
+      </a>
+      !
+    </p>
   );
 };
