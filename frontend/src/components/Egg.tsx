@@ -5,6 +5,9 @@ type Props = {
   id: number;
 };
 
+// @ts-ignore
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const Egg: React.FC<Props> = ({ id }) => {
   const [name, setName] = useState<string>();
   const [loading, setLoading] = useState(true);
@@ -12,9 +15,7 @@ export const Egg: React.FC<Props> = ({ id }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const metadata = await axios.get(
-        `${process.env.VITE_API_URL}/eggs/${id}`
-      );
+      const metadata = await axios.get(`${API_URL}/eggs/${id}`);
       setName(metadata.data.name);
       setImage(`https://ipfs.io/${metadata.data.image.replace("://", "/")}`);
       setLoading(false);
